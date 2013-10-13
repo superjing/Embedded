@@ -1,0 +1,478 @@
+DHCP 协议实现方案(ENC28J60)
+发布于 2013 年 5 月 26 日 by TaterLi 归档于 程序开发
+    首现初始化几个变量,分别有host_name,dhcpState,start(开始时间,超时后不DHCP,返回失败.),using_dhcp(DHCP使用标记).
+
+    代码大致如下.
+
+01
+bool EtherCard::dhcpSetup () {
+02
+    // Use during setup, as this discards all incoming requests until it returns.
+03
+    // That shouldn't be a problem, because we don't have an IP-address yet.
+04
+    // Will try 60 secs to obtain DHCP-lease.
+05
+ 
+06
+    using_dhcp = true;
+07
+ 
+08
+    // Set a unique hostname, use TaterET-?? with last octet of mac address
+09
+     hostname[8] = '0' + (mymac[5] >> 4);
+10
+     hostname[9] = '0' + (mymac[5] & 0x0F);
+11
+ 
+12
+     dhcpState = DHCP_STATE_INIT    ;
+13
+     unsigned int start = millis();
+14
+ 
+15
+     while (dhcpState != DHCP_STATE_BOUND && (word) (millis() - start) < 60000) {
+16
+      if (isLinkUp()) DhcpStateMachine(packetReceive());
+17
+    }
+18
+    return dhcpState == DHCP_STATE_BOUND ;
+19
+}
+    其中millis获取设备已经运行的时间,可以用定时器实现,isLinkUp通过查询寄存器确定,是否已经连接.
+1
+bool ENC28J60::isLinkUp() {
+2
+    return (readPhyByte(PHSTAT2) >> 2) & 1;
+3
+}
+    如果已经连接上了,读取接收缓冲区.
+01
+unsigned int ENC28J60::packetReceive() {
+02
+    unsigned int len = 0;
+03
+    if (readRegByte(EPKTCNT) > 0) {
+04
+        writeReg(ERDPT, gNextPacketPtr);
+05
+ 
+06
+        struct {
+07
+            unsigned int nextPacket;
+08
+            unsigned int byteCount;
+09
+            unsigned int status;
+10
+        } header;
+11
+         
+12
+        readBuf(sizeof header, (uint8_t*) &header);
+13
+ 
+14
+        gNextPacketPtr  = header.nextPacket;
+15
+        len = header.byteCount - 4; // 删除CRC计数
+16
+        if (len>bufferSize-1)
+17
+            len=bufferSize-1;
+18
+        if ((header.status & 0x80)==0)
+19
+            len = 0;
+20
+        else
+21
+            readBuf(len, buffer);
+22
+        buffer[len] = 0;
+23
+        if (gNextPacketPtr - 1 > RXSTOP_INIT)
+24
+            writeReg(ERXRDPT, RXSTOP_INIT);
+25
+        else
+26
+            writeReg(ERXRDPT, gNextPacketPtr - 1);
+27
+        writeOp(ENC28J60_BIT_FIELD_SET, ECON2, ECON2_PKTDEC);
+28
+    }
+29
+    return len;
+30
+}
+    他的过程是写入读指针寄存器,然后通过ENC28J60_READ_BUF_MEM指令读取缓冲区,存入临时只用一次的header结构体里.获得需要的长度后,读取缓冲区的内容.直到接收完了,返回长度,实际上长度对DhcpStateMachine用途不大,我们要的是全局变量buffer.
+    然后进入后判断状态,进行接续.
+
+01
+void EtherCard::DhcpStateMachine (unsigned int len) {
+02
+ 
+03
+    switch (dhcpState) {
+04
+     
+05
+        case DHCP_STATE_BOUND:
+06
+            if (millis() >= leaseStart + leaseTime) {
+07
+                send_dhcp_message();
+08
+                dhcpState = DHCP_STATE_RENEWING;
+09
+                stateTimer = millis();
+10
+            }
+11
+            break;
+12
+     
+13
+        case DHCP_STATE_INIT:
+14
+            currentXid = millis();
+15
+            memset(myip,0,4); // force ip 0.0.0.0
+16
+            send_dhcp_message();
+17
+            enableBroadcast();
+18
+            dhcpState = DHCP_STATE_SELECTING;
+19
+            stateTimer = millis();
+20
+            break;
+21
+             
+22
+        case DHCP_STATE_SELECTING:
+23
+            if (dhcp_received_message_type(len, DHCP_OFFER)) {
+24
+                process_dhcp_offer(len);
+25
+                send_dhcp_message();
+26
+                dhcpState = DHCP_STATE_REQUESTING;
+27
+                stateTimer = millis();
+28
+            } else {
+29
+                if (millis() > stateTimer + DHCP_REQUEST_TIMEOUT) {
+30
+                    dhcpState = DHCP_STATE_INIT;
+31
+                }
+32
+            }
+33
+            break;
+34
+             
+35
+        case DHCP_STATE_REQUESTING:
+36
+        case DHCP_STATE_RENEWING:
+37
+            if (dhcp_received_message_type(len, DHCP_ACK)) {
+38
+                disableBroadcast();
+39
+                leaseStart = millis();
+40
+                if (gwip[0] != 0) setGwIp(gwip); // why is this? because it initiates an arp request
+41
+                dhcpState = DHCP_STATE_BOUND;
+42
+            } else {
+43
+                if (millis() > stateTimer + DHCP_REQUEST_TIMEOUT) {
+44
+                    dhcpState = DHCP_STATE_INIT;
+45
+                }
+46
+            }
+47
+            break;     
+48
+ 
+49
+    }
+50
+}
+    因为目前状态变量是DHCP_STATE_INIT,所以跳到第二个分支.
+    通过memset强制把IP设置成0.0.0.0,然后发送DHCP数据包,开启广播接收,DHCP状态改成选择IP.先不说函数实现,看看选择状态如何操作.
+
+01
+if (dhcp_received_message_type(len, DHCP_OFFER)) {
+02
+    process_dhcp_offer(len);
+03
+    send_dhcp_message();
+04
+    dhcpState = DHCP_STATE_REQUESTING;
+05
+    stateTimer = millis();
+06
+} else {
+07
+    if (millis() > stateTimer + DHCP_REQUEST_TIMEOUT) {
+08
+        dhcpState = DHCP_STATE_INIT;
+09
+    }
+10
+}
+11
+break;
+    在选择IP的状态下,如果收到的数据包是DHCP_OFFER的话,就执行offer的保留,然后切换状态.如果没收到,继续查询,如果时间过长了,重新发送DHCP_INIT数据(DISCOVER).
+    如果已经获取成功,我们看到DHCP_STATE_REQUESTING和DHCP_STATE_RENEWING同属一个状态.
+
+    如果ACK,那么就设置网关,否则再次初始化.
+
+    所有操作接续完毕还要回DHCP_STATE_BOUND,如果超过了DHCP租约,那么就发送DHCP信息,重新RENEW续租.
+
+    我们看看如何发送DHCP数据包:
+
+01
+static void send_dhcp_message (void) {
+02
+ 
+03
+    uint8_t allOnes[] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+04
+     
+05
+    memset(gPB, 0, UDP_DATA_P + sizeof( DHCPdata ));
+06
+     
+07
+    EtherCard::udpPrepare(DHCP_DEST_PORT,
+08
+        (dhcpState == DHCP_STATE_BOUND ? EtherCard::dhcpip : allOnes),
+09
+        DHCP_SRC_PORT);   // SRC<->DST ??
+10
+     
+11
+    if (dhcpState != DHCP_STATE_BOUND)
+12
+        EtherCard::copyMac(gPB + ETH_DST_MAC, allOnes); //force broadcast mac
+13
+    
+14
+    // Build DHCP Packet from buf[UDP_DATA_P]
+15
+    DHCPdata *dhcpPtr = (DHCPdata*) (gPB + UDP_DATA_P);
+16
+    dhcpPtr->op = DHCP_BOOTREQUEST;
+17
+    dhcpPtr->htype = 1;
+18
+    dhcpPtr->hlen = 6;
+19
+    dhcpPtr->xid = currentXid;
+20
+    if (dhcpState == DHCP_STATE_BOUND) {
+21
+        EtherCard::copyIp(dhcpPtr->ciaddr, EtherCard::myip);
+22
+    }
+23
+    EtherCard::copyMac(dhcpPtr->chaddr, EtherCard::mymac);
+24
+     
+25
+    // options defined as option, length, value
+26
+    bufPtr = gPB + UDP_DATA_P + sizeof( DHCPdata );
+27
+    // DHCP magic cookie, followed by message type
+28
+    static byte cookie[] = { 99, 130, 83, 99, 53, 1 };
+29
+    addBytes(sizeof cookie, cookie);
+30
+    // addToBuf(53);  // DHCP_STATE_SELECTING, DHCP_STATE_REQUESTING
+31
+    // addToBuf(1);   // Length
+32
+    addToBuf(dhcpState == DHCP_STATE_INIT ? DHCP_DISCOVER : DHCP_REQUEST);
+33
+     
+34
+    // Client Identifier Option, this is the client mac address
+35
+    addToBuf(61);     // Client identifier
+36
+    addToBuf(7);      // Length
+37
+    addToBuf(0x01);   // Ethernet
+38
+    addBytes(6, EtherCard::mymac);
+39
+     
+40
+    addToBuf(12);     // Host name Option
+41
+    addToBuf(10);
+42
+    addBytes(10, (byte*) hostname);
+43
+     
+44
+     
+45
+    if( dhcpState == DHCP_STATE_SELECTING) {
+46
+        addToBuf(50); // Request IP address
+47
+        addToBuf(4);
+48
+        addBytes(4, EtherCard::myip);
+49
+ 
+50
+        // Request using server ip address
+51
+        addToBuf(54); // Server IP address
+52
+        addToBuf(4);
+53
+        addBytes(4, EtherCard::dhcpip);
+54
+    }
+55
+     
+56
+    // Additional info in parameter list - minimal list for what we need
+57
+    static byte tail[] = { 55, 3, 1, 3, 6, 255 };
+58
+    addBytes(sizeof tail, tail);
+59
+    // addToBuf(55);     // Parameter request list
+60
+    // addToBuf(3);      // Length
+61
+    // addToBuf(1);      // Subnet mask
+62
+    // addToBuf(3);      // Route/Gateway
+63
+    // addToBuf(6);      // DNS Server
+64
+    // addToBuf(255);    // end option
+65
+ 
+66
+    // packet size will be under 300 bytes
+67
+    EtherCard::udpTransmit((bufPtr - gPB) - UDP_DATA_P);
+68
+}
+    首先,我们有定义:
+1
+#define gPB ether.buffer
+    分状态拼接数据包.
+    最后还有这两个:
+
+view sourceprint?
+01
+static void process_dhcp_offer (word len) {
+02
+    // Map struct onto payload
+03
+    DHCPdata *dhcpPtr = (DHCPdata*) (gPB + UDP_DATA_P);
+04
+    // Offered IP address is in yiaddr
+05
+    EtherCard::copyIp(EtherCard::myip, dhcpPtr->yiaddr);
+06
+    // Scan through variable length option list identifying options we want
+07
+    byte *ptr = (byte*) (dhcpPtr + 1) + 4;
+08
+    do {
+09
+        byte option = *ptr++;
+10
+        byte optionLen = *ptr++;
+11
+        switch (option) {
+12
+            case 1:  EtherCard::copyIp(EtherCard::mymask, ptr);
+13
+                     break;
+14
+            case 3:  EtherCard::copyIp(EtherCard::gwip, ptr);
+15
+                     break;
+16
+            case 6:  EtherCard::copyIp(EtherCard::dnsip, ptr);
+17
+                     break;
+18
+            case 51:
+19
+            case 58: leaseTime = 0; // option 58 = Renewal Time, 51 = Lease Time
+20
+                     for (byte i = 0; i<4; i++)
+21
+                         leaseTime = (leaseTime << 8) + ptr[i];
+22
+                     leaseTime *= 1000;      // milliseconds
+23
+                     break;
+24
+            case 54: EtherCard::copyIp(EtherCard::dhcpip, ptr);
+25
+                     break;
+26
+        }
+27
+        ptr += optionLen;
+28
+    } while (ptr < gPB + len);
+29
+}
+30
+ 
+31
+static bool dhcp_received_message_type (word len, byte msgType) {
+32
+    // Map struct onto payload
+33
+    DHCPdata *dhcpPtr = (DHCPdata*) (gPB + UDP_DATA_P);
+34
+     
+35
+    if (len >= 70 && gPB[UDP_SRC_PORT_L_P] == DHCP_SRC_PORT &&
+36
+            dhcpPtr->op == DHCP_BOOTRESPONSE && dhcpPtr->xid == currentXid ) {
+37
+     
+38
+        int optionIndex = UDP_DATA_P + sizeof( DHCPdata ) + 4;
+39
+        return gPB[optionIndex] == 53 ? gPB[optionIndex+2] == msgType : false;
+40
+    } else {
+41
+        return false;
+42
+    }
+43
+}

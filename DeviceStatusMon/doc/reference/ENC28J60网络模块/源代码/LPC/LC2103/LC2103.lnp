@@ -1,0 +1,4 @@
+--device DARMP "startup.o" "main.o" "pcd5544.o" "enc28j60.o" "ip_arp_udp_tcp.o" --strict --scatter "LC2103.sct" 
+--autoat --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list ".\LC2103.map" -o "LC2103.axf"

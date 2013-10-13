@@ -1,0 +1,242 @@
+C51 COMPILER V8.16   CGI                                                                   01/02/2011 16:07:32 PAGE 1   
+
+
+C51 COMPILER V8.16, COMPILATION OF MODULE CGI
+OBJECT MODULE PLACED IN .\debug\cgi.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE cgi.c LARGE BROWSE DEBUG OBJECTEXTEND PRINT(.\debug\cgi.lst) OBJECT(.\debug
+                    -\cgi.obj)
+
+line level    source
+
+   1          /**
+   2           * \addtogroup httpd
+   3           * @{
+   4           */
+   5          
+   6          /**
+   7           * \file
+   8           * HTTP server script language C functions file.
+   9           * \author Adam Dunkels <adam@dunkels.com>
+  10           *
+  11           * This file contains functions that are called by the web server
+  12           * scripts. The functions takes one argument, and the return value is
+  13           * interpreted as follows. A zero means that the function did not
+  14           * complete and should be invoked for the next packet as well. A
+  15           * non-zero value indicates that the function has completed and that
+  16           * the web server should move along to the next script line.
+  17           *
+  18           */
+  19          
+  20          /*
+  21           * Copyright (c) 2001, Adam Dunkels.
+  22           * All rights reserved. 
+  23           *
+  24           * Redistribution and use in source and binary forms, with or without 
+  25           * modification, are permitted provided that the following conditions 
+  26           * are met: 
+  27           * 1. Redistributions of source code must retain the above copyright 
+  28           *    notice, this list of conditions and the following disclaimer. 
+  29           * 2. Redistributions in binary form must reproduce the above copyright 
+  30           *    notice, this list of conditions and the following disclaimer in the 
+  31           *    documentation and/or other materials provided with the distribution. 
+  32           * 3. The name of the author may not be used to endorse or promote
+  33           *    products derived from this software without specific prior
+  34           *    written permission.  
+  35           *
+  36           * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS
+  37           * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+  38           * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  39           * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+  40           * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  41           * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+  42           * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  43           * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+  44           * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+  45           * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+  46           * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  
+  47           *
+  48           * This file is part of the uIP TCP/IP stack.
+  49           *
+  50           * $Id: cgi.c,v 1.23.2.4 2003/10/07 13:22:27 adam Exp $
+  51           *
+  52           */
+  53          
+  54          #include "uip.h"
+C51 COMPILER V8.16   CGI                                                                   01/02/2011 16:07:32 PAGE 2   
+
+  55          #include "cgi.h"
+  56          #include "httpd.h"
+  57          #include "fs.h"
+  58          
+  59          #include <stdio.h>
+  60          #include <string.h>
+  61          
+  62          static u8_t print_stats(u8_t next);
+  63          static u8_t file_stats(u8_t next);
+  64          static u8_t tcp_stats(u8_t next);
+  65          
+  66          cgifunction cgitab[] = {
+  67            print_stats,   /* CGI function "a" */
+  68            file_stats,    /* CGI function "b" */
+  69            tcp_stats      /* CGI function "c" */
+  70          };
+  71          
+  72          static const char closed[] =   /*  "CLOSED",*/
+  73          {0x43, 0x4c, 0x4f, 0x53, 0x45, 0x44, 0};
+  74          static const char syn_rcvd[] = /*  "SYN-RCVD",*/
+  75          {0x53, 0x59, 0x4e, 0x2d, 0x52, 0x43, 0x56, 
+  76           0x44,  0};
+  77          static const char syn_sent[] = /*  "SYN-SENT",*/
+  78          {0x53, 0x59, 0x4e, 0x2d, 0x53, 0x45, 0x4e, 
+  79           0x54,  0};
+  80          static const char established[] = /*  "ESTABLISHED",*/
+  81          {0x45, 0x53, 0x54, 0x41, 0x42, 0x4c, 0x49, 0x53, 0x48, 
+  82           0x45, 0x44, 0};
+  83          static const char fin_wait_1[] = /*  "FIN-WAIT-1",*/
+  84          {0x46, 0x49, 0x4e, 0x2d, 0x57, 0x41, 0x49, 
+  85           0x54, 0x2d, 0x31, 0};
+  86          static const char fin_wait_2[] = /*  "FIN-WAIT-2",*/
+  87          {0x46, 0x49, 0x4e, 0x2d, 0x57, 0x41, 0x49, 
+  88           0x54, 0x2d, 0x32, 0};
+  89          static const char closing[] = /*  "CLOSING",*/
+  90          {0x43, 0x4c, 0x4f, 0x53, 0x49, 
+  91           0x4e, 0x47, 0};
+  92          static const char time_wait[] = /*  "TIME-WAIT,"*/
+  93          {0x54, 0x49, 0x4d, 0x45, 0x2d, 0x57, 0x41, 
+  94           0x49, 0x54, 0};
+  95          static const char last_ack[] = /*  "LAST-ACK"*/
+  96          {0x4c, 0x41, 0x53, 0x54, 0x2d, 0x41, 0x43, 
+  97           0x4b, 0};
+  98          
+  99          static const char *states[] = {
+ 100            closed,
+ 101            syn_rcvd,
+ 102            syn_sent,
+ 103            established,
+ 104            fin_wait_1,
+ 105            fin_wait_2,
+ 106            closing,
+ 107            time_wait,
+ 108            last_ack};
+ 109            
+ 110          
+ 111          /*-----------------------------------------------------------------------------------*/
+ 112          /* print_stats:
+ 113           *
+ 114           * Prints out a part of the uIP statistics. The statistics data is
+ 115           * written into the uip_appdata buffer. It overwrites any incoming
+ 116           * packet.
+C51 COMPILER V8.16   CGI                                                                   01/02/2011 16:07:32 PAGE 3   
+
+ 117           */
+ 118          static u8_t
+ 119          print_stats(u8_t next)
+ 120          {
+ 121   1      #if UIP_STATISTICS
+ 122   1        u16_t i, j;
+ 123   1        u8_t *buf;
+ 124   1        u16_t *databytes;
+ 125   1        
+ 126   1        if(next) {
+ 127   2          /* If our last data has been acknowledged, we move on the next
+ 128   2             chunk of statistics. */
+ 129   2          hs->count = hs->count + 4;
+ 130   2          if(hs->count >= sizeof(struct uip_stats)/sizeof(u16_t)) {
+ 131   3            /* We have printed out all statistics, so we return 1 to
+ 132   3               indicate that we are done. */
+ 133   3            return 1;
+ 134   3          }
+ 135   2        }
+ 136   1      
+ 137   1        /* Write part of the statistics into the uip_appdata buffer. */
+ 138   1        databytes = (u16_t *)&uip_stat + hs->count;
+ 139   1        buf       = (u8_t *)uip_appdata;
+ 140   1      
+ 141   1        j = 4 + 1;
+ 142   1        i = hs->count;
+ 143   1        while (i < sizeof(struct uip_stats)/sizeof(u16_t) && --j > 0) {
+ 144   2          sprintf((char *)buf, "%5u\r\n", *databytes);
+ 145   2          ++databytes;
+ 146   2          buf += 6;
+ 147   2          ++i;
+ 148   2        }
+ 149   1      
+ 150   1        /* Send the data. */
+ 151   1        uip_send(uip_appdata, buf - uip_appdata);
+ 152   1        
+ 153   1        return 0;
+ 154   1      #else
+                return 1;
+              #endif /* UIP_STATISTICS */
+ 157   1      }
+ 158          /*-----------------------------------------------------------------------------------*/
+ 159          static u8_t
+ 160          file_stats(u8_t next)
+ 161          {
+ 162   1        /* We use sprintf() to print the number of file accesses to a
+ 163   1           particular file (given as an argument to the function in the
+ 164   1           script). We then use uip_send() to actually send the data. */
+ 165   1        if(next) {
+ 166   2          return 1;
+ 167   2        }
+ 168   1        uip_send(uip_appdata, sprintf((char *)uip_appdata, "%5u", fs_count(&hs->script[4])));  
+ 169   1        return 0;
+ 170   1      }
+ 171          /*-----------------------------------------------------------------------------------*/
+ 172          static u8_t
+ 173          tcp_stats(u8_t next)
+ 174          {
+ 175   1        struct uip_conn *conn;  
+ 176   1      
+ 177   1        if(next) {
+ 178   2          /* If the previously sent data has been acknowledged, we move
+C51 COMPILER V8.16   CGI                                                                   01/02/2011 16:07:32 PAGE 4   
+
+ 179   2             forward one connection. */
+ 180   2          if(++hs->count == UIP_CONNS) {
+ 181   3            /* If all connections has been printed out, we are done and
+ 182   3               return 1. */
+ 183   3            return 1;
+ 184   3          }
+ 185   2        }
+ 186   1        
+ 187   1        conn = &uip_conns[hs->count];
+ 188   1        if((conn->tcpstateflags & TS_MASK) == CLOSED) {
+ 189   2          uip_send(uip_appdata, sprintf((char *)uip_appdata,
+ 194   2                                        "<tr align=\"center\"><td>-</td><td>-</td><td>%u</td><td>%u</td><td>%c %c</td></tr>\r\n",
+ 194   2                                        conn->nrtx,
+ 194   2                                        conn->timer,
+ 194   2                                        (uip_outstanding(conn))? '*':' ',
+ 194   2                                        (uip_stopped(conn))? '!':' '));
+ 195   2        } else {
+ 196   2          uip_send(uip_appdata, sprintf((char *)uip_appdata,
+ 207   2                                        "<tr align=\"center\"><td>%u.%u.%u.%u:%u</td><td>%s</td><td>%u</td><td>%u</td><td>%c %c</td></tr>\r\
+             -n",
+ 207   2                                        htons(conn->ripaddr[0]) >> 8,
+ 207   2                                        htons(conn->ripaddr[0]) & 0xff,
+ 207   2                                        htons(conn->ripaddr[1]) >> 8,
+ 207   2                                        htons(conn->ripaddr[1]) & 0xff,
+ 207   2                                        htons(conn->rport),
+ 207   2                                        states[conn->tcpstateflags & TS_MASK],
+ 207   2                                        conn->nrtx,
+ 207   2                                        conn->timer,
+ 207   2                                        (uip_outstanding(conn))? '*':' ',
+ 207   2                                        (uip_stopped(conn))? '!':' '));
+ 208   2        }
+ 209   1        return 0;
+ 210   1      }
+ 211          /*-----------------------------------------------------------------------------------*/
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    962    ----
+   CONSTANT SIZE    =    190    ----
+   XDATA SIZE       =    122      13
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

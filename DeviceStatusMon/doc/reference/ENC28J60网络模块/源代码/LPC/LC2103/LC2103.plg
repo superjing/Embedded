@@ -1,0 +1,450 @@
+<html>
+<body>
+<pre>
+<h1>µVision3 Build Log</h1>
+<h2>Project:</h2>
+E:\Lcsoft\LPC2103\LC2103\LC2103.uv2
+Project File Date:  10/01/2010
+
+<h2>Output:</h2>
+Build target 'Target 1'
+assembling Startup.s...
+compiling Main.c...
+compiling PCD5544.c...
+compiling enc28j60.c...
+compiling ip_arp_udp_tcp.c...
+ip_arp_udp_tcp.c(401): warning:  #1293-D: assignment in condition
+linking...
+Program Size: Code=9256 RO-data=704 RW-data=40 ZI-data=2760  
+FromELF: creating hex file...
+"LC2103.axf" - 0 Error(s), 1 Warning(s).
+Load "E:\\Lcsoft\\LPC2103\\LC2103\\LC2103.AXF" 
+VTarget = 3.274V
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: RTCK reaction time is approx. 126ns
+Info: Auto JTAG speed: Adaptive
+DLL version V4.08b, compiled Jun 30 2009 19:10:31
+Firmware: J-Link ARM V8 compiled Dec  1 2009 11:42:48
+Hardware: V8.00
+Hardware-Breakpoints: 2
+Software-Breakpoints: 2048
+Watchpoints:          0
+Found 1 JTAG device, Total IRLen = 4:
+ Id of device #0: 0x4F1F0F0F
+ARM7 identified.
+Using adaptive clocking instead of fixed JTAG speed.
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: TotalIRLen = 4, IRPrint = 0x01
+JTAG speed: 400 kHz
+Erase Done.
+Programming Done.
+Verify OK.
+Info: TotalIRLen = 4, IRPrint = 0x01
+JTAG speed: 400 kHz
+Application running ...
+Build target 'Target 1'
+assembling Startup.s...
+compiling Main.c...
+compiling PCD5544.c...
+compiling enc28j60.c...
+compiling ip_arp_udp_tcp.c...
+ip_arp_udp_tcp.c(401): warning:  #1293-D: assignment in condition
+linking...
+Program Size: Code=9396 RO-data=704 RW-data=48 ZI-data=2760  
+FromELF: creating hex file...
+"LC2103.axf" - 0 Error(s), 1 Warning(s).
+Load "E:\\Lcsoft\\LPC2103\\LC2103\\LC2103.AXF" 
+VTarget = 3.280V
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: RTCK reaction time is approx. 126ns
+Info: Auto JTAG speed: Adaptive
+DLL version V4.08b, compiled Jun 30 2009 19:10:31
+Firmware: J-Link ARM V8 compiled Dec  1 2009 11:42:48
+Hardware: V8.00
+Hardware-Breakpoints: 2
+Software-Breakpoints: 2048
+Watchpoints:          0
+Found 1 JTAG device, Total IRLen = 4:
+ Id of device #0: 0x4F1F0F0F
+ARM7 identified.
+Using adaptive clocking instead of fixed JTAG speed.
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: TotalIRLen = 4, IRPrint = 0x01
+JTAG speed: 400 kHz
+Erase Done.
+Programming Done.
+Verify OK.
+Info: TotalIRLen = 4, IRPrint = 0x01
+JTAG speed: 400 kHz
+Application running ...
+Build target 'Target 1'
+assembling Startup.s...
+compiling Main.c...
+compiling PCD5544.c...
+compiling enc28j60.c...
+compiling ip_arp_udp_tcp.c...
+ip_arp_udp_tcp.c(401): warning:  #1293-D: assignment in condition
+linking...
+Program Size: Code=9396 RO-data=704 RW-data=48 ZI-data=2760  
+FromELF: creating hex file...
+"LC2103.axf" - 0 Error(s), 1 Warning(s).
+Load "E:\\Lcsoft\\LPC2103\\LC2103\\LC2103.AXF" 
+VTarget = 3.280V
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: RTCK reaction time is approx. 126ns
+Info: Auto JTAG speed: Adaptive
+DLL version V4.08b, compiled Jun 30 2009 19:10:31
+Firmware: J-Link ARM V8 compiled Dec  1 2009 11:42:48
+Hardware: V8.00
+Hardware-Breakpoints: 2
+Software-Breakpoints: 2048
+Watchpoints:          0
+Found 1 JTAG device, Total IRLen = 4:
+ Id of device #0: 0x4F1F0F0F
+ARM7 identified.
+Using adaptive clocking instead of fixed JTAG speed.
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: TotalIRLen = 4, IRPrint = 0x01
+JTAG speed: 400 kHz
+Erase Done.
+Programming Done.
+Verify OK.
+Info: TotalIRLen = 4, IRPrint = 0x01
+JTAG speed: 400 kHz
+Application running ...
+Load "E:\\Lcsoft\\LPC2103\\LC2103\\LC2103.AXF" 
+VTarget = 3.280V
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: RTCK reaction time is approx. 126ns
+Info: Auto JTAG speed: Adaptive
+DLL version V4.08b, compiled Jun 30 2009 19:10:31
+Firmware: J-Link ARM V8 compiled Dec  1 2009 11:42:48
+Hardware: V8.00
+Hardware-Breakpoints: 2
+Software-Breakpoints: 2048
+Watchpoints:          0
+Found 1 JTAG device, Total IRLen = 4:
+ Id of device #0: 0x4F1F0F0F
+ARM7 identified.
+Using adaptive clocking instead of fixed JTAG speed.
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: TotalIRLen = 4, IRPrint = 0x01
+JTAG speed: 400 kHz
+Erase Done.
+Programming Done.
+Verify OK.
+Info: TotalIRLen = 4, IRPrint = 0x01
+JTAG speed: 400 kHz
+Application running ...
+Build target 'Target 1'
+assembling Startup.s...
+compiling Main.c...
+compiling PCD5544.c...
+compiling enc28j60.c...
+compiling ip_arp_udp_tcp.c...
+ip_arp_udp_tcp.c(401): warning:  #1293-D: assignment in condition
+linking...
+Program Size: Code=9396 RO-data=704 RW-data=48 ZI-data=2760  
+FromELF: creating hex file...
+"LC2103.axf" - 0 Error(s), 1 Warning(s).
+Load "E:\\Lcsoft\\LPC2103\\LC2103\\LC2103.AXF" 
+VTarget = 3.274V
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: RTCK reaction time is approx. 126ns
+Info: Auto JTAG speed: Adaptive
+DLL version V4.08b, compiled Jun 30 2009 19:10:31
+Firmware: J-Link ARM V8 compiled Dec  1 2009 11:42:48
+Hardware: V8.00
+Hardware-Breakpoints: 2
+Software-Breakpoints: 2048
+Watchpoints:          0
+Found 1 JTAG device, Total IRLen = 4:
+ Id of device #0: 0x4F1F0F0F
+ARM7 identified.
+Using adaptive clocking instead of fixed JTAG speed.
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: TotalIRLen = 4, IRPrint = 0x01
+JTAG speed: 400 kHz
+Erase Done.
+Programming Done.
+Verify OK.
+Info: TotalIRLen = 4, IRPrint = 0x01
+JTAG speed: 400 kHz
+Application running ...
+Build target 'Target 1'
+assembling Startup.s...
+compiling Main.c...
+compiling PCD5544.c...
+compiling enc28j60.c...
+compiling ip_arp_udp_tcp.c...
+ip_arp_udp_tcp.c(401): warning:  #1293-D: assignment in condition
+linking...
+Program Size: Code=9380 RO-data=704 RW-data=40 ZI-data=2760  
+FromELF: creating hex file...
+"LC2103.axf" - 0 Error(s), 1 Warning(s).
+Load "E:\\Lcsoft\\LPC2103\\LC2103\\LC2103.AXF" 
+VTarget = 3.280V
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: RTCK reaction time is approx. 126ns
+Info: Auto JTAG speed: Adaptive
+DLL version V4.08b, compiled Jun 30 2009 19:10:31
+Firmware: J-Link ARM V8 compiled Dec  1 2009 11:42:48
+Hardware: V8.00
+Hardware-Breakpoints: 2
+Software-Breakpoints: 2048
+Watchpoints:          0
+Found 1 JTAG device, Total IRLen = 4:
+ Id of device #0: 0x4F1F0F0F
+ARM7 identified.
+Using adaptive clocking instead of fixed JTAG speed.
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: TotalIRLen = 4, IRPrint = 0x01
+JTAG speed: 400 kHz
+Erase Done.
+Programming Done.
+Verify OK.
+Info: TotalIRLen = 4, IRPrint = 0x01
+JTAG speed: 400 kHz
+Application running ...
+Load "E:\\Lcsoft\\LPC2103\\LC2103\\LC2103.AXF" 
+VTarget = 3.280V
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: RTCK reaction time is approx. 126ns
+Info: Auto JTAG speed: Adaptive
+DLL version V4.08b, compiled Jun 30 2009 19:10:31
+Firmware: J-Link ARM V8 compiled Dec  1 2009 11:42:48
+Hardware: V8.00
+Hardware-Breakpoints: 2
+Software-Breakpoints: 2048
+Watchpoints:          0
+Found 1 JTAG device, Total IRLen = 4:
+ Id of device #0: 0x4F1F0F0F
+ARM7 identified.
+Using adaptive clocking instead of fixed JTAG speed.
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: TotalIRLen = 4, IRPrint = 0x01
+JTAG speed: 400 kHz
+Erase Done.
+Programming Done.
+Verify OK.
+Info: TotalIRLen = 4, IRPrint = 0x01
+JTAG speed: 400 kHz
+Application running ...
+Build target 'Target 1'
+assembling Startup.s...
+compiling Main.c...
+Main.c(160): error:  #268: declaration may not appear after executable statement in block
+compiling PCD5544.c...
+compiling enc28j60.c...
+compiling ip_arp_udp_tcp.c...
+ip_arp_udp_tcp.c(401): warning:  #1293-D: assignment in condition
+Target not created
+Build target 'Target 1'
+assembling Startup.s...
+compiling Main.c...
+compiling PCD5544.c...
+compiling enc28j60.c...
+compiling ip_arp_udp_tcp.c...
+ip_arp_udp_tcp.c(401): warning:  #1293-D: assignment in condition
+linking...
+Program Size: Code=9380 RO-data=704 RW-data=40 ZI-data=2760  
+FromELF: creating hex file...
+"LC2103.axf" - 0 Error(s), 1 Warning(s).
+Load "E:\\Lcsoft\\LPC2103\\LC2103\\LC2103.AXF" 
+VTarget = 3.280V
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: RTCK reaction time is approx. 126ns
+Info: Auto JTAG speed: Adaptive
+DLL version V4.08b, compiled Jun 30 2009 19:10:31
+Firmware: J-Link ARM V8 compiled Dec  1 2009 11:42:48
+Hardware: V8.00
+Hardware-Breakpoints: 2
+Software-Breakpoints: 2048
+Watchpoints:          0
+Found 1 JTAG device, Total IRLen = 4:
+ Id of device #0: 0x4F1F0F0F
+ARM7 identified.
+Using adaptive clocking instead of fixed JTAG speed.
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: TotalIRLen = 4, IRPrint = 0x01
+JTAG speed: 400 kHz
+Erase Done.
+Programming Done.
+Verify OK.
+Info: TotalIRLen = 4, IRPrint = 0x01
+JTAG speed: 400 kHz
+Application running ...
+Build target 'Target 1'
+assembling Startup.s...
+compiling Main.c...
+compiling PCD5544.c...
+compiling enc28j60.c...
+compiling ip_arp_udp_tcp.c...
+ip_arp_udp_tcp.c(401): warning:  #1293-D: assignment in condition
+linking...
+Program Size: Code=9380 RO-data=704 RW-data=40 ZI-data=2760  
+FromELF: creating hex file...
+"LC2103.axf" - 0 Error(s), 1 Warning(s).
+Load "E:\\Lcsoft\\LPC2103\\LC2103\\LC2103.AXF" 
+VTarget = 3.280V
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: RTCK reaction time is approx. 126ns
+Info: Auto JTAG speed: Adaptive
+DLL version V4.08b, compiled Jun 30 2009 19:10:31
+Firmware: J-Link ARM V8 compiled Dec  1 2009 11:42:48
+Hardware: V8.00
+Hardware-Breakpoints: 2
+Software-Breakpoints: 2048
+Watchpoints:          0
+Found 1 JTAG device, Total IRLen = 4:
+ Id of device #0: 0x4F1F0F0F
+ARM7 identified.
+Using adaptive clocking instead of fixed JTAG speed.
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: TotalIRLen = 4, IRPrint = 0x01
+JTAG speed: 400 kHz
+Erase Done.
+Programming Done.
+Verify OK.
+Info: TotalIRLen = 4, IRPrint = 0x01
+JTAG speed: 400 kHz
+Application running ...
+Build target 'Target 1'
+assembling Startup.s...
+compiling Main.c...
+compiling PCD5544.c...
+compiling enc28j60.c...
+compiling ip_arp_udp_tcp.c...
+ip_arp_udp_tcp.c(401): warning:  #1293-D: assignment in condition
+linking...
+Program Size: Code=9396 RO-data=704 RW-data=48 ZI-data=2760  
+FromELF: creating hex file...
+"LC2103.axf" - 0 Error(s), 1 Warning(s).
+Load "E:\\Lcsoft\\LPC2103\\LC2103\\LC2103.AXF" 
+VTarget = 3.274V
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: RTCK reaction time is approx. 126ns
+Info: Auto JTAG speed: Adaptive
+DLL version V4.08b, compiled Jun 30 2009 19:10:31
+Firmware: J-Link ARM V8 compiled Dec  1 2009 11:42:48
+Hardware: V8.00
+Hardware-Breakpoints: 2
+Software-Breakpoints: 2048
+Watchpoints:          0
+Found 1 JTAG device, Total IRLen = 4:
+ Id of device #0: 0x4F1F0F0F
+ARM7 identified.
+Using adaptive clocking instead of fixed JTAG speed.
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: TotalIRLen = 4, IRPrint = 0x01
+JTAG speed: 400 kHz
+Erase Done.
+Programming Done.
+Verify OK.
+Info: TotalIRLen = 4, IRPrint = 0x01
+JTAG speed: 400 kHz
+Application running ...
+Build target 'Target 1'
+assembling Startup.s...
+compiling Main.c...
+compiling PCD5544.c...
+compiling enc28j60.c...
+compiling ip_arp_udp_tcp.c...
+ip_arp_udp_tcp.c(401): warning:  #1293-D: assignment in condition
+linking...
+Program Size: Code=9392 RO-data=704 RW-data=48 ZI-data=2760  
+FromELF: creating hex file...
+"LC2103.axf" - 0 Error(s), 1 Warning(s).
+Build target 'Target 1'
+assembling Startup.s...
+compiling Main.c...
+compiling PCD5544.c...
+compiling enc28j60.c...
+compiling ip_arp_udp_tcp.c...
+ip_arp_udp_tcp.c(401): warning:  #1293-D: assignment in condition
+linking...
+Program Size: Code=9392 RO-data=704 RW-data=48 ZI-data=2760  
+FromELF: creating hex file...
+"LC2103.axf" - 0 Error(s), 1 Warning(s).
+Load "E:\\Lcsoft\\LPC2103\\LC2103\\LC2103.AXF" 
+VTarget = 3.280V
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: RTCK reaction time is approx. 126ns
+Info: Auto JTAG speed: Adaptive
+DLL version V4.08b, compiled Jun 30 2009 19:10:31
+Firmware: J-Link ARM V8 compiled Dec  1 2009 11:42:48
+Hardware: V8.00
+Hardware-Breakpoints: 2
+Software-Breakpoints: 2048
+Watchpoints:          0
+Found 1 JTAG device, Total IRLen = 4:
+ Id of device #0: 0x4F1F0F0F
+ARM7 identified.
+Using adaptive clocking instead of fixed JTAG speed.
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: TotalIRLen = 4, IRPrint = 0x01
+JTAG speed: 400 kHz
+Erase Done.
+Programming Done.
+Verify OK.
+Info: TotalIRLen = 4, IRPrint = 0x01
+JTAG speed: 400 kHz
+Application running ...
+Build target 'Target 1'
+assembling Startup.s...
+compiling Main.c...
+compiling PCD5544.c...
+compiling enc28j60.c...
+compiling ip_arp_udp_tcp.c...
+ip_arp_udp_tcp.c(401): warning:  #1293-D: assignment in condition
+linking...
+Program Size: Code=9512 RO-data=704 RW-data=52 ZI-data=2764  
+FromELF: creating hex file...
+"LC2103.axf" - 0 Error(s), 1 Warning(s).
+Load "E:\\Lcsoft\\LPC2103\\LC2103\\LC2103.AXF" 
+VTarget = 3.274V
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: RTCK reaction time is approx. 126ns
+Info: Auto JTAG speed: Adaptive
+DLL version V4.08b, compiled Jun 30 2009 19:10:31
+Firmware: J-Link ARM V8 compiled Dec  1 2009 11:42:48
+Hardware: V8.00
+Hardware-Breakpoints: 2
+Software-Breakpoints: 2048
+Watchpoints:          0
+Found 1 JTAG device, Total IRLen = 4:
+ Id of device #0: 0x4F1F0F0F
+ARM7 identified.
+Using adaptive clocking instead of fixed JTAG speed.
+Info: TotalIRLen = 4, IRPrint = 0x01
+Info: TotalIRLen = 4, IRPrint = 0x01
+JTAG speed: 400 kHz
+Erase Done.
+Programming Done.
+Verify OK.
+Info: TotalIRLen = 4, IRPrint = 0x01
+JTAG speed: 400 kHz
+Application running ...
+Build target 'Target 1'
+assembling Startup.s...
+compiling Main.c...
+compiling PCD5544.c...
+compiling enc28j60.c...
+compiling ip_arp_udp_tcp.c...
+ip_arp_udp_tcp.c(401): warning:  #1293-D: assignment in condition
+linking...
+Program Size: Code=9512 RO-data=704 RW-data=52 ZI-data=2764  
+FromELF: creating hex file...
+"LC2103.axf" - 0 Error(s), 1 Warning(s).

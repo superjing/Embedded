@@ -1,0 +1,183 @@
+C51 COMPILER V8.16   FS                                                                    01/02/2011 16:07:34 PAGE 1   
+
+
+C51 COMPILER V8.16, COMPILATION OF MODULE FS
+OBJECT MODULE PLACED IN .\debug\fs.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE fs.c LARGE BROWSE DEBUG OBJECTEXTEND PRINT(.\debug\fs.lst) OBJECT(.\debug\f
+                    -s.obj)
+
+line level    source
+
+   1          /**
+   2           * \addtogroup httpd
+   3           * @{
+   4           */
+   5          
+   6          /**
+   7           * \file
+   8           * HTTP server read-only file system code.
+   9           * \author Adam Dunkels <adam@dunkels.com>
+  10           *
+  11           * A simple read-only filesystem. 
+  12           */
+  13           
+  14          /*
+  15           * Copyright (c) 2001, Swedish Institute of Computer Science.
+  16           * All rights reserved. 
+  17           *
+  18           * Redistribution and use in source and binary forms, with or without 
+  19           * modification, are permitted provided that the following conditions 
+  20           * are met: 
+  21           * 1. Redistributions of source code must retain the above copyright 
+  22           *    notice, this list of conditions and the following disclaimer. 
+  23           * 2. Redistributions in binary form must reproduce the above copyright 
+  24           *    notice, this list of conditions and the following disclaimer in the 
+  25           *    documentation and/or other materials provided with the distribution. 
+  26           * 3. Neither the name of the Institute nor the names of its contributors 
+  27           *    may be used to endorse or promote products derived from this software 
+  28           *    without specific prior written permission. 
+  29           *
+  30           * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND 
+  31           * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+  32           * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
+  33           * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE 
+  34           * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL 
+  35           * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS 
+  36           * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+  37           * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+  38           * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY 
+  39           * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF 
+  40           * SUCH DAMAGE. 
+  41           *
+  42           * This file is part of the lwIP TCP/IP stack.
+  43           * 
+  44           * Author: Adam Dunkels <adam@sics.se>
+  45           *
+  46           * $Id: fs.c,v 1.7.2.3 2003/10/07 13:22:27 adam Exp $
+  47           */
+  48          
+  49          #include "uip.h"
+  50          #include "httpd.h"
+  51          #include "fs.h"
+  52          #include "fsdata.h"
+  53          
+  54          #define NULL (void *)0
+C51 COMPILER V8.16   FS                                                                    01/02/2011 16:07:34 PAGE 2   
+
+  55          //#include "fsdata.c"
+  56          
+  57          #ifdef FS_STATISTICS
+  58          #if FS_STATISTICS == 1
+  59          static u16_t count[FS_NUMFILES];
+  60          #endif /* FS_STATISTICS */
+  61          #endif /* FS_STATISTICS */
+  62          
+  63          /*-----------------------------------------------------------------------------------*/
+  64          static u8_t
+  65          fs_strcmp(const char *str1, const char *str2)
+  66          {
+  67   1        u8_t i;
+  68   1        i = 0;
+  69   1       loop:
+  70   1      
+  71   1        if(str2[i] == 0 ||
+  72   1           str1[i] == '\r' || 
+  73   1           str1[i] == '\n') {
+  74   2          return 0;
+  75   2        }
+  76   1      
+  77   1        if(str1[i] != str2[i]) {
+  78   2          return 1;
+  79   2        }
+  80   1      
+  81   1      
+  82   1        ++i;
+  83   1        goto loop;
+  84   1      }
+  85          /*-----------------------------------------------------------------------------------*/
+  86          int
+  87          fs_open(const char *name, struct fs_file *file)
+  88          {
+  89   1      #ifdef FS_STATISTICS
+  90   1      #if FS_STATISTICS == 1
+  91   1        u16_t i = 0;
+  92   1      #endif /* FS_STATISTICS */
+  93   1      #endif /* FS_STATISTICS */
+  94   1        struct fsdata_file_noconst *f;
+  95   1      
+  96   1        for(f = (struct fsdata_file_noconst *)FS_ROOT;
+  97   1            f != NULL;
+  98   1            f = (struct fsdata_file_noconst *)f->next) {
+  99   2      
+ 100   2          if(fs_strcmp(name, f->name) == 0) {
+ 101   3            file->dat = f->dat;
+ 102   3            file->len = f->len;
+ 103   3      #ifdef FS_STATISTICS
+ 104   3      #if FS_STATISTICS == 1
+ 105   3            ++count[i];
+ 106   3      #endif /* FS_STATISTICS */
+ 107   3      #endif /* FS_STATISTICS */
+ 108   3            return 1;
+ 109   3          }
+ 110   2      #ifdef FS_STATISTICS
+ 111   2      #if FS_STATISTICS == 1
+ 112   2          ++i;
+ 113   2      #endif /* FS_STATISTICS */
+ 114   2      #endif /* FS_STATISTICS */
+ 115   2      
+ 116   2        }
+C51 COMPILER V8.16   FS                                                                    01/02/2011 16:07:34 PAGE 3   
+
+ 117   1        return 0;
+ 118   1      }
+ 119          /*-----------------------------------------------------------------------------------*/
+ 120          void
+ 121          fs_init(void)
+ 122          {
+ 123   1      #ifdef FS_STATISTICS
+ 124   1      #if FS_STATISTICS == 1
+ 125   1        u16_t i;
+ 126   1        for(i = 0; i < FS_NUMFILES; i++) {
+ 127   2          count[i] = 0;
+ 128   2        }
+ 129   1      #endif /* FS_STATISTICS */
+ 130   1      #endif /* FS_STATISTICS */
+ 131   1      }
+ 132          /*-----------------------------------------------------------------------------------*/
+ 133          #ifdef FS_STATISTICS
+ 134          #if FS_STATISTICS == 1  
+ 135          u16_t fs_count
+ 136          (char *name)
+ 137          {
+ 138   1        struct fsdata_file_noconst *f;
+ 139   1        u16_t i;
+ 140   1      
+ 141   1        i = 0;
+ 142   1        for(f = (struct fsdata_file_noconst *)FS_ROOT;
+ 143   1            f != NULL;
+ 144   1            f = (struct fsdata_file_noconst *)f->next) {
+ 145   2      
+ 146   2          if(fs_strcmp(name, f->name) == 0) {
+ 147   3            return count[i];
+ 148   3          }
+ 149   2          ++i;
+ 150   2        }
+ 151   1        return 0;
+ 152   1      }
+ 153          #endif /* FS_STATISTICS */
+ 154          #endif /* FS_STATISTICS */
+ 155          /*-----------------------------------------------------------------------------------*/
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    528    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     28      25
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

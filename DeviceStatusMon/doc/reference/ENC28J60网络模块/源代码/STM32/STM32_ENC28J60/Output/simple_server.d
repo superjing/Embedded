@@ -1,0 +1,12 @@
+.\Output\simple_server.o: simple_server.c
+.\Output\simple_server.o: C:\Keil\ARM\RV31\INC\string.h
+.\Output\simple_server.o: enc28j60.h
+.\Output\simple_server.o: C:\Keil\ARM\INC\ST\STM32F10x\STM32F10X_GPIO.h
+.\Output\simple_server.o: C:\Keil\ARM\INC\ST\STM32F10x\stm32f10x_map.h
+.\Output\simple_server.o: C:\Keil\ARM\INC\ST\STM32F10x\stm32f10x_conf.h
+.\Output\simple_server.o: C:\Keil\ARM\INC\ST\STM32F10x\stm32f10x_type.h
+.\Output\simple_server.o: C:\Keil\ARM\INC\ST\STM32F10x\cortexm3_macro.h
+.\Output\simple_server.o: ip_arp_udp_tcp.h
+.\Output\simple_server.o: net.h
+.\Output\simple_server.o: simple_server.h
+.\Output\simple_server.o: ENC28J60.h

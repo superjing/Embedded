@@ -1,0 +1,1038 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html><head>
+<title>Static Call Graph - [.\Output\USART_Pol.axf]</title></head>
+<body><HR>
+<H1>Static Call Graph for image .\Output\USART_Pol.axf</H1><HR>
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, RVCT4.0 [Build 524]: Last Updated: Sun Jan 02 19:46:03 2011
+<BR><P>
+<H3>Maximum Stack Usage =        216 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
+Call chain for Maximum Stack Depth:</H3>
+__rt_entry_main &rArr; main &rArr; simple_server &rArr; enc28j60Init &rArr; __2printf &rArr; _printf_char_common &rArr; __printf
+<P>
+<H3>
+Functions with no stack information
+</H3><UL>
+ <LI><a href="#[bef1e8]">__user_initial_stackheap</a>
+</UL>
+</UL>
+<P>
+<H3>
+Mutually Recursive functions
+</H3> <LI><a href="#[bef0bc]">NMI_Handler</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[bef0bc]">NMI_Handler</a><BR>
+ <LI><a href="#[bef080]">HardFault_Handler</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[bef080]">HardFault_Handler</a><BR>
+ <LI><a href="#[bef044]">MemManage_Handler</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[bef044]">MemManage_Handler</a><BR>
+ <LI><a href="#[bef008]">BusFault_Handler</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[bef008]">BusFault_Handler</a><BR>
+ <LI><a href="#[beefcc]">UsageFault_Handler</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[beefcc]">UsageFault_Handler</a><BR>
+ <LI><a href="#[beef90]">SVC_Handler</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[beef90]">SVC_Handler</a><BR>
+ <LI><a href="#[beef54]">DebugMon_Handler</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[beef54]">DebugMon_Handler</a><BR>
+ <LI><a href="#[beef18]">PendSV_Handler</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[beef18]">PendSV_Handler</a><BR>
+ <LI><a href="#[beeedc]">SysTick_Handler</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[beeedc]">SysTick_Handler</a><BR>
+ <LI><a href="#[beeea0]">ADC_IRQHandler</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[beeea0]">ADC_IRQHandler</a><BR>
+</UL>
+<P>
+<H3>
+Function Pointers
+</H3><UL>
+ <LI><a href="#[bef0f8]">Reset_Handler</a>
+ <LI><a href="#[bef0bc]">NMI_Handler</a>
+ <LI><a href="#[bef080]">HardFault_Handler</a>
+ <LI><a href="#[bef044]">MemManage_Handler</a>
+ <LI><a href="#[bef008]">BusFault_Handler</a>
+ <LI><a href="#[beefcc]">UsageFault_Handler</a>
+ <LI><a href="#[beef90]">SVC_Handler</a>
+ <LI><a href="#[beef54]">DebugMon_Handler</a>
+ <LI><a href="#[beef18]">PendSV_Handler</a>
+ <LI><a href="#[beeedc]">SysTick_Handler</a>
+ <LI><a href="#[bee4c8]">WWDG_IRQHandler</a>
+ <LI><a href="#[bee978]">PVD_IRQHandler</a>
+ <LI><a href="#[bee810]">TAMPER_IRQHandler</a>
+ <LI><a href="#[bee8c4]">RTC_IRQHandler</a>
+ <LI><a href="#[beeaa4]">FLASH_IRQHandler</a>
+ <LI><a href="#[bee93c]">RCC_IRQHandler</a>
+ <LI><a href="#[beec48]">EXTI0_IRQHandler</a>
+ <LI><a href="#[beebd0]">EXTI1_IRQHandler</a>
+ <LI><a href="#[beeb94]">EXTI2_IRQHandler</a>
+ <LI><a href="#[beeb58]">EXTI3_IRQHandler</a>
+ <LI><a href="#[beeb1c]">EXTI4_IRQHandler</a>
+ <LI><a href="#[beedec]">DMAChannel1_IRQHandler</a>
+ <LI><a href="#[beedb0]">DMAChannel2_IRQHandler</a>
+ <LI><a href="#[beed74]">DMAChannel3_IRQHandler</a>
+ <LI><a href="#[beed38]">DMAChannel4_IRQHandler</a>
+ <LI><a href="#[beecfc]">DMAChannel5_IRQHandler</a>
+ <LI><a href="#[beecc0]">DMAChannel6_IRQHandler</a>
+ <LI><a href="#[beec84]">DMAChannel7_IRQHandler</a>
+ <LI><a href="#[beeea0]">ADC_IRQHandler</a>
+ <LI><a href="#[bee540]">USB_HP_CAN_TX_IRQHandler</a>
+ <LI><a href="#[bee504]">USB_LP_CAN_RX0_IRQHandler</a>
+ <LI><a href="#[beee64]">CAN_RX1_IRQHandler</a>
+ <LI><a href="#[beee28]">CAN_SCE_IRQHandler</a>
+ <LI><a href="#[beeae0]">EXTI9_5_IRQHandler</a>
+ <LI><a href="#[bee7d4]">TIM1_BRK_IRQHandler</a>
+ <LI><a href="#[bee720]">TIM1_UP_IRQHandler</a>
+ <LI><a href="#[bee75c]">TIM1_TRG_COM_IRQHandler</a>
+ <LI><a href="#[bee798]">TIM1_CC_IRQHandler</a>
+ <LI><a href="#[bee6e4]">TIM2_IRQHandler</a>
+ <LI><a href="#[bee6a8]">TIM3_IRQHandler</a>
+ <LI><a href="#[bee66c]">TIM4_IRQHandler</a>
+ <LI><a href="#[beea2c]">I2C1_EV_IRQHandler</a>
+ <LI><a href="#[beea68]">I2C1_ER_IRQHandler</a>
+ <LI><a href="#[bee9b4]">I2C2_EV_IRQHandler</a>
+ <LI><a href="#[bee9f0]">I2C2_ER_IRQHandler</a>
+ <LI><a href="#[bee888]">SPI1_IRQHandler</a>
+ <LI><a href="#[bee84c]">SPI2_IRQHandler</a>
+ <LI><a href="#[bee630]">USART1_IRQHandler</a>
+ <LI><a href="#[bee5f4]">USART2_IRQHandler</a>
+ <LI><a href="#[bee5b8]">USART3_IRQHandler</a>
+ <LI><a href="#[beec0c]">EXTI15_10_IRQHandler</a>
+ <LI><a href="#[bee900]">RTCAlarm_IRQHandler</a>
+ <LI><a href="#[bee57c]">USBWakeUp_IRQHandler</a>
+ <LI><a href="#[14b227c]">__main</a>
+ <LI><a href="#[bf235c]">fputc</a>
+ <LI><a href="#[14b1d90]">_printf_input_char</a>
+</UL>
+<P>
+<H3>
+Global Symbols
+</H3>
+<P><STRONG><a name="[14b227c]"></a>__main</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, __main.o(!!!main))
+<BR><BR>[Calls]<UL><LI><a href="#[14abd3c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload
+<LI><a href="#[14b2150]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_entry
+</UL>
+
+<P><STRONG><a name="[14abd3c]"></a>__scatterload</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __scatter.o(!!!scatter))
+<BR><BR>[Called By]<UL><LI><a href="#[14b227c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__main
+</UL>
+
+<P><STRONG><a name="[14abd00]"></a>__scatterload_rt2</STRONG> (Thumb, 44 bytes, Stack size unknown bytes, __scatter.o(!!!scatter), UNUSED)
+<BR><BR>[Calls]<UL><LI><a href="#[14b2150]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_entry
+</UL>
+
+<P><STRONG><a name="[14abcc4]"></a>__scatterload_rt2_thumb_only</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __scatter.o(!!!scatter), UNUSED)
+
+<P><STRONG><a name="[14abc88]"></a>__scatterload_null</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __scatter.o(!!!scatter), UNUSED)
+
+<P><STRONG><a name="[14abae4]"></a>__scatterload_copy</STRONG> (Thumb, 26 bytes, Stack size unknown bytes, __scatter_copy.o(!!handler_copy), UNUSED)
+<BR><BR>[Calls]<UL><LI><a href="#[14abae4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload_copy
+</UL>
+<BR>[Called By]<UL><LI><a href="#[14abae4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload_copy
+</UL>
+
+<P><STRONG><a name="[14ab9f4]"></a>__scatterload_zeroinit</STRONG> (Thumb, 28 bytes, Stack size unknown bytes, __scatter_zi.o(!!handler_zi), UNUSED)
+
+<P><STRONG><a name="[14b27e0]"></a>_printf_percent</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, _printf_percent.o(.ARM.Collect$$_printf_percent$$00000000))
+<BR><BR>[Called By]<UL><LI><a href="#[14b41e4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__printf
+</UL>
+
+<P><STRONG><a name="[14b28d0]"></a>_printf_x</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, _printf_x.o(.ARM.Collect$$_printf_percent$$0000000C))
+<BR><BR>[Stack]<UL><LI>Max Depth = 48 + Unknown Stack Size
+<LI>Call Chain = _printf_x &rArr; _printf_int_hex &rArr; _printf_int_common
+</UL>
+<BR>[Calls]<UL><LI><a href="#[14b3de8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_int_hex
+</UL>
+
+<P><STRONG><a name="[14b1c64]"></a>_printf_percent_end</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, _printf_percent_end.o(.ARM.Collect$$_printf_percent$$00000017))
+
+<P><STRONG><a name="[14b0ecc]"></a>__rt_lib_init</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit.o(.ARM.Collect$$libinit$$00000000))
+<BR><BR>[Called By]<UL><LI><a href="#[14b191c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_entry_li
+</UL>
+
+<P><STRONG><a name="[14af39c]"></a>__rt_lib_init_alloca_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$0000002A))
+
+<P><STRONG><a name="[14af414]"></a>__rt_lib_init_argv_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000028))
+
+<P><STRONG><a name="[14af7d4]"></a>__rt_lib_init_atexit_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000017))
+
+<P><STRONG><a name="[14af66c]"></a>__rt_lib_init_clock_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$0000001D))
+
+<P><STRONG><a name="[14af2ac]"></a>__rt_lib_init_cpp_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$0000002E))
+
+<P><STRONG><a name="[14af324]"></a>__rt_lib_init_exceptions_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$0000002C))
+
+<P><STRONG><a name="[14af6e4]"></a>__rt_lib_init_fp_trap_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$0000001B))
+
+<P><STRONG><a name="[14af5f4]"></a>__rt_lib_init_getenv_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$0000001F))
+
+<P><STRONG><a name="[14afbd0]"></a>__rt_lib_init_heap_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000006))
+
+<P><STRONG><a name="[14afa2c]"></a>__rt_lib_init_lc_collate_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$0000000D))
+
+<P><STRONG><a name="[14af9b4]"></a>__rt_lib_init_lc_ctype_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$0000000F))
+
+<P><STRONG><a name="[14af93c]"></a>__rt_lib_init_lc_monetary_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000011))
+
+<P><STRONG><a name="[14af8c4]"></a>__rt_lib_init_lc_numeric_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000013))
+
+<P><STRONG><a name="[14af84c]"></a>__rt_lib_init_lc_time_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000015))
+
+<P><STRONG><a name="[14afae0]"></a>__rt_lib_init_rand_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$0000000A))
+
+<P><STRONG><a name="[14af270]"></a>__rt_lib_init_return</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$0000002F))
+
+<P><STRONG><a name="[14af75c]"></a>__rt_lib_init_signal_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000019))
+
+<P><STRONG><a name="[14af57c]"></a>__rt_lib_init_stdio_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000021))
+
+<P><STRONG><a name="[14afb58]"></a>__rt_lib_init_user_alloc_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000008))
+
+<P><STRONG><a name="[14ae3e8]"></a>__rt_lib_shutdown</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libshutdown.o(.ARM.Collect$$libshutdown$$00000000))
+<BR><BR>[Called By]<UL><LI><a href="#[14aeaf0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_exit_ls
+</UL>
+
+<P><STRONG><a name="[14ad86c]"></a>__rt_lib_shutdown_fp_trap_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libshutdown2.o(.ARM.Collect$$libshutdown$$00000006))
+
+<P><STRONG><a name="[14ad68c]"></a>__rt_lib_shutdown_heap_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libshutdown2.o(.ARM.Collect$$libshutdown$$0000000E))
+
+<P><STRONG><a name="[14ad650]"></a>__rt_lib_shutdown_return</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libshutdown2.o(.ARM.Collect$$libshutdown$$0000000F))
+
+<P><STRONG><a name="[14ad7b8]"></a>__rt_lib_shutdown_signal_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libshutdown2.o(.ARM.Collect$$libshutdown$$00000009))
+
+<P><STRONG><a name="[14ad920]"></a>__rt_lib_shutdown_stdio_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libshutdown2.o(.ARM.Collect$$libshutdown$$00000003))
+
+<P><STRONG><a name="[14ad740]"></a>__rt_lib_shutdown_user_alloc_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libshutdown2.o(.ARM.Collect$$libshutdown$$0000000B))
+
+<P><STRONG><a name="[14b2150]"></a>__rt_entry</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rtentry.o(.ARM.Collect$$rtentry$$00000000))
+<BR><BR>[Called By]<UL><LI><a href="#[14abd00]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload_rt2
+<LI><a href="#[14b227c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__main
+</UL>
+
+<P><STRONG><a name="[14b19d0]"></a>__rt_entry_presh_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rtentry2.o(.ARM.Collect$$rtentry$$00000002))
+
+<P><STRONG><a name="[14b164c]"></a>__rt_entry_sh</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rtentry4.o(.ARM.Collect$$rtentry$$00000004))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8 + Unknown Stack Size
+<LI>Call Chain = __rt_entry_sh &rArr; __user_setup_stackheap
+</UL>
+<BR>[Calls]<UL><LI><a href="#[14b1430]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__user_setup_stackheap
+</UL>
+
+<P><STRONG><a name="[14b191c]"></a>__rt_entry_li</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rtentry2.o(.ARM.Collect$$rtentry$$0000000A))
+<BR><BR>[Calls]<UL><LI><a href="#[14b0ecc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_lib_init
+</UL>
+
+<P><STRONG><a name="[14b1958]"></a>__rt_entry_postsh_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rtentry2.o(.ARM.Collect$$rtentry$$00000009))
+
+<P><STRONG><a name="[14b1868]"></a>__rt_entry_main</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rtentry2.o(.ARM.Collect$$rtentry$$0000000D))
+<BR><BR>[Stack]<UL><LI>Max Depth = 216 + Unknown Stack Size
+<LI>Call Chain = __rt_entry_main &rArr; main &rArr; simple_server &rArr; enc28j60Init &rArr; __2printf &rArr; _printf_char_common &rArr; __printf
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bef56c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+<LI><a href="#[14b12c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;exit
+</UL>
+
+<P><STRONG><a name="[14b18a4]"></a>__rt_entry_postli_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rtentry2.o(.ARM.Collect$$rtentry$$0000000C))
+
+<P><STRONG><a name="[14b074c]"></a>__rt_exit</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rtexit.o(.ARM.Collect$$rtexit$$00000000))
+<BR><BR>[Called By]<UL><LI><a href="#[14b12c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;exit
+</UL>
+
+<P><STRONG><a name="[14aeaf0]"></a>__rt_exit_ls</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rtexit2.o(.ARM.Collect$$rtexit$$00000003))
+<BR><BR>[Calls]<UL><LI><a href="#[14ae3e8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_lib_shutdown
+</UL>
+
+<P><STRONG><a name="[14aeb2c]"></a>__rt_exit_prels_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rtexit2.o(.ARM.Collect$$rtexit$$00000002))
+
+<P><STRONG><a name="[14aeab4]"></a>__rt_exit_exit</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rtexit2.o(.ARM.Collect$$rtexit$$00000004))
+<BR><BR>[Calls]<UL><LI><a href="#[bf226c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_sys_exit
+</UL>
+
+<P><STRONG><a name="[bf2e24]"></a>enc28j60ReadOp</STRONG> (Thumb, 76 bytes, Stack size 16 bytes, enc28j60.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = enc28j60ReadOp &rArr; SPI1_ReadWrite
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bf2b18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPI1_ReadWrite
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bf2b54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60PacketReceive
+<LI><a href="#[bf2cf8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60Read
+</UL>
+
+<P><STRONG><a name="[bf2de8]"></a>enc28j60WriteOp</STRONG> (Thumb, 68 bytes, Stack size 24 bytes, enc28j60.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = enc28j60WriteOp &rArr; SPI1_ReadWrite
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bf2b18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPI1_ReadWrite
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bf2b54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60PacketReceive
+<LI><a href="#[bf2b90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60PacketSend
+<LI><a href="#[bf2c08]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60Init
+<LI><a href="#[bf2cbc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60Write
+<LI><a href="#[bf2d34]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60SetBank
+</UL>
+
+<P><STRONG><a name="[bf2dac]"></a>enc28j60ReadBuffer</STRONG> (Thumb, 64 bytes, Stack size 16 bytes, enc28j60.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = enc28j60ReadBuffer &rArr; SPI1_ReadWrite
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bf2b18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPI1_ReadWrite
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bf2b54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60PacketReceive
+</UL>
+
+<P><STRONG><a name="[bf2d70]"></a>enc28j60WriteBuffer</STRONG> (Thumb, 58 bytes, Stack size 16 bytes, enc28j60.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = enc28j60WriteBuffer &rArr; SPI1_ReadWrite
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bf2b18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPI1_ReadWrite
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bf2b90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60PacketSend
+</UL>
+
+<P><STRONG><a name="[bf2d34]"></a>enc28j60SetBank</STRONG> (Thumb, 48 bytes, Stack size 8 bytes, enc28j60.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = enc28j60SetBank &rArr; enc28j60WriteOp &rArr; SPI1_ReadWrite
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bf2de8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60WriteOp
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bf2c08]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60Init
+<LI><a href="#[bf2cbc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60Write
+<LI><a href="#[bf2cf8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60Read
+</UL>
+
+<P><STRONG><a name="[bf2cf8]"></a>enc28j60Read</STRONG> (Thumb, 20 bytes, Stack size 8 bytes, enc28j60.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = enc28j60Read &rArr; enc28j60SetBank &rArr; enc28j60WriteOp &rArr; SPI1_ReadWrite
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bf2d34]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60SetBank
+<LI><a href="#[bf2e24]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60ReadOp
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bf2b54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60PacketReceive
+<LI><a href="#[bf2b90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60PacketSend
+<LI><a href="#[bf2bcc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60getrev
+<LI><a href="#[bf2c08]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60Init
+<LI><a href="#[bf2c80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60PhyWrite
+</UL>
+
+<P><STRONG><a name="[bf2cbc]"></a>enc28j60Write</STRONG> (Thumb, 24 bytes, Stack size 16 bytes, enc28j60.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = enc28j60Write &rArr; enc28j60SetBank &rArr; enc28j60WriteOp &rArr; SPI1_ReadWrite
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bf2d34]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60SetBank
+<LI><a href="#[bf2de8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60WriteOp
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bf2b54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60PacketReceive
+<LI><a href="#[bf2b90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60PacketSend
+<LI><a href="#[bf2c08]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60Init
+<LI><a href="#[bf2c44]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60clkout
+<LI><a href="#[bf2c80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60PhyWrite
+</UL>
+
+<P><STRONG><a name="[bf2c80]"></a>enc28j60PhyWrite</STRONG> (Thumb, 48 bytes, Stack size 16 bytes, enc28j60.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = enc28j60PhyWrite &rArr; enc28j60Write &rArr; enc28j60SetBank &rArr; enc28j60WriteOp &rArr; SPI1_ReadWrite
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bf2cbc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60Write
+<LI><a href="#[bf2cf8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60Read
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bef530]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;simple_server
+<LI><a href="#[bf2c08]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60Init
+</UL>
+
+<P><STRONG><a name="[bf2c44]"></a>enc28j60clkout</STRONG> (Thumb, 16 bytes, Stack size 8 bytes, enc28j60.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = enc28j60clkout &rArr; enc28j60Write &rArr; enc28j60SetBank &rArr; enc28j60WriteOp &rArr; SPI1_ReadWrite
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bf2cbc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60Write
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bef530]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;simple_server
+</UL>
+
+<P><STRONG><a name="[bf2c08]"></a>enc28j60Init</STRONG> (Thumb, 414 bytes, Stack size 16 bytes, enc28j60.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 136 + Unknown Stack Size
+<LI>Call Chain = enc28j60Init &rArr; __2printf &rArr; _printf_char_common &rArr; __printf
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bf2c80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60PhyWrite
+<LI><a href="#[bf2cbc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60Write
+<LI><a href="#[bf2cf8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60Read
+<LI><a href="#[bf2d34]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60SetBank
+<LI><a href="#[bf2de8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60WriteOp
+<LI><a href="#[14b42d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bef530]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;simple_server
+<LI><a href="#[bef56c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+</UL>
+
+<P><STRONG><a name="[bf2bcc]"></a>enc28j60getrev</STRONG> (Thumb, 10 bytes, Stack size 8 bytes, enc28j60.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = enc28j60getrev &rArr; enc28j60Read &rArr; enc28j60SetBank &rArr; enc28j60WriteOp &rArr; SPI1_ReadWrite
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bf2cf8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60Read
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bef56c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+</UL>
+
+<P><STRONG><a name="[bf2b90]"></a>enc28j60PacketSend</STRONG> (Thumb, 102 bytes, Stack size 16 bytes, enc28j60.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = enc28j60PacketSend &rArr; enc28j60Write &rArr; enc28j60SetBank &rArr; enc28j60WriteOp &rArr; SPI1_ReadWrite
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bf2cbc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60Write
+<LI><a href="#[bf2cf8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60Read
+<LI><a href="#[bf2d70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60WriteBuffer
+<LI><a href="#[bf2de8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60WriteOp
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bed7e4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_udp_reply_from_request
+<LI><a href="#[bed820]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_tcp_synack_from_syn
+<LI><a href="#[bed85c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_tcp_ack_with_data
+<LI><a href="#[bed898]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_tcp_ack_from_any
+<LI><a href="#[bed8d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_echo_reply_from_request
+<LI><a href="#[bed910]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_arp_answer_from_request
+</UL>
+
+<P><STRONG><a name="[bf2b54]"></a>enc28j60PacketReceive</STRONG> (Thumb, 312 bytes, Stack size 24 bytes, enc28j60.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = enc28j60PacketReceive &rArr; enc28j60Write &rArr; enc28j60SetBank &rArr; enc28j60WriteOp &rArr; SPI1_ReadWrite
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bf2cbc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60Write
+<LI><a href="#[bf2cf8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60Read
+<LI><a href="#[bf2dac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60ReadBuffer
+<LI><a href="#[bf2de8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60WriteOp
+<LI><a href="#[bf2e24]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60ReadOp
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bef530]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;simple_server
+</UL>
+
+<P><STRONG><a name="[bf235c]"></a>fputc</STRONG> (Thumb, 14 bytes, Stack size 16 bytes, retarget.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = fputc
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bf21f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SendChar
+</UL>
+<BR>[Address Reference Count : 1]<UL><LI> noretval__2printf.o(.text)
+</UL>
+<P><STRONG><a name="[bf2320]"></a>fgetc</STRONG> (Thumb, 16 bytes, Stack size 16 bytes, retarget.o(.text), UNUSED)
+<BR><BR>[Calls]<UL><LI><a href="#[bf21f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SendChar
+<LI><a href="#[bf2230]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GetKey
+</UL>
+
+<P><STRONG><a name="[bf22e4]"></a>_ttywrch</STRONG> (Thumb, 12 bytes, Stack size 8 bytes, retarget.o(.text), UNUSED)
+<BR><BR>[Calls]<UL><LI><a href="#[bf21f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SendChar
+</UL>
+
+<P><STRONG><a name="[bf22a8]"></a>ferror</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, retarget.o(.text), UNUSED)
+
+<P><STRONG><a name="[bf226c]"></a>_sys_exit</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, retarget.o(.text))
+<BR><BR>[Called By]<UL><LI><a href="#[14aeab4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_exit_exit
+</UL>
+
+<P><STRONG><a name="[bf1c54]"></a>SPI1_Init</STRONG> (Thumb, 112 bytes, Stack size 32 bytes, spi.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 52<LI>Call Chain = SPI1_Init &rArr; GPIO_Init
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bf1ab0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPI_Init
+<LI><a href="#[bf1ba0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPI_Cmd
+<LI><a href="#[bf1bdc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_APB2PeriphClockCmd
+<LI><a href="#[bf1c18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_Init
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bef56c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+</UL>
+
+<P><STRONG><a name="[bf2b18]"></a>SPI1_ReadWrite</STRONG> (Thumb, 50 bytes, Stack size 8 bytes, spi.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = SPI1_ReadWrite
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bf1aec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPI_I2S_SendData
+<LI><a href="#[bf1b28]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPI_I2S_ReceiveData
+<LI><a href="#[bf1b64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPI_I2S_GetFlagStatus
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bf2d70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60WriteBuffer
+<LI><a href="#[bf2dac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60ReadBuffer
+<LI><a href="#[bf2de8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60WriteOp
+<LI><a href="#[bf2e24]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60ReadOp
+</UL>
+
+<P><STRONG><a name="[beffbc]"></a>stm32_EfiSetup</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, stm32_init.o(.text))
+<BR><BR>[Called By]<UL><LI><a href="#[befd64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;stm32_Init
+</UL>
+
+<P><STRONG><a name="[beff80]"></a>stm32_ClockSetup</STRONG> (Thumb, 52 bytes, Stack size 0 bytes, stm32_init.o(.text))
+<BR><BR>[Called By]<UL><LI><a href="#[befd64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;stm32_Init
+</UL>
+
+<P><STRONG><a name="[beff44]"></a>stm32_IwdgSetup</STRONG> (Thumb, 32 bytes, Stack size 0 bytes, stm32_init.o(.text), UNUSED)
+
+<P><STRONG><a name="[beff08]"></a>stm32_SysTickSetup</STRONG> (Thumb, 28 bytes, Stack size 0 bytes, stm32_init.o(.text), UNUSED)
+
+<P><STRONG><a name="[befecc]"></a>stm32_RtcSetup</STRONG> (Thumb, 180 bytes, Stack size 0 bytes, stm32_init.o(.text), UNUSED)
+
+<P><STRONG><a name="[befe90]"></a>stm32_TimerSetup</STRONG> (Thumb, 100 bytes, Stack size 0 bytes, stm32_init.o(.text), UNUSED)
+
+<P><STRONG><a name="[befe54]"></a>stm32_GpioSetup</STRONG> (Thumb, 112 bytes, Stack size 0 bytes, stm32_init.o(.text))
+<BR><BR>[Called By]<UL><LI><a href="#[befd64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;stm32_Init
+</UL>
+
+<P><STRONG><a name="[befe18]"></a>stm32_UsartSetup</STRONG> (Thumb, 146 bytes, Stack size 0 bytes, stm32_init.o(.text))
+<BR><BR>[Called By]<UL><LI><a href="#[befd64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;stm32_Init
+</UL>
+
+<P><STRONG><a name="[befddc]"></a>stm32_ExtiSetup</STRONG> (Thumb, 34 bytes, Stack size 0 bytes, stm32_init.o(.text), UNUSED)
+
+<P><STRONG><a name="[befda0]"></a>stm32_TamperSetup</STRONG> (Thumb, 102 bytes, Stack size 0 bytes, stm32_init.o(.text), UNUSED)
+
+<P><STRONG><a name="[befd64]"></a>stm32_Init</STRONG> (Thumb, 20 bytes, Stack size 4 bytes, stm32_init.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 4<LI>Call Chain = stm32_Init
+</UL>
+<BR>[Calls]<UL><LI><a href="#[befe18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;stm32_UsartSetup
+<LI><a href="#[befe54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;stm32_GpioSetup
+<LI><a href="#[beff80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;stm32_ClockSetup
+<LI><a href="#[beffbc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;stm32_EfiSetup
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bef56c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+</UL>
+
+<P><STRONG><a name="[befd28]"></a>stm32_GetPCLK1</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, stm32_init.o(.text), UNUSED)
+
+<P><STRONG><a name="[bef5a8]"></a>Delay</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, usart_pol.o(.text), UNUSED)
+
+<P><STRONG><a name="[bf21f4]"></a>SendChar</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, usart_pol.o(.text))
+<BR><BR>[Called By]<UL><LI><a href="#[bf22e4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ttywrch
+<LI><a href="#[bf2320]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fgetc
+<LI><a href="#[bf235c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fputc
+</UL>
+
+<P><STRONG><a name="[bf2230]"></a>GetKey</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, usart_pol.o(.text), UNUSED)
+<BR><BR>[Called By]<UL><LI><a href="#[bf2320]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fgetc
+</UL>
+
+<P><STRONG><a name="[bef56c]"></a>main</STRONG> (Thumb, 44 bytes, Stack size 8 bytes, usart_pol.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 216 + Unknown Stack Size
+<LI>Call Chain = main &rArr; simple_server &rArr; enc28j60Init &rArr; __2printf &rArr; _printf_char_common &rArr; __printf
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bef530]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;simple_server
+<LI><a href="#[befd64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;stm32_Init
+<LI><a href="#[bf1c54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPI1_Init
+<LI><a href="#[bf2bcc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60getrev
+<LI><a href="#[bf2c08]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60Init
+<LI><a href="#[14b42d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
+</UL>
+<BR>[Called By]<UL><LI><a href="#[14b1868]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_entry_main
+</UL>
+
+<P><STRONG><a name="[bef0f8]"></a>Reset_Handler</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[bef0bc]"></a>NMI_Handler</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR><BR>[Calls]<UL><LI><a href="#[bef0bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;NMI_Handler
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bef0bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;NMI_Handler
+</UL>
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[bef080]"></a>HardFault_Handler</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR><BR>[Calls]<UL><LI><a href="#[bef080]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HardFault_Handler
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bef080]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HardFault_Handler
+</UL>
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[bef044]"></a>MemManage_Handler</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR><BR>[Calls]<UL><LI><a href="#[bef044]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MemManage_Handler
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bef044]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MemManage_Handler
+</UL>
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[bef008]"></a>BusFault_Handler</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR><BR>[Calls]<UL><LI><a href="#[bef008]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BusFault_Handler
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bef008]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BusFault_Handler
+</UL>
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[beefcc]"></a>UsageFault_Handler</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR><BR>[Calls]<UL><LI><a href="#[beefcc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UsageFault_Handler
+</UL>
+<BR>[Called By]<UL><LI><a href="#[beefcc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UsageFault_Handler
+</UL>
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[beef90]"></a>SVC_Handler</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR><BR>[Calls]<UL><LI><a href="#[beef90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SVC_Handler
+</UL>
+<BR>[Called By]<UL><LI><a href="#[beef90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SVC_Handler
+</UL>
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[beef54]"></a>DebugMon_Handler</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR><BR>[Calls]<UL><LI><a href="#[beef54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DebugMon_Handler
+</UL>
+<BR>[Called By]<UL><LI><a href="#[beef54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DebugMon_Handler
+</UL>
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[beef18]"></a>PendSV_Handler</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR><BR>[Calls]<UL><LI><a href="#[beef18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PendSV_Handler
+</UL>
+<BR>[Called By]<UL><LI><a href="#[beef18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PendSV_Handler
+</UL>
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[beeedc]"></a>SysTick_Handler</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR><BR>[Calls]<UL><LI><a href="#[beeedc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SysTick_Handler
+</UL>
+<BR>[Called By]<UL><LI><a href="#[beeedc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SysTick_Handler
+</UL>
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[beeea0]"></a>ADC_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR><BR>[Calls]<UL><LI><a href="#[beeea0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ADC_IRQHandler
+</UL>
+<BR>[Called By]<UL><LI><a href="#[beeea0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ADC_IRQHandler
+</UL>
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[beee64]"></a>CAN_RX1_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[beee28]"></a>CAN_SCE_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[beedec]"></a>DMAChannel1_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[beedb0]"></a>DMAChannel2_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[beed74]"></a>DMAChannel3_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[beed38]"></a>DMAChannel4_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[beecfc]"></a>DMAChannel5_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[beecc0]"></a>DMAChannel6_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[beec84]"></a>DMAChannel7_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[beec48]"></a>EXTI0_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[beec0c]"></a>EXTI15_10_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[beebd0]"></a>EXTI1_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[beeb94]"></a>EXTI2_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[beeb58]"></a>EXTI3_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[beeb1c]"></a>EXTI4_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[beeae0]"></a>EXTI9_5_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[beeaa4]"></a>FLASH_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[beea68]"></a>I2C1_ER_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[beea2c]"></a>I2C1_EV_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[bee9f0]"></a>I2C2_ER_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[bee9b4]"></a>I2C2_EV_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[bee978]"></a>PVD_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[bee93c]"></a>RCC_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[bee900]"></a>RTCAlarm_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[bee8c4]"></a>RTC_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[bee888]"></a>SPI1_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[bee84c]"></a>SPI2_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[bee810]"></a>TAMPER_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[bee7d4]"></a>TIM1_BRK_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[bee798]"></a>TIM1_CC_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[bee75c]"></a>TIM1_TRG_COM_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[bee720]"></a>TIM1_UP_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[bee6e4]"></a>TIM2_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[bee6a8]"></a>TIM3_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[bee66c]"></a>TIM4_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[bee630]"></a>USART1_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[bee5f4]"></a>USART2_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[bee5b8]"></a>USART3_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[bee57c]"></a>USBWakeUp_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[bee540]"></a>USB_HP_CAN_TX_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[bee504]"></a>USB_LP_CAN_RX0_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[bee4c8]"></a>WWDG_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, stm32f10x.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> stm32f10x.o(RESET)
+</UL>
+<P><STRONG><a name="[bef1e8]"></a>__user_initial_stackheap</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, stm32f10x.o(.text))
+<BR><BR>[Called By]<UL><LI><a href="#[14b1430]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__user_setup_stackheap
+</UL>
+
+<P><STRONG><a name="[bedb68]"></a>verify_password</STRONG> (Thumb, 24 bytes, Stack size 8 bytes, simple_server.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = verify_password &rArr; strncmp
+</UL>
+<BR>[Calls]<UL><LI><a href="#[14b25c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strncmp
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bedb2c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;analyse_get_url
+<LI><a href="#[bef530]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;simple_server
+</UL>
+
+<P><STRONG><a name="[bedb2c]"></a>analyse_get_url</STRONG> (Thumb, 82 bytes, Stack size 16 bytes, simple_server.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = analyse_get_url &rArr; verify_password &rArr; strncmp
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bedb68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;verify_password
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bef530]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;simple_server
+</UL>
+
+<P><STRONG><a name="[bedaf0]"></a>print_webpage</STRONG> (Thumb, 190 bytes, Stack size 16 bytes, simple_server.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = print_webpage &rArr; fill_tcp_data_p
+</UL>
+<BR>[Calls]<UL><LI><a href="#[beda00]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fill_tcp_data_p
+<LI><a href="#[beda3c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fill_tcp_data
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bef530]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;simple_server
+</UL>
+
+<P><STRONG><a name="[bef530]"></a>simple_server</STRONG> (Thumb, 644 bytes, Stack size 72 bytes, simple_server.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 208 + Unknown Stack Size
+<LI>Call Chain = simple_server &rArr; enc28j60Init &rArr; __2printf &rArr; _printf_char_common &rArr; __printf
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bed7e4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_udp_reply_from_request
+<LI><a href="#[bed820]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_tcp_synack_from_syn
+<LI><a href="#[bed85c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_tcp_ack_with_data
+<LI><a href="#[bed898]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_tcp_ack_from_any
+<LI><a href="#[bed8d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_echo_reply_from_request
+<LI><a href="#[bed910]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_arp_answer_from_request
+<LI><a href="#[bed94c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;init_len_info
+<LI><a href="#[bed988]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;init_ip_arp_udp_tcp
+<LI><a href="#[bed9c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;get_tcp_data_pointer
+<LI><a href="#[beda00]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fill_tcp_data_p
+<LI><a href="#[beda3c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fill_tcp_data
+<LI><a href="#[beda78]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eth_type_is_ip_and_my_ip
+<LI><a href="#[bedab4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eth_type_is_arp_and_my_ip
+<LI><a href="#[bedaf0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;print_webpage
+<LI><a href="#[bedb2c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;analyse_get_url
+<LI><a href="#[bedb68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;verify_password
+<LI><a href="#[bf2b54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60PacketReceive
+<LI><a href="#[bf2c08]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60Init
+<LI><a href="#[bf2c44]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60clkout
+<LI><a href="#[bf2c80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60PhyWrite
+<LI><a href="#[14b24d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strlen
+<LI><a href="#[14b25c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strncmp
+<LI><a href="#[14b26b4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strcpy
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bef56c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+</UL>
+
+<P><STRONG><a name="[bed1cc]"></a>checksum</STRONG> (Thumb, 80 bytes, Stack size 12 bytes, ip_arp_udp_tcp.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = checksum
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bed154]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fill_ip_hdr_checksum
+<LI><a href="#[bed7e4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_udp_reply_from_request
+<LI><a href="#[bed820]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_tcp_synack_from_syn
+<LI><a href="#[bed85c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_tcp_ack_with_data
+<LI><a href="#[bed898]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_tcp_ack_from_any
+</UL>
+
+<P><STRONG><a name="[bed988]"></a>init_ip_arp_udp_tcp</STRONG> (Thumb, 48 bytes, Stack size 12 bytes, ip_arp_udp_tcp.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = init_ip_arp_udp_tcp
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bef530]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;simple_server
+</UL>
+
+<P><STRONG><a name="[bedab4]"></a>eth_type_is_arp_and_my_ip</STRONG> (Thumb, 64 bytes, Stack size 8 bytes, ip_arp_udp_tcp.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = eth_type_is_arp_and_my_ip
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bef530]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;simple_server
+</UL>
+
+<P><STRONG><a name="[beda78]"></a>eth_type_is_ip_and_my_ip</STRONG> (Thumb, 72 bytes, Stack size 8 bytes, ip_arp_udp_tcp.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = eth_type_is_ip_and_my_ip
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bef530]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;simple_server
+</UL>
+
+<P><STRONG><a name="[bed190]"></a>make_eth</STRONG> (Thumb, 30 bytes, Stack size 0 bytes, ip_arp_udp_tcp.o(.text))
+<BR><BR>[Called By]<UL><LI><a href="#[bed7e4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_udp_reply_from_request
+<LI><a href="#[bed820]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_tcp_synack_from_syn
+<LI><a href="#[bed898]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_tcp_ack_from_any
+<LI><a href="#[bed8d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_echo_reply_from_request
+<LI><a href="#[bed910]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_arp_answer_from_request
+</UL>
+
+<P><STRONG><a name="[bed154]"></a>fill_ip_hdr_checksum</STRONG> (Thumb, 44 bytes, Stack size 12 bytes, ip_arp_udp_tcp.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = fill_ip_hdr_checksum &rArr; checksum
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bed1cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;checksum
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bed118]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_ip
+<LI><a href="#[bed85c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_tcp_ack_with_data
+</UL>
+
+<P><STRONG><a name="[bed118]"></a>make_ip</STRONG> (Thumb, 46 bytes, Stack size 12 bytes, ip_arp_udp_tcp.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 36<LI>Call Chain = make_ip &rArr; fill_ip_hdr_checksum &rArr; checksum
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bed154]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fill_ip_hdr_checksum
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bed7e4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_udp_reply_from_request
+<LI><a href="#[bed820]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_tcp_synack_from_syn
+<LI><a href="#[bed898]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_tcp_ack_from_any
+<LI><a href="#[bed8d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_echo_reply_from_request
+</UL>
+
+<P><STRONG><a name="[bed0dc]"></a>make_tcphead</STRONG> (Thumb, 168 bytes, Stack size 20 bytes, ip_arp_udp_tcp.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = make_tcphead
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bed820]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_tcp_synack_from_syn
+<LI><a href="#[bed898]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_tcp_ack_from_any
+</UL>
+
+<P><STRONG><a name="[bed910]"></a>make_arp_answer_from_request</STRONG> (Thumb, 96 bytes, Stack size 16 bytes, ip_arp_udp_tcp.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = make_arp_answer_from_request &rArr; enc28j60PacketSend &rArr; enc28j60Write &rArr; enc28j60SetBank &rArr; enc28j60WriteOp &rArr; SPI1_ReadWrite
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bed190]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_eth
+<LI><a href="#[bf2b90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60PacketSend
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bef530]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;simple_server
+</UL>
+
+<P><STRONG><a name="[bed8d4]"></a>make_echo_reply_from_request</STRONG> (Thumb, 62 bytes, Stack size 16 bytes, ip_arp_udp_tcp.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = make_echo_reply_from_request &rArr; enc28j60PacketSend &rArr; enc28j60Write &rArr; enc28j60SetBank &rArr; enc28j60WriteOp &rArr; SPI1_ReadWrite
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bed118]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_ip
+<LI><a href="#[bed190]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_eth
+<LI><a href="#[bf2b90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60PacketSend
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bef530]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;simple_server
+</UL>
+
+<P><STRONG><a name="[bed7e4]"></a>make_udp_reply_from_request</STRONG> (Thumb, 132 bytes, Stack size 32 bytes, ip_arp_udp_tcp.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 104<LI>Call Chain = make_udp_reply_from_request &rArr; enc28j60PacketSend &rArr; enc28j60Write &rArr; enc28j60SetBank &rArr; enc28j60WriteOp &rArr; SPI1_ReadWrite
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bed118]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_ip
+<LI><a href="#[bed190]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_eth
+<LI><a href="#[bed1cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;checksum
+<LI><a href="#[bf2b90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60PacketSend
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bef530]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;simple_server
+</UL>
+
+<P><STRONG><a name="[bed820]"></a>make_tcp_synack_from_syn</STRONG> (Thumb, 76 bytes, Stack size 16 bytes, ip_arp_udp_tcp.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = make_tcp_synack_from_syn &rArr; enc28j60PacketSend &rArr; enc28j60Write &rArr; enc28j60SetBank &rArr; enc28j60WriteOp &rArr; SPI1_ReadWrite
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bed0dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_tcphead
+<LI><a href="#[bed118]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_ip
+<LI><a href="#[bed190]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_eth
+<LI><a href="#[bed1cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;checksum
+<LI><a href="#[bf2b90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60PacketSend
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bef530]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;simple_server
+</UL>
+
+<P><STRONG><a name="[bed9c4]"></a>get_tcp_data_pointer</STRONG> (Thumb, 22 bytes, Stack size 0 bytes, ip_arp_udp_tcp.o(.text))
+<BR><BR>[Called By]<UL><LI><a href="#[bef530]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;simple_server
+</UL>
+
+<P><STRONG><a name="[bed94c]"></a>init_len_info</STRONG> (Thumb, 60 bytes, Stack size 0 bytes, ip_arp_udp_tcp.o(.text))
+<BR><BR>[Called By]<UL><LI><a href="#[bef530]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;simple_server
+</UL>
+
+<P><STRONG><a name="[beda00]"></a>fill_tcp_data_p</STRONG> (Thumb, 26 bytes, Stack size 8 bytes, ip_arp_udp_tcp.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = fill_tcp_data_p
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bedaf0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;print_webpage
+<LI><a href="#[bef530]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;simple_server
+</UL>
+
+<P><STRONG><a name="[beda3c]"></a>fill_tcp_data</STRONG> (Thumb, 28 bytes, Stack size 8 bytes, ip_arp_udp_tcp.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = fill_tcp_data
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bedaf0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;print_webpage
+<LI><a href="#[bef530]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;simple_server
+</UL>
+
+<P><STRONG><a name="[bed898]"></a>make_tcp_ack_from_any</STRONG> (Thumb, 104 bytes, Stack size 16 bytes, ip_arp_udp_tcp.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = make_tcp_ack_from_any &rArr; enc28j60PacketSend &rArr; enc28j60Write &rArr; enc28j60SetBank &rArr; enc28j60WriteOp &rArr; SPI1_ReadWrite
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bed0dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_tcphead
+<LI><a href="#[bed118]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_ip
+<LI><a href="#[bed190]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;make_eth
+<LI><a href="#[bed1cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;checksum
+<LI><a href="#[bf2b90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60PacketSend
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bef530]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;simple_server
+</UL>
+
+<P><STRONG><a name="[bed85c]"></a>make_tcp_ack_with_data</STRONG> (Thumb, 76 bytes, Stack size 16 bytes, ip_arp_udp_tcp.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = make_tcp_ack_with_data &rArr; enc28j60PacketSend &rArr; enc28j60Write &rArr; enc28j60SetBank &rArr; enc28j60WriteOp &rArr; SPI1_ReadWrite
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bed154]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fill_ip_hdr_checksum
+<LI><a href="#[bed1cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;checksum
+<LI><a href="#[bf2b90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60PacketSend
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bef530]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;simple_server
+</UL>
+
+<P><STRONG><a name="[14b45e0]"></a>__I$use$semihosting</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, use_no_semi.o(.text), UNUSED)
+
+<P><STRONG><a name="[14b45a4]"></a>__use_no_semihosting_swi</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, use_no_semi.o(.text), UNUSED)
+
+<P><STRONG><a name="[14b42d4]"></a>__2printf</STRONG> (Thumb, 24 bytes, Stack size 24 bytes, noretval__2printf.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 120 + Unknown Stack Size
+<LI>Call Chain = __2printf &rArr; _printf_char_common &rArr; __printf
+</UL>
+<BR>[Calls]<UL><LI><a href="#[14b1d54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_char_common
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bef56c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+<LI><a href="#[bf2c08]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;enc28j60Init
+</UL>
+
+<P><STRONG><a name="[14b41e4]"></a>__printf</STRONG> (Thumb, 110 bytes, Stack size 24 bytes, __printf.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 24 + Unknown Stack Size
+<LI>Call Chain = __printf
+</UL>
+<BR>[Calls]<UL><LI><a href="#[14b27e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_percent
+</UL>
+<BR>[Called By]<UL><LI><a href="#[14b1d54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_char_common
+</UL>
+
+<P><STRONG><a name="[14b3de8]"></a>_printf_int_hex</STRONG> (Thumb, 86 bytes, Stack size 16 bytes, _printf_hex_int.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = _printf_int_hex &rArr; _printf_int_common
+</UL>
+<BR>[Calls]<UL><LI><a href="#[14b1ef8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_int_common
+</UL>
+<BR>[Called By]<UL><LI><a href="#[14b28d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_x
+</UL>
+
+<P><STRONG><a name="[14b3dac]"></a>_printf_longlong_hex</STRONG> (Thumb, 0 bytes, Stack size 16 bytes, _printf_hex_int.o(.text), UNUSED)
+
+<P><STRONG><a name="[14b26b4]"></a>strcpy</STRONG> (Thumb, 74 bytes, Stack size 12 bytes, strcpy.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = strcpy
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bef530]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;simple_server
+</UL>
+
+<P><STRONG><a name="[14b25c4]"></a>strncmp</STRONG> (Thumb, 140 bytes, Stack size 16 bytes, strncmp.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = strncmp
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bedb68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;verify_password
+<LI><a href="#[bef530]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;simple_server
+</UL>
+
+<P><STRONG><a name="[14b24d4]"></a>strlen</STRONG> (Thumb, 62 bytes, Stack size 8 bytes, strlen.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = strlen
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bef530]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;simple_server
+</UL>
+
+<P><STRONG><a name="[14b23e4]"></a>__use_two_region_memory</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, heapauxi.o(.text), UNUSED)
+
+<P><STRONG><a name="[14b23a8]"></a>__rt_heap_escrow$2region</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, heapauxi.o(.text), UNUSED)
+
+<P><STRONG><a name="[14b236c]"></a>__rt_heap_expand$2region</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, heapauxi.o(.text), UNUSED)
+
+<P><STRONG><a name="[14b1ef8]"></a>_printf_int_common</STRONG> (Thumb, 174 bytes, Stack size 32 bytes, _printf_intcommon.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = _printf_int_common
+</UL>
+<BR>[Called By]<UL><LI><a href="#[14b3de8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_int_hex
+</UL>
+
+<P><STRONG><a name="[14b1d54]"></a>_printf_char_common</STRONG> (Thumb, 34 bytes, Stack size 72 bytes, _printf_char_common.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 96 + Unknown Stack Size
+<LI>Call Chain = _printf_char_common &rArr; __printf
+</UL>
+<BR>[Calls]<UL><LI><a href="#[14b41e4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__printf
+</UL>
+<BR>[Called By]<UL><LI><a href="#[14b42d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
+</UL>
+
+<P><STRONG><a name="[14b1430]"></a>__user_setup_stackheap</STRONG> (Thumb, 74 bytes, Stack size 8 bytes, sys_stackheap_outer.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8 + Unknown Stack Size
+<LI>Call Chain = __user_setup_stackheap
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bef1e8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__user_initial_stackheap
+<LI><a href="#[14b083c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__user_perproc_libspace
+</UL>
+<BR>[Called By]<UL><LI><a href="#[14b164c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_entry_sh
+</UL>
+
+<P><STRONG><a name="[14b12c8]"></a>exit</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, exit.o(.text))
+<BR><BR>[Calls]<UL><LI><a href="#[14b074c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_exit
+</UL>
+<BR>[Called By]<UL><LI><a href="#[14b1868]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_entry_main
+</UL>
+
+<P><STRONG><a name="[14b0878]"></a>__user_libspace</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, libspace.o(.text), UNUSED)
+
+<P><STRONG><a name="[14b083c]"></a>__user_perproc_libspace</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, libspace.o(.text))
+<BR><BR>[Called By]<UL><LI><a href="#[14b1430]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__user_setup_stackheap
+</UL>
+
+<P><STRONG><a name="[14b0800]"></a>__user_perthread_libspace</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, libspace.o(.text), UNUSED)
+
+<P><STRONG><a name="[bf1c18]"></a>GPIO_Init</STRONG> (Thumb, 160 bytes, Stack size 20 bytes, stm32f10x_gpio.o(i.GPIO_Init))
+<BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = GPIO_Init
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bf1c54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPI1_Init
+</UL>
+
+<P><STRONG><a name="[bf1bdc]"></a>RCC_APB2PeriphClockCmd</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, stm32f10x_rcc.o(i.RCC_APB2PeriphClockCmd))
+<BR><BR>[Called By]<UL><LI><a href="#[bf1c54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPI1_Init
+</UL>
+
+<P><STRONG><a name="[bf1ba0]"></a>SPI_Cmd</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, stm32f10x_spi.o(i.SPI_Cmd))
+<BR><BR>[Called By]<UL><LI><a href="#[bf1c54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPI1_Init
+</UL>
+
+<P><STRONG><a name="[bf1b64]"></a>SPI_I2S_GetFlagStatus</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, stm32f10x_spi.o(i.SPI_I2S_GetFlagStatus))
+<BR><BR>[Called By]<UL><LI><a href="#[bf2b18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPI1_ReadWrite
+</UL>
+
+<P><STRONG><a name="[bf1b28]"></a>SPI_I2S_ReceiveData</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, stm32f10x_spi.o(i.SPI_I2S_ReceiveData))
+<BR><BR>[Called By]<UL><LI><a href="#[bf2b18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPI1_ReadWrite
+</UL>
+
+<P><STRONG><a name="[bf1aec]"></a>SPI_I2S_SendData</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, stm32f10x_spi.o(i.SPI_I2S_SendData))
+<BR><BR>[Called By]<UL><LI><a href="#[bf2b18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPI1_ReadWrite
+</UL>
+
+<P><STRONG><a name="[bf1ab0]"></a>SPI_Init</STRONG> (Thumb, 56 bytes, Stack size 16 bytes, stm32f10x_spi.o(i.SPI_Init))
+<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = SPI_Init
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bf1c54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPI1_Init
+</UL>
+<P>
+<H3>
+Local Symbols
+</H3>
+<P><STRONG><a name="[14b1d90]"></a>_printf_input_char</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, _printf_char_common.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> _printf_char_common.o(.text)
+</UL><P>
+<H3>
+Undefined Global Symbols
+</H3><HR></body></html>

@@ -1,0 +1,9 @@
+.\Output\ip_arp_udp_tcp.o: ip_arp_udp_tcp.c
+.\Output\ip_arp_udp_tcp.o: net.h
+.\Output\ip_arp_udp_tcp.o: ip_arp_udp_tcp.h
+.\Output\ip_arp_udp_tcp.o: enc28j60.h
+.\Output\ip_arp_udp_tcp.o: C:\Keil\ARM\INC\ST\STM32F10x\STM32F10X_GPIO.h
+.\Output\ip_arp_udp_tcp.o: C:\Keil\ARM\INC\ST\STM32F10x\stm32f10x_map.h
+.\Output\ip_arp_udp_tcp.o: C:\Keil\ARM\INC\ST\STM32F10x\stm32f10x_conf.h
+.\Output\ip_arp_udp_tcp.o: C:\Keil\ARM\INC\ST\STM32F10x\stm32f10x_type.h
+.\Output\ip_arp_udp_tcp.o: C:\Keil\ARM\INC\ST\STM32F10x\cortexm3_macro.h

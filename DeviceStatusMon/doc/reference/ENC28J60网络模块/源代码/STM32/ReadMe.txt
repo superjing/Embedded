@@ -1,0 +1,2 @@
+本程序在STM32F103VB下测试通过
+接线说明：NSS<->PD9,SCK<->PA5,MISO<->PA6,MOSI<->PA7

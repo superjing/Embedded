@@ -1,0 +1,23 @@
+*** Creating Trace Output File 'LC2103.tra' Ok.
+### Preparing for ADS-LD.
+### Creating ADS-LD Command Line
+### List of Objects: adding '"startup.o"'
+### List of Objects: adding '"main.o"'
+### List of Objects: adding '"pcd5544.o"'
+### List of Objects: adding '"enc28j60.o"'
+### List of Objects: adding '"ip_arp_udp_tcp.o"'
+### ADS-LD Command completed:
+--device DARMP "startup.o" "main.o" "pcd5544.o" "enc28j60.o" "ip_arp_udp_tcp.o" --strict --scatter "LC2103.sct" 
+--autoat --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list ".\LC2103.map" -o "LC2103.axf"### Preparing Environment (PrepEnvAds)
+### ADS-LD Output File: 'LC2103.axf'
+### ADS-LD Command File: 'LC2103.lnp'
+### Checking for dirty Components...
+### Creating CmdFile 'LC2103.lnp', Handle=0x00000148
+### Writing '.lnp' file
+### ADS-LD Command file 'LC2103.lnp' is ready.
+### ADS-LD: About to start ADS-LD Thread.
+### ADS-LD: executed with 0 errors
+### Updating obj list
+### LDADS_file() completed.

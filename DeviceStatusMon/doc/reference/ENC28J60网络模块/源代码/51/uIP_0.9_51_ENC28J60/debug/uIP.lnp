@@ -1,0 +1,13 @@
+".\debug\httpd.obj",
+".\debug\main.obj",
+".\debug\uip.obj",
+".\debug\uip_arch.obj",
+".\debug\uip_arp.obj",
+".\debug\cgi.obj",
+".\debug\fs.obj",
+".\debug\fsdata.obj",
+".\debug\spi.obj",
+".\debug\enc28j60.obj",
+".\debug\MCU_UART.obj" 
+TO ".\debug\uIP" 
+PRINT(".\debug\uIP.m51") RAMSIZE(256) 

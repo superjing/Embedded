@@ -1,0 +1,19 @@
+Bill of Material for ENC28J60.Sch
+On 2010/6/17 at 16:30:04
+
+ Comment             Pattern     Quantity  Components
+------------------------------------------------------------------------------
+                     XTAL             1    Y1                           Crystal              
+ 0.01uF              0805             2    C4, C5                       Capacitor            
+ 0.1uF               0805             1    C6                           Capacitor            
+ 10k                 0805             2    R1, R2                                            
+ 10uF                1210             1    C3                           Capacitor            
+ 10uH                0805             1    L1                                                
+ 18pF                0805             2    C1, C2                       Capacitor            
+ 1k                  0805             3    R3, R4, R5                                        
+ 2.7k                0805             1    R10                                               
+ 50/1%               0805             4    R6, R7, R8, R9                                    
+ CON10               IDC-10           1    J1                           Connector            
+ ENC28J60            SOP28            1    U1                                                
+ HR911105A           HR911105A-1      1    J2                                                
+ LED                 0805             1    D1                                                

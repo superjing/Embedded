@@ -1,0 +1,1 @@
+-c --device DARMSTM -g -O0 --apcs=interwork -I.\Initialisation -I.\Drivers -I "C:\Keil\ARM\INC\ST\STM32F10x" -o ".\Output\simple_server.o" --omf_browse ".\Output\simple_server.crf" --depend ".\Output\simple_server.d" "simple_server.c"

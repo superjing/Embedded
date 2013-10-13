@@ -1,0 +1,4 @@
+--device DARMSTM ".\output\enc28j60.o" ".\output\retarget.o" ".\output\spi.o" ".\output\stm32_init.o" ".\output\usart_pol.o" "C:\Keil\ARM\RV31\LIB\ST\STM32F10xR.LIB" ".\output\stm32f10x.o" ".\output\simple_server.o" ".\output\ip_arp_udp_tcp.o" --strict --scatter ".\Output\USART_Pol.sct" 
+--autoat --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list ".\Output\USART_Pol.map" -o ".\Output\USART_Pol.axf"

@@ -1,0 +1,27 @@
+*** Creating Trace Output File '.\Output\USART_Pol.tra' Ok.
+### Preparing for ADS-LD.
+### Creating ADS-LD Command Line
+### List of Objects: adding '".\output\enc28j60.o"'
+### List of Objects: adding '".\output\retarget.o"'
+### List of Objects: adding '".\output\spi.o"'
+### List of Objects: adding '".\output\stm32_init.o"'
+### List of Objects: adding '".\output\usart_pol.o"'
+### List of Objects: adding '"C:\Keil\ARM\RV31\LIB\ST\STM32F10xR.LIB"'
+### List of Objects: adding '".\output\stm32f10x.o"'
+### List of Objects: adding '".\output\simple_server.o"'
+### List of Objects: adding '".\output\ip_arp_udp_tcp.o"'
+### ADS-LD Command completed:
+--device DARMSTM ".\output\enc28j60.o" ".\output\retarget.o" ".\output\spi.o" ".\output\stm32_init.o" ".\output\usart_pol.o" "C:\Keil\ARM\RV31\LIB\ST\STM32F10xR.LIB" ".\output\stm32f10x.o" ".\output\simple_server.o" ".\output\ip_arp_udp_tcp.o" --strict --scatter ".\Output\USART_Pol.sct" 
+--autoat --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list ".\Output\USART_Pol.map" -o ".\Output\USART_Pol.axf"### Preparing Environment (PrepEnvAds)
+### ADS-LD Output File: '.\Output\USART_Pol.axf'
+### ADS-LD Command File: '.\Output\USART_Pol.lnp'
+### Checking for dirty Components...
+### Creating CmdFile '.\Output\USART_Pol.lnp', Handle=0x000003C0
+### Writing '.lnp' file
+### ADS-LD Command file '.\Output\USART_Pol.lnp' is ready.
+### ADS-LD: About to start ADS-LD Thread.
+### ADS-LD: executed with 0 errors
+### Updating obj list
+### LDADS_file() completed.

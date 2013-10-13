@@ -1,0 +1,1 @@
+-c --device DARMSTM -g -O0 --apcs=interwork -I.\Initialisation -I.\Drivers -I "C:\Keil\ARM\INC\ST\STM32F10x" -o ".\Output\ip_arp_udp_tcp.o" --omf_browse ".\Output\ip_arp_udp_tcp.crf" --depend ".\Output\ip_arp_udp_tcp.d" "ip_arp_udp_tcp.c"
