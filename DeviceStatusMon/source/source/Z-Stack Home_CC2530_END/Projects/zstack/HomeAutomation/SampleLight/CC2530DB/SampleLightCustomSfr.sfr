@@ -1,0 +1,25 @@
+[Sfr]
+sfr = "P1DIR",	"SFR",	0xfe,	1,	base=16,	modified
+sfr = "STCV0",	"XData",	0x62b2,	1,	base=16,	modified
+sfr = "OPAMPMC",	"XData",	0x61a6,	1,	base=16,	modified
+sfr = "PCON",	"SFR",	0x87,	1,	base=16,	modified
+sfr = "SLEEPCMD",	"SFR",	0xbe,	1,	base=16,	modified
+sfr = "SLEEPSTA",	"SFR",	0x9d,	1,	base=16,	modified
+sfr = "CLKCONCMD",	"SFR",	0xc6,	1,	base=16,	modified
+sfr = "CLKCONSTA",	"SFR",	0x9e,	1,	base=16,	modified
+sfr = "T1CNTH",	"SFR",	0xe3,	1,	base=16,	modified
+sfr = "T1CC1H",	"SFR",	0xdd,	1,	base=16,	modified
+sfr = "T2MOVF2",	"SFR",	0xa6,	1,	base=16,	modified
+sfr = "U0BAUD.BAUD_M",	"SFR",	0xc2,	1,	base=16,	modified
+sfr = "FRMFILT1",	"XData",	0x6181,	1,	base=16,	modified
+sfr = "RXENABLE",	"XData",	0x618b,	1,	base=16,	modified
+sfr = "RXLAST_PTR",	"XData",	0x619e,	1,	base=16,	modified
+sfr = "FSCAL3",	"XData",	0x61b0,	1,	base=16,	modified
+sfr = "CSPPROG13",	"XData",	0x61cd,	1,	base=16,	modified
+
+
+[SfrGroupInfo]
+group = "Custom", "P1DIR", "STCV0"
+group = "Custom", "OPAMPMC", "PCON", "SLEEPCMD"
+group = "Custom", "SLEEPSTA", "CLKCONCMD", "CLKCONSTA", "T1CNTH"
+group = "Custom", "T1CC1H", "T2MOVF2", "U0BAUD.BAUD_M", "FRMFILT1", "RXENABLE", "RXLAST_PTR", "FSCAL3", "CSPPROG13"
