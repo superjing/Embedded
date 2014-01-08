@@ -182,8 +182,15 @@ void SampleApp_RecoverHeartBeatMessage(void);
 
 #ifdef DEBUG_TRACE
 static void ShowHeartBeatInfo(uint8 *serialNumber, uint8 *curTime);
-static void FormatDebugInfo(uint8 *dst, const uint8 * src, uint8 len);
+static void FormatUint32Str(uint8 *dst, uint8 * src);
 static void ShowRssiInfo( void );
+static void convertNum2Bytes(uint8 *dstBuf, uint32 value)
+{
+  dstBuf[0] = (value >> 24) & 0xFF;
+  dstBuf[1] = (value >> 16) & 0xFF;
+  dstBuf[2] = (value >> 8) & 0xFF;
+  dstBuf[3] = value & 0xFF;
+}
 #endif
 /*********************************************************************
  * NETWORK LAYER CALLBACKS
@@ -437,7 +444,7 @@ uint16 SampleApp_ProcessEvent( uint8 task_id, uint16 events )
   if ( events & SAMPLEAPP_HEARTBEAT_MSG_EVT )
   {
     ++timerCount;
-    
+
     SampleApp_RecoverHeartBeatMessage();
     if (timerCount == 10)
     {
@@ -445,10 +452,10 @@ uint16 SampleApp_ProcessEvent( uint8 task_id, uint16 events )
         SampleApp_SendHeartBeatMessage();
         timerCount = 0;
     }
-    
+
      // Setup to send heartbeat again in 10s
      osal_start_timerEx( SampleApp_TaskID, SAMPLEAPP_HEARTBEAT_MSG_EVT, SAMPLEAPP_TIMER_MSG_TIMEOUT);
-    
+
     // return unprocessed events
     return (events ^ SAMPLEAPP_HEARTBEAT_MSG_EVT);
   }
@@ -552,7 +559,7 @@ void SampleApp_RecoverHeartBeatMessage(void)
           buf[9] = 2;
           buf[10] = 3;
           buf[11] = 4;
-          
+
           SampleApp_Periodic_DstAddr.endPoint = HEARTBEAT_ENDPOINT;
           if (AF_DataRequest(
               &SampleApp_Periodic_DstAddr,
@@ -577,7 +584,7 @@ void SampleApp_RecoverHeartBeatMessage(void)
        buf[9] = 12;
        buf[10] = 13;
        buf[11] = 14;
-       
+
        SampleApp_Periodic_DstAddr.endPoint = HEARTBEAT_ENDPOINT;
        if (AF_DataRequest(
               &SampleApp_Periodic_DstAddr,
@@ -599,7 +606,7 @@ void SampleApp_SendHeartBeatMessage(void)
   uint32 curTime = lastNvTime + osal_GetSystemClock();
   uint8 buf[SN_LEN + 4];
   memcpy(buf, serialNumber, SN_LEN);
-  memcpy(buf + 4, &curTime, 4);
+  convertNum2Bytes(buf + 4, curTime);
 
   SampleApp_Periodic_DstAddr.endPoint = HEARTBEAT_ENDPOINT;
   if ( AF_DataRequest(
@@ -645,32 +652,25 @@ void SampleApp_SendHeartBeatMessage(void)
 #ifdef DEBUG_TRACE
 static void ShowHeartBeatInfo(uint8 *serialNumber, uint8 *curTime)
 {
-  uint8 i = 0;
-  uint8 reverseSerialNumber[SN_LEN] = {0};
-  uint8 serialNumberStr[SN_LEN * 2 + 2] = {0};
-  uint8 curIimeStr[TIME_LEN * 2 + 2] = {0};
+  uint8 serialNumberStr[SN_LEN + 1] = {0};
+  uint8 curIimeStr[TIME_LEN * 2 + 1] = {0};
 
-  for (i = 0; i < SN_LEN; i++)
-  {
-    reverseSerialNumber[i] = serialNumber[SN_LEN - i - 1];
-  }
-
-  FormatDebugInfo(serialNumberStr, reverseSerialNumber, SN_LEN);
-  serialNumberStr[SN_LEN * 2 + 1] = '\n';
-  FormatDebugInfo(curIimeStr, curTime, TIME_LEN);
-  curIimeStr[TIME_LEN * 2 + 1] = '\n';
+  memcpy(serialNumberStr, serialNumber, SN_LEN);
+  serialNumberStr[SN_LEN] = '\n';
+  FormatUint32Str(curIimeStr, curTime);
+  curIimeStr[TIME_LEN * 2] = '\n';
   HalUARTWrite(0, SnHeadStr, strlen((char *)SnHeadStr));
-  HalUARTWrite(0, serialNumberStr, SN_LEN * 2 + 2);
+  HalUARTWrite(0, serialNumberStr, SN_LEN + 1);
   HalUARTWrite(0, curTimeHeadStr, strlen((char *)curTimeHeadStr));
-  HalUARTWrite(0, curIimeStr, TIME_LEN * 2 + 2);
+  HalUARTWrite(0, curIimeStr, TIME_LEN * 2 + 1);
 }
 
-static void FormatDebugInfo(uint8 *dst, const uint8 * src, uint8 len)
+static void FormatUint32Str(uint8 *dst, uint8 * src)
 {
   uint8 i = 0;
-  const uint8 *ptr = src + len - 1;
+  uint8 * ptr = src;
 
-  for (i = 0; i < (len * 2); ptr--)
+  for (i = 0; i < (sizeof(uint32) * 2); ptr++)
   {
     uint8 ch;
     ch = (*ptr >> 4) & 0x0F;
@@ -703,7 +703,7 @@ static void ShowRssiInfo(void)
 
   memcpy(str + 3, "dbm\n", 4);
 
-  HalUARTWrite(0, "rssi is:", 9);
-  HalUARTWrite(0, str, 8);
+  HalUARTWrite(0, "rssi is:", 8);
+  HalUARTWrite(0, str, 7);
 }
 #endif
