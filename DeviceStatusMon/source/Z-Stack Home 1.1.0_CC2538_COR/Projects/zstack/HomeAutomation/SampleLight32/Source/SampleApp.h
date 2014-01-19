@@ -85,6 +85,10 @@ extern "C"
 /*********************************************************************
  * MACROS
  */
+#define MSG_ELEM_LENGTH  12
+// write threee nv msg at one time
+#define MAX_TIME  3
+#define LARGEST_NV_TIME  180
 
 /*********************************************************************
  * FUNCTIONS

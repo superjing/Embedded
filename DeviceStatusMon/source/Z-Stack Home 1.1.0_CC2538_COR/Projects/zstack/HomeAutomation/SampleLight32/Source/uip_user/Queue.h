@@ -4,16 +4,18 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#define MAX_ELEMENT_NUM      32
 
-#define MAX_ELEMENT_NUM      40
-#define ELEMENT_SIZE         8
+#define ELEMENT_SIZE         12
+
 #define ELEMENT_NUM_TO_SEND  1
 
 typedef struct
 {
-   uint8_t front;
-   uint8_t rear;
-   uint8_t elements[MAX_ELEMENT_NUM * ELEMENT_SIZE];
+   uint16_t front;
+   uint16_t rear;
+   //uint8_t elements[MAX_ELEMENT_NUM * ELEMENT_SIZE];
+   uint8_t* elements;
 }LockFreeQueue;
 
 void InitFreeQueque( LockFreeQueue * pQueue );

@@ -72,7 +72,7 @@ extern "C"
 #define SAMPLEAPP_FLASH_CLUSTERID     2
 
 // Send Message Timeout
-#define SAMPLEAPP_TIMER_MSG_TIMEOUT        1000     // Every 5 seconds
+#define SAMPLEAPP_TIMER_MSG_TIMEOUT        1000     // Every 1 seconds
 
 // Application Events (OSAL) - These are bit weighted definitions.
 #define SAMPLEAPP_SEND_PERIODIC_MSG_EVT       0x0001

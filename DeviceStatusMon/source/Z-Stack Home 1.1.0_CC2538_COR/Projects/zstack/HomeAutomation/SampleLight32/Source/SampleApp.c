@@ -56,7 +56,9 @@
 /*********************************************************************
  * INCLUDES
  */
+#include <string.h>
 #include "OSAL.h"
+#include "OSAL_Nv.h"
 #include "ZGlobals.h"
 #include "AF.h"
 #include "aps_groups.h"
@@ -172,6 +174,71 @@ void SampleApp_MessageMSGCB( afIncomingMSGPacket_t *pckt );
 void SampleApp_SendPeriodicMessage( void );
 void SampleApp_SendFlashMessage( uint16 flashTime );
 
+#define NV_CONFIG_DATA 0x1000
+#define NV_RECOVER_DATA 0x1020
+
+uint32 nvMsgNum = 0;
+uint32 recoverMsgNum = 0;
+
+void nv_read_msg(uint32 msgIndex, uint8* rfMsg);
+
+static void nv_read_config(void)
+{
+  uint8 nv_buffer[4];
+
+  osal_nv_item_init(NV_CONFIG_DATA, 4, NULL);
+  osal_nv_read(NV_CONFIG_DATA, 0, 4, nv_buffer);
+  memcpy(&recoverMsgNum, nv_buffer, 4);
+
+  if (recoverMsgNum == 0xFFFFFFFF)
+  {
+     recoverMsgNum = 0;
+  }
+}
+
+void nv_write_config(void)
+{
+  uint8 nv_buffer[4];
+  memcpy(nv_buffer, &recoverMsgNum, 4);
+
+  osal_nv_item_init(NV_CONFIG_DATA, 4, NULL);
+  osal_nv_write(NV_CONFIG_DATA, 0, 4, nv_buffer);
+}
+
+uint8 rfMsg[MAX_TIME * MSG_ELEM_LENGTH];
+
+static void nv_write_msg(void)
+{
+  if (LARGEST_NV_TIME < recoverMsgNum + nvMsgNum)
+  {
+     return;
+  }
+
+  for(uint32 i =0; i != nvMsgNum; ++i)
+  {
+      osal_nv_item_init(
+         NV_RECOVER_DATA + recoverMsgNum + i,
+         MSG_ELEM_LENGTH,
+         NULL);
+
+      osal_nv_write(
+         NV_RECOVER_DATA + recoverMsgNum + i,
+         0,
+         MSG_ELEM_LENGTH,
+         rfMsg + (i * MSG_ELEM_LENGTH));
+  }
+
+  recoverMsgNum += nvMsgNum;
+  nvMsgNum = 0;
+
+  nv_write_config();
+}
+
+void nv_read_msg(uint32 msgIndex, uint8* rfMsg)
+{
+  osal_nv_item_init(NV_RECOVER_DATA + msgIndex, MSG_ELEM_LENGTH, NULL);
+  osal_nv_read(NV_RECOVER_DATA + msgIndex, 0, MSG_ELEM_LENGTH, rfMsg);
+}
 /*********************************************************************
  * NETWORK LAYER CALLBACKS
  */
@@ -263,6 +330,7 @@ void SampleApp_Init( uint8 task_id )
 
   initLiveList();
   InitFreeQueque( &queue );
+  nv_read_config();
 }
 
 static int timerTick = 0;
@@ -305,9 +373,21 @@ uint16 SampleApp_ProcessEvent( uint8 task_id, uint16 events )
           HalLedBlink(HAL_LED_1, 2, 50, 500);
           if (ELEMENT_SIZE == MSGpkt->cmd.DataLength)
           {
-            FreeQueuePush(&queue, MSGpkt->cmd.Data);
+            if (!IsFreeQueueFull(&queue))
+            {
+              FreeQueuePush(&queue, MSGpkt->cmd.Data);
+            }
+            else
+            {
+              /*write nv*/
+              memcpy(rfMsg + (nvMsgNum * MSG_ELEM_LENGTH), MSGpkt->cmd.Data, MSG_ELEM_LENGTH);
+              nvMsgNum++;
+              if (nvMsgNum == MAX_TIME)
+              {
+                nv_write_msg();
+              }
+            }
           }
-          //uip_rf_store(MSGpkt->cmd.Data, MSGpkt->cmd.DataLength);
 
            if (MSGpkt->endPoint == HEARTBEAT_ENDPOINT)
            {

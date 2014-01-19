@@ -182,9 +182,9 @@ void SampleApp_RecoverHeartBeatMessage(void);
 
 #ifdef DEBUG_TRACE
 static void ShowHeartBeatInfo(uint8 *serialNumber, uint8 *curTime);
-static void FormatUint32Str(uint8 *dst, uint8 * src);
+static void FormatHexUint32Str(uint8 *dst, uint8 * src);
 static void ShowRssiInfo( void );
-static void convertNum2Bytes(uint8 *dstBuf, uint32 value)
+static void convertUint2Bytes(uint8 *dstBuf, uint32 value)
 {
   dstBuf[0] = (value >> 24) & 0xFF;
   dstBuf[1] = (value >> 16) & 0xFF;
@@ -204,7 +204,7 @@ static void convertNum2Bytes(uint8 *dstBuf, uint32 value)
 #define SN_LEN    4
 #define TIME_LEN  4
 #define NV_CONFIG_DATA 0x1000
-#define NV_RECOVER_DATA 0x1001
+#define NV_RECOVER_DATA 0x1020
 
 static uint8 serialNumber[SN_LEN] = {0};
 static uint32 lastNvTime = 0;
@@ -212,11 +212,15 @@ static uint32 nvMsgNum = 0;
 static uint32 recoverMsgNum = 0;
 static uint32 heartBitFailNum = 0;
 
+static void nv_read_msg(uint32 msgIndex, uint32* curTime);
 static uint8 timerCount = 0;
 
 static void nv_read_config(void)
 {
   uint8 nv_buffer[12];
+  uint8 buf[4];
+  uint8 buf2[8];
+
   osal_nv_item_init(NV_CONFIG_DATA, 12, NULL);
   osal_nv_read(NV_CONFIG_DATA, 0, 12, nv_buffer);
   memcpy(serialNumber, nv_buffer, 4);
@@ -232,12 +236,38 @@ static void nv_read_config(void)
   {
      lastNvTime = 0;
   }
+#ifdef DEBUG_TRACE
+  convertUint2Bytes(buf, recoverMsgNum);
+  FormatHexUint32Str(buf2, buf);
+  HalUARTWrite(0, "recoverMsgNum:", strlen("recoverMsgNum:"));
+  HalUARTWrite(0, buf2, 8);
+  HalUARTWrite(0, "\n", 2);
+
+  convertUint2Bytes(buf, lastNvTime);
+  FormatHexUint32Str(buf2, buf);
+  HalUARTWrite(0, "lastNvTime:", strlen("lastNvTime:"));
+  HalUARTWrite(0, buf2, 8);
+  HalUARTWrite(0, "\n", 1);
+
+  for (uint32 i = 0; i != recoverMsgNum; ++i)
+  {
+    uint32 time;
+    nv_read_msg(i, &time);
+
+    convertUint2Bytes(buf, time);
+    FormatHexUint32Str(buf2, buf);
+    HalUARTWrite(0, "time:", strlen("time:"));
+    HalUARTWrite(0, buf2, 8);
+    HalUARTWrite(0, "\n", 1);
+  }
+#endif
 }
 
 static void nv_write_config(void)
 {
   uint8 nv_buffer[12];
   uint32 curTime = lastNvTime + osal_GetSystemClock();
+
   memcpy(nv_buffer, serialNumber, 4);
   memcpy(nv_buffer + 4, &curTime, 4);
   memcpy(nv_buffer + 8, &recoverMsgNum, 4);
@@ -264,7 +294,11 @@ static void nv_reset_config(void)
 // write threee nv msg at one time
 #define MAX_TIME  3
 //For testing , we only store 12 msg at most
-#define LARGEST_NV_TIME  32
+
+#define LARGEST_NV_TIME  180
+
+#define FAIL_TIEM_TO_RESTART 5
+
 static uint32 osTime[MAX_TIME];
 
 static void nv_write_msg(void)
@@ -274,16 +308,19 @@ static void nv_write_msg(void)
      return;
   }
 
-  osal_nv_item_init(
-      NV_RECOVER_DATA,
-      MSG_ELEM_LENGTH * (recoverMsgNum + nvMsgNum),
-      NULL);
+  for(uint32 i =0; i != nvMsgNum; ++i)
+  {
+      osal_nv_item_init(
+         NV_RECOVER_DATA + recoverMsgNum + i,
+         MSG_ELEM_LENGTH,
+         NULL);
 
-  osal_nv_write(
-      NV_RECOVER_DATA,
-      recoverMsgNum * MSG_ELEM_LENGTH,
-      MSG_ELEM_LENGTH * nvMsgNum,
-      osTime);
+      osal_nv_write(
+         NV_RECOVER_DATA + recoverMsgNum + i,
+         0,
+         MSG_ELEM_LENGTH,
+         osTime + i);
+  }
 
   recoverMsgNum += nvMsgNum;
   nvMsgNum = 0;
@@ -293,8 +330,8 @@ static void nv_write_msg(void)
 
 static void nv_read_msg(uint32 msgIndex, uint32* curTime)
 {
-  osal_nv_item_init(NV_RECOVER_DATA, MSG_ELEM_LENGTH * msgIndex, NULL);
-  osal_nv_read(NV_RECOVER_DATA, msgIndex * MSG_ELEM_LENGTH, MSG_ELEM_LENGTH, curTime);
+  osal_nv_item_init(NV_RECOVER_DATA + msgIndex, MSG_ELEM_LENGTH, NULL);
+  osal_nv_read(NV_RECOVER_DATA + msgIndex, 0, MSG_ELEM_LENGTH, curTime);
 }
 
 /*********************************************************************
@@ -363,6 +400,11 @@ void SampleApp_Init( uint8 task_id )
 
   nv_read_config();
 
+  serialNumber[0] = 'y';
+  serialNumber[1] = 'y';
+  serialNumber[2] = 'y';
+  serialNumber[3] = 'y';
+
   osal_start_timerEx( SampleApp_TaskID,
                       SAMPLEAPP_HEARTBEAT_MSG_EVT,
                       500 );
@@ -386,6 +428,7 @@ void SampleApp_Init( uint8 task_id )
 
 uint16 SampleApp_ProcessEvent( uint8 task_id, uint16 events )
 {
+  static bool inNetwork = false;
   afIncomingMSGPacket_t *MSGpkt;
   (void)task_id;  // Intentionally unreferenced parameter
 
@@ -420,6 +463,7 @@ uint16 SampleApp_ProcessEvent( uint8 task_id, uint16 events )
           {
               HalLedBlink(HAL_LED_1, 2, 50, 500);
               HalUARTWrite(0, EndDeviceStatus, strlen((char *)EndDeviceStatus));
+              inNetwork = true;
               //Start sending the periodic message in a regular interval.
           }
           break;
@@ -443,18 +487,42 @@ uint16 SampleApp_ProcessEvent( uint8 task_id, uint16 events )
   //  (setup in SampleApp_Init()).
   if ( events & SAMPLEAPP_HEARTBEAT_MSG_EVT )
   {
-    ++timerCount;
-
-    SampleApp_RecoverHeartBeatMessage();
-    if (timerCount == 10)
+    if (inNetwork)
     {
-        // Send the Heartbeat Message
-        SampleApp_SendHeartBeatMessage();
-        timerCount = 0;
+       SampleApp_RecoverHeartBeatMessage();
+    }
+
+    if (++timerCount == 2)
+    {
+       if (inNetwork)
+       {
+          // Send the Heartbeat Message
+          SampleApp_SendHeartBeatMessage();
+       }
+       else
+       {
+          osTime[nvMsgNum++] = lastNvTime + osal_GetSystemClock();
+          if (nvMsgNum == MAX_TIME)
+          {
+             nv_write_msg();
+          }
+
+          if (++heartBitFailNum == FAIL_TIEM_TO_RESTART)
+          {
+             if (nvMsgNum != 0)
+             {
+                nv_write_msg();
+             }
+
+             HAL_SYSTEM_RESET();
+          }
+       }
+
+       timerCount = 0;
     }
 
      // Setup to send heartbeat again in 10s
-     osal_start_timerEx( SampleApp_TaskID, SAMPLEAPP_HEARTBEAT_MSG_EVT, SAMPLEAPP_TIMER_MSG_TIMEOUT);
+     osal_start_timerEx( SampleApp_TaskID, SAMPLEAPP_HEARTBEAT_MSG_EVT, SAMPLEAPP_TIMER_MSG_TIMEOUT + (osal_rand() & 0x00FF));
 
     // return unprocessed events
     return (events ^ SAMPLEAPP_HEARTBEAT_MSG_EVT);
@@ -548,17 +616,18 @@ void SampleApp_RecoverHeartBeatMessage(void)
 {
    uint8 buf[SN_LEN + 4 + 4];
    uint32 msgTime;
+
    if (nvMsgNum == 0)
    {
        if (recoverMsgNum != 0)
        {
           nv_read_msg(recoverMsgNum - 1, &msgTime);
           memcpy(buf, serialNumber, SN_LEN);
-          memcpy(buf + 4, &msgTime, 4);
-          buf[8] = 1;
-          buf[9] = 2;
-          buf[10] = 3;
-          buf[11] = 4;
+          convertUint2Bytes(buf + 4, msgTime);
+          buf[8] = '1';
+          buf[9] = '2';
+          buf[10] = '3';
+          buf[11] = '4';
 
           SampleApp_Periodic_DstAddr.endPoint = HEARTBEAT_ENDPOINT;
           if (AF_DataRequest(
@@ -572,6 +641,26 @@ void SampleApp_RecoverHeartBeatMessage(void)
               AF_DEFAULT_RADIUS ) == afStatus_SUCCESS )
          {
             --recoverMsgNum;
+
+            if (recoverMsgNum == 0)
+            {
+               nv_write_config();
+            }
+#ifdef DEBUG_TRACE
+            HalUARTWrite(0, "Recover :\n", 10);
+            ShowHeartBeatInfo(buf, buf + 4);
+            HalUARTWrite(0, buf + 8, 4);
+            HalUARTWrite(0, "OK\n", 3);
+#endif
+         }
+         else
+         {
+#ifdef DEBUG_TRACE
+          HalUARTWrite(0, "Recover :\n", 10);
+          ShowHeartBeatInfo(buf, buf + 4);
+          HalUARTWrite(0, buf + 8, 4);
+          HalUARTWrite(0, "ERR\n", 4);
+#endif
          }
        }
    }
@@ -579,11 +668,11 @@ void SampleApp_RecoverHeartBeatMessage(void)
    {
        msgTime = osTime[nvMsgNum - 1];
        memcpy(buf, serialNumber, SN_LEN);
-       memcpy(buf + 4, &msgTime, 4);
-       buf[8] = 11;
-       buf[9] = 12;
-       buf[10] = 13;
-       buf[11] = 14;
+       convertUint2Bytes(buf + 4, msgTime);
+       buf[8] = 'A';
+       buf[9] = 'B';
+       buf[10] = 'C';
+       buf[11] = 'D';
 
        SampleApp_Periodic_DstAddr.endPoint = HEARTBEAT_ENDPOINT;
        if (AF_DataRequest(
@@ -597,6 +686,21 @@ void SampleApp_RecoverHeartBeatMessage(void)
               AF_DEFAULT_RADIUS ) == afStatus_SUCCESS )
       {
          --nvMsgNum;
+#ifdef DEBUG_TRACE
+          HalUARTWrite(0, "Recover :\n", 10);
+          ShowHeartBeatInfo(buf, buf + 4);
+          HalUARTWrite(0, buf + 8, 4);
+          HalUARTWrite(0, "OK\n", 3);
+#endif
+      }
+      else
+      {
+#ifdef DEBUG_TRACE
+      HalUARTWrite(0, "Recover :\n", 10);
+      ShowHeartBeatInfo(buf, buf + 4);
+      HalUARTWrite(0, buf + 8, 4);
+      HalUARTWrite(0, "ERR\n", 4);
+#endif
       }
    }
 }
@@ -604,15 +708,19 @@ void SampleApp_RecoverHeartBeatMessage(void)
 void SampleApp_SendHeartBeatMessage(void)
 {
   uint32 curTime = lastNvTime + osal_GetSystemClock();
-  uint8 buf[SN_LEN + 4];
+  uint8 buf[SN_LEN + 4 + 4];
   memcpy(buf, serialNumber, SN_LEN);
-  convertNum2Bytes(buf + 4, curTime);
+  convertUint2Bytes(buf + 4, curTime);
+  buf[8] = '8';
+  buf[9] = '9';
+  buf[10] = 'X';
+  buf[11] = 'Y';
 
   SampleApp_Periodic_DstAddr.endPoint = HEARTBEAT_ENDPOINT;
   if ( AF_DataRequest(
            &SampleApp_Periodic_DstAddr, &SampleApp_epDesc,
            SAMPLEAPP_PERIODIC_CLUSTERID,
-           SN_LEN + 4,
+           SN_LEN + 4 + 4,
            buf,
            &SampleApp_TransID,
            AF_DISCV_ROUTE,
@@ -625,6 +733,21 @@ void SampleApp_SendHeartBeatMessage(void)
       osTime[nvMsgNum] = curTime;
       ++nvMsgNum;
       ++heartBitFailNum;
+
+      if (nvMsgNum == MAX_TIME)
+      {
+         nv_write_msg();
+      }
+
+      if (heartBitFailNum == FAIL_TIEM_TO_RESTART)
+      {
+         if (nvMsgNum != 0)
+         {
+            nv_write_msg();
+         }
+
+         HAL_SYSTEM_RESET();
+      }
   }
 
 #ifdef DEBUG_TRACE
@@ -632,19 +755,6 @@ void SampleApp_SendHeartBeatMessage(void)
   ShowRssiInfo();
 #endif
 
-  if (nvMsgNum == MAX_TIME)
-  {
-     nv_write_msg();
-  }
-
-  if (heartBitFailNum == MAX_TIME)
-  {
-      if (nvMsgNum != 0)
-      {
-         nv_write_msg();
-      }
-      HAL_SYSTEM_RESET();
-  }
 }
 
 /*********************************************************************
@@ -653,19 +763,21 @@ void SampleApp_SendHeartBeatMessage(void)
 static void ShowHeartBeatInfo(uint8 *serialNumber, uint8 *curTime)
 {
   uint8 serialNumberStr[SN_LEN + 1] = {0};
-  uint8 curIimeStr[TIME_LEN * 2 + 1] = {0};
+  uint8 curTimeStr[2 + TIME_LEN * 2 + 1] = {0};
 
   memcpy(serialNumberStr, serialNumber, SN_LEN);
   serialNumberStr[SN_LEN] = '\n';
-  FormatUint32Str(curIimeStr, curTime);
-  curIimeStr[TIME_LEN * 2] = '\n';
-  HalUARTWrite(0, SnHeadStr, strlen((char *)SnHeadStr));
-  HalUARTWrite(0, serialNumberStr, SN_LEN + 1);
+  curTimeStr[0] = '0';
+  curTimeStr[1] = 'x';
+  FormatHexUint32Str(curTimeStr + 2, curTime);
+  curTimeStr[TIME_LEN * 2 + 2] = '\n';
+  //HalUARTWrite(0, SnHeadStr, strlen((char *)SnHeadStr));
+  //HalUARTWrite(0, serialNumberStr, SN_LEN + 1);
   HalUARTWrite(0, curTimeHeadStr, strlen((char *)curTimeHeadStr));
-  HalUARTWrite(0, curIimeStr, TIME_LEN * 2 + 1);
+  HalUARTWrite(0, curTimeStr, TIME_LEN * 2 + 2 + 1);
 }
 
-static void FormatUint32Str(uint8 *dst, uint8 * src)
+static void FormatHexUint32Str(uint8 *dst, uint8 * src)
 {
   uint8 i = 0;
   uint8 * ptr = src;
