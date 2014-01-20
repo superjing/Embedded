@@ -4,11 +4,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define MAX_ELEMENT_NUM      32
-
-#define ELEMENT_SIZE         12
-
-#define ELEMENT_NUM_TO_SEND  1
+#define MAX_ELEMENT_NUM 32
+#define ELEMENT_SIZE    12
 
 typedef struct
 {

@@ -45,19 +45,18 @@ extern "C"
 {
 #endif
 
-/*********************************************************************
- * INCLUDES
- */
+   /*********************************************************************
+    * INCLUDES
+    */
 #include "ZComDef.h"
 
-/*********************************************************************
- * CONSTANTS
- */
+   /*********************************************************************
+    * CONSTANTS
+    */
 
-// These constants are only for example and should be changed to the
-// device's needs
-#define SAMPLEAPP_ENDPOINT           20
+   // These constants are only for example and should be changed to the
 #define HEARTBEAT_ENDPOINT           10
+#define SAMPLEAPP_ENDPOINT           20
 
 #define SAMPLEAPP_PROFID             0x0F08
 #define SAMPLEAPP_DEVICEID           0x0001
@@ -68,45 +67,37 @@ extern "C"
 #define SAMPLEAPP_PERIODIC_CLUSTERID 1
 #define SAMPLEAPP_FLASH_CLUSTERID     2
 
-// Send Message Timeout
+   // Send Message Timeout
 #define SAMPLEAPP_SEND_PERIODIC_MSG_TIMEOUT   5000     // Every 5 seconds
 #define SAMPLEAPP_POOL_UIP_MSG_TIMEOUT        1000     // Every 5 seconds
 
-// Application Events (OSAL) - These are bit weighted definitions.
+   // Application Events (OSAL) - These are bit weighted definitions.
 #define SAMPLEAPP_SEND_PERIODIC_MSG_EVT       0x0001
 #define SAMPLEAPP_POLL_UIP_MSG_EVT            0x0004
 
-// Group ID for Flash Command
+   // Group ID for Flash Command
 #define SAMPLEAPP_FLASH_GROUP                  0x0001
 
-// Flash Command Duration - in milliseconds
+   // Flash Command Duration - in milliseconds
 #define SAMPLEAPP_FLASH_DURATION               1000
 
-/*********************************************************************
- * MACROS
- */
-#define MSG_ELEM_LENGTH  12
-// write threee nv msg at one time
-#define MAX_TIME  3
-#define LARGEST_NV_TIME  180
+   /*********************************************************************
+    * FUNCTIONS
+    */
+   extern uint8 SampleApp_TaskID;
+   /*
+    * Task Initialization for the Generic Application
+    */
+   extern void SampleApp_Init( uint8 task_id );
 
-/*********************************************************************
- * FUNCTIONS
- */
-extern uint8 SampleApp_TaskID;
-/*
- * Task Initialization for the Generic Application
- */
-extern void SampleApp_Init( uint8 task_id );
-
-/*
- * Task Event Processor for the Generic Application
- */
-extern UINT16 SampleApp_ProcessEvent( uint8 task_id, uint16 events );
+   /*
+    * Task Event Processor for the Generic Application
+    */
+   extern UINT16 SampleApp_ProcessEvent( uint8 task_id, uint16 events );
 
 
-/*********************************************************************
-*********************************************************************/
+   /*********************************************************************
+    *********************************************************************/
 
 #ifdef __cplusplus
 }

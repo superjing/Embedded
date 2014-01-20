@@ -4,6 +4,7 @@
 
 #define SN_LEN        4
 #define MAX_END_NUM   32
+
 typedef struct tLiveElem
 {
   uint8 sn[SN_LEN];
@@ -13,14 +14,14 @@ typedef struct tLiveElem
 
 typedef struct tLiveList
 {
-  tLiveElem LiveElem[MAX_END_NUM];
-  uint8 liveCount;
+   tLiveElem LiveElem[MAX_END_NUM];
+   uint8 liveCount;
 }tLiveList;
 
 void initLiveList(void);
 int findLiveList(uint8* sn, int* emptyIndex);
 void setLiveStatus(int index, bool alive);
-void insertLiveList(int index, uint8 * sn);
+bool insertLiveList(int index, uint8 * sn);
 void resetLiveList(void);
 
 #endif

@@ -55,7 +55,7 @@ static uint8_t enc28j60ReadOp(uint8_t op, uint8_t address)
 
 static void enc28j60WriteOp(uint8_t op, uint8_t address, uint8_t mydat)
 {
-  uint8_t opcode = op | (address & ADDR_MASK);
+   uint8_t opcode = op | (address & ADDR_MASK);
    enc28j60_spi_cs(0);
    // issue write command
    delay_100ns();
@@ -190,7 +190,7 @@ static uint16_t enc28j60PacketReceive(uint16_t maxlen, uint8_t* packet)
    rxstat |= enc28j60ReadOp(ENC28J60_READ_BUF_MEM, 0)<<8;
    // limit retrieve length
    // (we reduce the MAC-reported length by 4 to remove the CRC)
-   
+
    if (len > maxlen)
    {
       len = maxlen;
@@ -293,7 +293,7 @@ static void enc28j60_init(void)
    enc28j60Write(MAADR2, UIP_ETHADDR3);  //78
    enc28j60Write(MAADR1, UIP_ETHADDR4);  //90
    enc28j60Write(MAADR0, UIP_ETHADDR5);
-   
+
    uint8_t value = enc28j60Read(MAADR0);
 
    enc28j60PhyWrite(PHCON1, PHCON1_PDPXMD);

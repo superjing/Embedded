@@ -26,7 +26,7 @@ bool IsFreeQueueFull( const LockFreeQueue * pQueue )
    }
 }
 
-void FreeQueuePush( LockFreeQueue * pQueue, const uint8_t * elementBuffer )
+void FreeQueuePush(LockFreeQueue * pQueue, const uint8_t * elementBuffer)
 {
    memcpy(
       pQueue->elements + pQueue->rear * ELEMENT_SIZE,
@@ -36,13 +36,13 @@ void FreeQueuePush( LockFreeQueue * pQueue, const uint8_t * elementBuffer )
 
    ++pQueue->rear;
 
-   if( pQueue->rear == MAX_ELEMENT_NUM )
+   if (pQueue->rear == MAX_ELEMENT_NUM)
    {
       pQueue->rear = 0;
    }
 }
 
-uint8_t QueueLength( const LockFreeQueue * pQueue )
+uint8_t QueueLength(const LockFreeQueue * pQueue)
 {
    if ( pQueue->rear >= pQueue->front)
    {
@@ -54,15 +54,14 @@ uint8_t QueueLength( const LockFreeQueue * pQueue )
    }
 }
 
-void FreeQueuePop( LockFreeQueue * pQueue, uint8_t * pOutBuffer )
+void FreeQueuePop(LockFreeQueue * pQueue, uint8_t * pOutBuffer)
 {
    memcpy(
       pOutBuffer,
       pQueue->elements + pQueue->front * ELEMENT_SIZE,
-      ELEMENT_NUM_TO_SEND * ELEMENT_SIZE
-      );
+      ELEMENT_SIZE);
 
-   pQueue->front += ELEMENT_NUM_TO_SEND;
+   ++pQueue->front;
 
    if( pQueue->front == MAX_ELEMENT_NUM )
    {
