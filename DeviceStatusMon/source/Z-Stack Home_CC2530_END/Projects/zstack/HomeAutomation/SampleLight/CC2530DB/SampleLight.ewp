@@ -3237,7 +3237,19 @@
   <group>
     <name>App</name>
     <file>
+      <name>$PROJ_DIR$\..\Source\nv.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\nv.h</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\Source\OSAL_SampleApp.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\printDebug.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\printDebug.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\Source\SampleApp.c</name>

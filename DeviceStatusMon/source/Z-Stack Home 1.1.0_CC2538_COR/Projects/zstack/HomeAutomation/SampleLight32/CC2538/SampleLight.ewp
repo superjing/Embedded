@@ -2956,6 +2956,12 @@
       <name>$PROJ_DIR$\..\Source\livelist.h</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\Source\nv.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\nv.h</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\Source\OSAL_SampleApp.c</name>
     </file>
     <file>

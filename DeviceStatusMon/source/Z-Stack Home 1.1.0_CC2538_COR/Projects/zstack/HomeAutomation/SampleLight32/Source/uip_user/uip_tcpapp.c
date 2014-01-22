@@ -69,19 +69,7 @@ void tcp_client_demo_appcall_user(void)
 {
    uint8_t buffer[ELEMENT_SIZE];
 
-   if (uip_aborted())
-   {
-      tcp_client_reconnect();
-      return;
-   }
-
-   if (uip_timedout())
-   {
-     tcp_client_reconnect();
-     return;
-   }
-
-   if (uip_closed())
+   if (uip_aborted() || uip_timedout() || uip_closed())
    {
       tcp_client_reconnect();
       return;

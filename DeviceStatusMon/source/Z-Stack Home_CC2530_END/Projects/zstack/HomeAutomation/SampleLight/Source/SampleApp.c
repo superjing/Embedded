@@ -2,40 +2,30 @@
 // 1. Rename the project SampleLight to a meaningful project.
 // 2. Remove the Sample(SampleApp, SampleDesc, ...) key words in the project.
 // 3. Change the rf_msg_length from 12 to 10, the last two bytes are ADC data,
-//    now you can set these two bytes to 0.
+//    now you can set these two bytes to some special value (recover 0xCC, heartbeat 0xEE).
 // 4. Change the nv things stored into NV. Currently we only store 4 bytes time,
 //    now we also need to store both 4 bytes time and 2 bytes ADC value. Also in
 //    ShowHeartBeatInfo function, print the ADC value.
-// 5. Change the destination address to 0.
-//    SampleApp_Periodic_DstAddr.addrMode = (afAddrMode_t)AddrBroadcast; ->change to some other value
-//    SampleApp_Periodic_DstAddr.addr.shortAddr = 0xFFFF; -> change to 0
 // 6. Change uart input command(reset, set sn) with special header.
 
 /*********************************************************************
  * INCLUDES
  */
 #include "OSAL.h"
-#include "ZGlobals.h"
 #include "AF.h"
-#include "aps_groups.h"
 #include "ZDApp.h"
 #include "OnBoard.h"
-
-#include "SampleApp.h"
-#include "SampleAppHw.h"
 
 #include "MT_Uart.h"
 #include "MT.h"
 
-/* MAC */
-#include "ioCC2530.h"
-
-/* HAL */
 #include "hal_led.h"
-#include "hal_mcu.h"
 
 #include "nv.h"
 #include "printDebug.h"
+
+#include "SampleApp.h"
+#include "SampleAppHw.h"
 
 #include "string.h"
 
@@ -64,10 +54,10 @@ const SimpleDescriptionFormat_t SampleApp_SimpleDesc =
    SAMPLEAPP_DEVICEID,              //  uint16 AppDeviceId[2];
    SAMPLEAPP_DEVICE_VERSION,        //  int    AppDevVer:4;
    SAMPLEAPP_FLAGS,                 //  int    AppFlags:4;
-   SAMPLEAPP_MAX_CLUSTERS,          //  uint8  AppNumInClusters;
-   (cId_t *)SampleApp_ClusterList,  //  uint8* pAppInClusterList;
-   SAMPLEAPP_MAX_CLUSTERS,          //  uint8  AppNumInClusters;
-   (cId_t *)SampleApp_ClusterList   //  uint8* pAppInClusterList;
+   0,                               //  uint8  AppNumInClusters;
+   NULL,                            //  uint8* pAppInClusterList;
+   SAMPLEAPP_MAX_CLUSTERS,          //  uint8  AppNumOutClusters;
+   (cId_t *)SampleApp_ClusterList   //  uint8* pAppOutClusterList;
 };
 
 // This is the Endpoint/Interface description. It is defined here, but
@@ -156,9 +146,9 @@ void SampleApp_Init(uint8 task_id)
 
    // Setup for the periodic message's destination address
    // Broadcast to everyone
-   SampleApp_Periodic_DstAddr.addrMode = (afAddrMode_t)AddrBroadcast;
+   SampleApp_Periodic_DstAddr.addrMode = (afAddrMode_t)Addr16Bit;
    SampleApp_Periodic_DstAddr.endPoint = HEARTBEAT_ENDPOINT;
-   SampleApp_Periodic_DstAddr.addr.shortAddr = 0xFFFF;
+   SampleApp_Periodic_DstAddr.addr.shortAddr = 0;
 
    // Fill out the endpoint description.
    SampleApp_epDesc.endPoint = HEARTBEAT_ENDPOINT;
@@ -249,7 +239,7 @@ uint16 SampleApp_ProcessEvent(uint8 task_id, uint16 events)
       }
 
       // send heart bit every 10s.
-      if (++timerCount == (SAMPLEAPP_TIMER_MSG_TIMEOUT/1000 * 2))
+      if (++timerCount == (SAMPLEAPP_TIMER_MSG_TIMEOUT/1000 * 10))
       {
          uint32 curTime = lastNvTime + osal_GetSystemClock();
          if (inNetwork)
@@ -277,6 +267,7 @@ uint16 SampleApp_ProcessEvent(uint8 task_id, uint16 events)
             {
                nv_write_msg();
             }
+
             HAL_SYSTEM_RESET();
          }
          timerCount = 0;
