@@ -7,7 +7,7 @@
 void PrintRecover(uint8* buf, bool result)
 {
    HalUARTWrite(0, "Recover :\n", 10);
-   ShowHeartBeatInfo(buf, buf + 4);
+   ShowHeartBeatInfo(buf);
    HalUARTWrite(0, buf + 8, 4);
    if (result)
    {
@@ -34,19 +34,42 @@ static void FormatHexUint32Str(uint8 *dst, uint8 * src)
    }
 }
 
-void ShowHeartBeatInfo(uint8 *serialNumber, uint8 *curTime)
+static void FormatHexUint8Str(uint8 *dst, uint8 * src)
 {
-   uint8 curTimeStr[10] = {0};
+   uint8 i = 0;
+   uint8 * ptr = src;
 
-   curTimeStr[0] = '0';
-   curTimeStr[1] = 'x';
-   FormatHexUint32Str(curTimeStr + 2, curTime);
+   for (i = 0; i < (sizeof(8) * 2); ptr++)
+   {
+      uint8 ch;
+      ch = (*ptr >> 4) & 0x0F;
+      dst[i++] = ch + (( ch < 10 ) ? '0' : '7');
+      ch = *ptr & 0x0F;
+      dst[i++] = ch + (( ch < 10 ) ? '0' : '7');
+   }
+}
+
+void ShowHeartBeatInfo(uint8 *buf)
+{
+   uint8 temp[10] = {0};
+
+   temp[0] = '0';
+   temp[1] = 'x';
+   FormatHexUint32Str(temp + 2, buf + 4);
 
    HalUARTWrite(0, "sn is:", 6);
-   HalUARTWrite(0, serialNumber, 4);
-   HalUARTWrite(0, "\n", 1);
-   HalUARTWrite(0, "curTime is:", 11);
-   HalUARTWrite(0, curTimeStr, 10);
+   HalUARTWrite(0, buf, 4);
+   HalUARTWrite(0, " curTime is:", 12);
+   HalUARTWrite(0, temp, 10);
+   
+   FormatHexUint8Str(temp + 2, buf + 8);
+   HalUARTWrite(0, " high:", 6);
+   HalUARTWrite(0, temp, 4);
+   
+   FormatHexUint8Str(temp + 2, buf + 9);
+   HalUARTWrite(0, " low:", 5);
+   HalUARTWrite(0, temp, 4);
+   
    HalUARTWrite(0, "\n", 1);
 }
 

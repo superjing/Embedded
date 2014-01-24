@@ -5,7 +5,7 @@
 
 #ifdef DEBUG_TRACE
 void PrintRecover(uint8* buf, bool result);
-void ShowHeartBeatInfo(uint8 *serialNumber, uint8 *curTime);
+void ShowHeartBeatInfo(uint8 *buf);
 void ShowRssiInfo(void);
 #else
 #define PrintRecover(buf, result)

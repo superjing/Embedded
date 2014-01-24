@@ -10,7 +10,7 @@
 #include <stdio.h>
 
 #ifdef DEBUG_TRACE
-#define RF_MSG_SIZE 30
+#define RF_MSG_SIZE 37
 #else
 #define RF_MSG_SIZE ELEMENT_SIZE
 #endif
@@ -34,6 +34,22 @@ static void FormatHexUint32Str(uint8 *dst, uint8 * src)
       dst[i++] = ch + (( ch < 10 ) ? '0' : '7');
    }
 }
+
+static void FormatHexUint8Str(uint8 *dst, uint8 * src)
+{
+   uint8 i = 0;
+   uint8 * ptr = src;
+
+   for (i = 0; i < (sizeof(uint8) * 2); ptr++)
+   {
+      uint8 ch;
+      ch = (*ptr >> 4) & 0x0F;
+      dst[i++] = ch + (( ch < 10 ) ? '0' : '7');
+      ch = *ptr & 0x0F;
+      dst[i++] = ch + (( ch < 10 ) ? '0' : '7');
+   }
+}
+
 #endif
 
 static void _uip_send(uint8 * buffer)
@@ -41,13 +57,15 @@ static void _uip_send(uint8 * buffer)
 #ifdef DEBUG_TRACE
    uint8 debugBuf[RF_MSG_SIZE];
 
-   memcpy(debugBuf, "sn=", 3);
-   memcpy(debugBuf + 3, buffer, 4);
-   memcpy(debugBuf + 7, " time=0x", 8);
-   FormatHexUint32Str(debugBuf + 15, buffer + 4);
-   memcpy(debugBuf + 23, " ", 1);
-   memcpy(debugBuf + 24, buffer + 8, 4);
-   memcpy(debugBuf + 28, "\n\0", 2);
+   memcpy(debugBuf, "s=0x", 4);
+   memcpy(debugBuf + 4, buffer, 4);
+   memcpy(debugBuf + 8, " t=0x", 5);
+   FormatHexUint32Str(debugBuf + 13, buffer + 4);
+   memcpy(debugBuf + 21, " h=0x", 5);
+   FormatHexUint8Str(debugBuf + 26, buffer + 8);
+   memcpy(debugBuf + 28, " l=0x", 5);
+   FormatHexUint8Str(debugBuf + 33, buffer + 9);
+   memcpy(debugBuf + 35, "\n\0", 2);
    uip_send(debugBuf, RF_MSG_SIZE);
 #else
    uip_send(buffer, RF_MSG_SIZE);

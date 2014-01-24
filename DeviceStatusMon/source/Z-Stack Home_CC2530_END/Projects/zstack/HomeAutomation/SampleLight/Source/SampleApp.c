@@ -1,12 +1,6 @@
 // Things you need to do:
 // 1. Rename the project SampleLight to a meaningful project.
 // 2. Remove the Sample(SampleApp, SampleDesc, ...) key words in the project.
-// 3. Change the rf_msg_length from 12 to 10, the last two bytes are ADC data,
-//    now you can set these two bytes to some special value (recover 0xCC, heartbeat 0xEE).
-// 4. Change the nv things stored into NV. Currently we only store 4 bytes time,
-//    now we also need to store both 4 bytes time and 2 bytes ADC value. Also in
-//    ShowHeartBeatInfo function, print the ADC value.
-// 6. Change uart input command(reset, set sn) with special header.
 
 /*********************************************************************
  * INCLUDES
@@ -77,22 +71,25 @@ uint8 SampleApp_TransID;
 
 afAddrType_t SampleApp_Periodic_DstAddr;
 
-uint32 osTime[NV_NUM_STORE];
+tRfData rfData[NV_NUM_STORE];
 
 /*********************************************************************
  * LOCAL FUNCTIONS
  */
 void SampleApp_SerialCMD(mtOSALSerialData_t* cmdMsg);
-bool SampleApp_SendHeartBeatMessage(uint32 time);
+bool SampleApp_SendHeartBeatMessage(uint8* buf);
 void SampleApp_RecoverHeartBeatMessage(void);
-void SampleApp_StoreHeartBeatMessage(uint32 time);
+void SampleApp_StoreHeartBeatMessage(uint8* buf);
 
-static void convertUint2Bytes(uint8 *dstBuf, uint32 value)
+static void revertUint32Bytes(uint8 * buf)
 {
-   dstBuf[0] = (value >> 24) & 0xFF;
-   dstBuf[1] = (value >> 16) & 0xFF;
-   dstBuf[2] = (value >> 8) & 0xFF;
-   dstBuf[3] = value & 0xFF;
+   uint8 temp = buf[0];
+   buf[0] = buf[3];
+   buf[3] = temp;
+
+   temp = buf[1];
+   buf[1] = buf[2];
+   buf[2] = temp;
 }
 
 /*********************************************************************
@@ -239,16 +236,24 @@ uint16 SampleApp_ProcessEvent(uint8 task_id, uint16 events)
       }
 
       // send heart bit every 10s.
-      if (++timerCount == (SAMPLEAPP_TIMER_MSG_TIMEOUT/1000 * 10))
+      if (++timerCount == (SAMPLEAPP_TIMER_MSG_TIMEOUT/1000 * 2))
       {
+         uint8 buf[SN_LEN + NV_LEN];
          uint32 curTime = lastNvTime + osal_GetSystemClock();
+         memcpy(buf, serialNumber, SN_LEN);
+         memcpy(buf + 4, &curTime, NV_LEN);
+         revertUint32Bytes(buf + 4);
+
+         buf[8]  = 0xEE;
+         buf[9]  = 0xEE;
+
          if (inNetwork)
          {
             // Send the Heartbeat Message
-            if (!SampleApp_SendHeartBeatMessage(curTime))
+            if (!SampleApp_SendHeartBeatMessage(buf))
             {
                ++heartBitFailNum;
-               SampleApp_StoreHeartBeatMessage(curTime);
+               SampleApp_StoreHeartBeatMessage(buf + 4);
             }
             else
             {
@@ -258,7 +263,7 @@ uint16 SampleApp_ProcessEvent(uint8 task_id, uint16 events)
          else
          {
             ++heartBitFailNum;
-            SampleApp_StoreHeartBeatMessage(curTime);
+            SampleApp_StoreHeartBeatMessage(buf + 4);
          }
 
          if (heartBitFailNum == FAIL_TIEM_TO_RESTART)
@@ -287,9 +292,9 @@ uint16 SampleApp_ProcessEvent(uint8 task_id, uint16 events)
    return 0;
 }
 
-void SampleApp_StoreHeartBeatMessage(uint32 time)
+void SampleApp_StoreHeartBeatMessage(uint8* nvBuf)
 {
-   osTime[nvMsgNum++] = time;
+   memcpy(rfData[nvMsgNum++].data, nvBuf, NV_LEN);
    if (nvMsgNum == NV_NUM_STORE)
    {
       nv_write_msg();
@@ -301,13 +306,22 @@ void SampleApp_SerialCMD(mtOSALSerialData_t *cmdMsg)
    uint8 *uartMsg = cmdMsg->msg;
 
    //Set the SN through UART
-   if(uartMsg[0] == 4)
+   if ((uartMsg[0] == 7)
+       && (uartMsg[1] == 's')
+       && (uartMsg[2] == 'n')
+       && (uartMsg[3] == '='))
+
    {
-      memcpy(serialNumber, (uartMsg + 1), SN_LEN);
+      memcpy(serialNumber, (uartMsg + 4), SN_LEN);
       nv_write_config();
    }
 
-   if(uartMsg[0] == 1 && uartMsg[1] == '9')
+   if ((uartMsg[0] == 5)
+       && (uartMsg[1] == 'r')
+       && (uartMsg[2] == 'e')
+       && (uartMsg[3] == 's')
+       && (uartMsg[4] == 'e')
+       && (uartMsg[5] == 't'))
    {
       nv_reset_config();
    }
@@ -315,26 +329,24 @@ void SampleApp_SerialCMD(mtOSALSerialData_t *cmdMsg)
 
 void SampleApp_RecoverHeartBeatMessage(void)
 {
-   uint8 buf[12];
-   uint32 msgTime;
+   uint8 buf[SN_LEN + NV_LEN];
 
    if (nvMsgNum == 0)
    {
       if (recoverMsgNum != 0)
       {
-         nv_read_msg(recoverMsgNum - 1, &msgTime);
+         nv_read_msg(recoverMsgNum - 1, buf + 4);
          memcpy(buf, serialNumber, 4);
-         convertUint2Bytes(buf + 4, msgTime);
-         buf[8]  = '1';
-         buf[9]  = '2';
-         buf[10] = '3';
-         buf[11] = '4';
+
+         //TODO:remove it, now for test.
+         buf[8]  = 0xCC;
+         buf[9]  = 0xCC;
 
          if (AF_DataRequest(
                   &SampleApp_Periodic_DstAddr,
                   &SampleApp_epDesc,
                   SAMPLEAPP_PERIODIC_CLUSTERID,
-                  12,
+                  SN_LEN + NV_LEN,
                   buf,
                   &SampleApp_TransID,
                   AF_DISCV_ROUTE,
@@ -355,19 +367,16 @@ void SampleApp_RecoverHeartBeatMessage(void)
    }
    else
    {
-      msgTime = osTime[nvMsgNum - 1];
-      memcpy(buf, serialNumber, 4);
-      convertUint2Bytes(buf + 4, msgTime);
-      buf[8]  = 'A';
-      buf[9]  = 'B';
-      buf[10] = 'C';
-      buf[11] = 'D';
+      memcpy(buf, serialNumber, SN_LEN);
+      memcpy(buf + 4, rfData[nvMsgNum - 1].data, NV_LEN);
+      buf[8]  = 0xDD;
+      buf[9]  = 0xDD;
 
       if (AF_DataRequest(
                &SampleApp_Periodic_DstAddr,
                &SampleApp_epDesc,
                SAMPLEAPP_PERIODIC_CLUSTERID,
-               12,
+               SN_LEN + NV_LEN,
                buf,
                &SampleApp_TransID,
                AF_DISCV_ROUTE,
@@ -383,24 +392,16 @@ void SampleApp_RecoverHeartBeatMessage(void)
    }
 }
 
-bool SampleApp_SendHeartBeatMessage(uint32 curTime)
+bool SampleApp_SendHeartBeatMessage(uint8* buf)
 {
-   uint8 buf[12];
-   memcpy(buf, serialNumber, 4);
-   convertUint2Bytes(buf + 4, curTime);
-   buf[8]  = '8';
-   buf[9]  = '9';
-   buf[10] = 'X';
-   buf[11] = 'Y';
-
-   ShowHeartBeatInfo(buf, buf + 4);
+   ShowHeartBeatInfo(buf);
    ShowRssiInfo();
 
    if (AF_DataRequest(
             &SampleApp_Periodic_DstAddr,
             &SampleApp_epDesc,
             SAMPLEAPP_PERIODIC_CLUSTERID,
-            12,
+            SN_LEN + NV_LEN,
             buf,
             &SampleApp_TransID,
             AF_DISCV_ROUTE,

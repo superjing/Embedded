@@ -14,7 +14,7 @@
 
 #include "SampleApp.h"
 #include "SampleAppHw.h"
-   
+
 #include "string.h"
 
 /*********************************************************************
@@ -137,7 +137,7 @@ uint16 SampleApp_ProcessEvent( uint8 task_id, uint16 events )
                // Received when a messages is received (OTA) for this endpoint
             case AF_INCOMING_MSG_CMD:
                HalLedBlink(HAL_LED_1, 2, 50, 500);
-               
+
                if ((MSGpkt->endPoint == HEARTBEAT_ENDPOINT)
                 && (ELEMENT_SIZE == MSGpkt->cmd.DataLength))
                {
@@ -159,7 +159,7 @@ uint16 SampleApp_ProcessEvent( uint8 task_id, uint16 events )
                   if (IsFreeQueueFull(&queue))
                   {
                      // If the queue is full, write current msg to the nv.
-                     nv_write_msg(MSGpkt->cmd.Data);   
+                     nv_write_msg(MSGpkt->cmd.Data);
                   }
                   else
                   {
