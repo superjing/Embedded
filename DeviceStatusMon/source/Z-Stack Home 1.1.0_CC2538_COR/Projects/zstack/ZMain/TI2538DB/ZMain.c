@@ -47,6 +47,7 @@
 #include "OSAL_Nv.h"
 #include "OnBoard.h"
 #include "ZMAC.h"
+#include "string.h"
 
 #ifndef NONWK
   #include "AF.h"
@@ -169,15 +170,6 @@ static void pollEnc28j60(void)
    }
 }
 
-char mac[] = {
-   UIP_ETHADDR0,
-   UIP_ETHADDR1,
-   UIP_ETHADDR2,
-   UIP_ETHADDR3,
-   UIP_ETHADDR4,
-   UIP_ETHADDR5
-};
-
 extern char dhcpdone;
 /******************************************************************************
  * @fn      main
@@ -246,6 +238,14 @@ int main( void )
   WatchDogEnable( WDTIMX );
 #endif
 
+#ifndef PROTOTYPE
+  GPIOPinTypeGPIOOutput(GPIO_B_BASE, GPIO_PIN_1);
+  GPIOPinTypeGPIOOutput(GPIO_B_BASE, GPIO_PIN_2);
+  GPIOPinTypeGPIOOutput(GPIO_B_BASE, GPIO_PIN_3);
+  GPIOPinTypeGPIOOutput(GPIO_D_BASE, GPIO_PIN_2);
+  GPIOPinWrite(GPIO_B_BASE, GPIO_PIN_3, 0);
+#endif
+
   arptimer = 0;
 
   dev_init();
@@ -255,20 +255,25 @@ int main( void )
   // Initialize the uIP TCP/IP stack.
   uip_init();
 
-  //example1_init();
-  dhcpc_init(mac, 6);
+  // Use zigbee IEEE Mac address as dhcp Mac address
+  dhcpc_init(aExtendedAddress + 2, 6);
 
   for(;;)
   {
     osal_run_system();
+
     pollEnc28j60();
     if (dhcpdone)
     {
       tpc_app_init();
       dhcpdone = 0;
+
+      #ifndef PROTOTYPE
+      // Turn on LED after dhcp get ip address
+      GPIOPinWrite(GPIO_B_BASE, GPIO_PIN_2, 0);
+      #endif
     }
   }
-
   //osal_start_system(); // No Return from here
 } // main()
 

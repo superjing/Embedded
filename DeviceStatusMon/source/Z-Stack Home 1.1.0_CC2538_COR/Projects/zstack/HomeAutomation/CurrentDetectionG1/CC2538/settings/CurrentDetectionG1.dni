@@ -1,0 +1,62 @@
+[xds100]
+xds100serialNo=06EB1210040D
+xds100foundProbes=
+[DebugChecksum]
+Checksum=2139290576
+[Exceptions]
+StopOnUncaught=_ 0
+StopOnThrow=_ 0
+[Stack]
+FillEnabled=0
+OverflowWarningsEnabled=1
+WarningThreshold=90
+SpWarningsEnabled=1
+WarnLogOnly=1
+UseTrigger=1
+TriggerName=main
+LimitSize=0
+ByteLimit=50
+[CallStack]
+ShowArgs=0
+[Disassembly]
+MixedMode=1
+[struct_types]
+Fmt0=struct dhcp_msg-hlen	4	0
+Fmt1=struct dhcp_msg-hops	4	0
+Fmt2=struct dhcp_msg-htype	4	0
+Fmt3=struct dhcp_msg-op	4	0
+[array_types]
+Fmt0=u8_t[4]	4	0
+[watch_formats]
+Fmt0={W}0:m	4	0
+Fmt1={W}0:ui32PortAddr	4	0
+[Disassemble mode]
+mode=0
+[Breakpoints]
+Bp0=_ "STD_CODE" "{G:\Embedded\DeviceStatusMon\source\Z-Stack Home 1.1.0_CC2538_COR\Projects\zstack\HomeAutomation\CurrentDetectionG1\Source\CurrentDetectionG1.c}.180.22" 0 0 0 0 "" 0 "" 0
+Bp1=_ "STD_CODE" "{G:\Embedded\DeviceStatusMon\source\Z-Stack Home 1.1.0_CC2538_COR\Projects\zstack\HomeAutomation\CurrentDetectionG1\Source\uip_user\uip_dhcpc.c}.346.4" 0 0 0 0 "" 0 "" 0
+Bp2=_ "STD_CODE" "{G:\Embedded\DeviceStatusMon\source\Z-Stack Home 1.1.0_CC2538_COR\Projects\zstack\HomeAutomation\CurrentDetectionG1\Source\uip_user\uip_dhcpc.c}.309.10" 0 0 0 0 "" 0 "" 0
+Bp3=_ "STD_CODE" "{G:\Embedded\DeviceStatusMon\source\Z-Stack Home 1.1.0_CC2538_COR\Projects\zstack\HomeAutomation\CurrentDetectionG1\Source\uip_user\uip_dhcpc.c}.305.9" 0 0 0 0 "" 0 "" 0
+Bp4=_ "STD_CODE" "{G:\Embedded\DeviceStatusMon\source\Z-Stack Home 1.1.0_CC2538_COR\Projects\zstack\HomeAutomation\CurrentDetectionG1\Source\uip_user\uip_dhcpc.c}.244.4" 0 0 0 0 "" 0 "" 0
+Bp5=_ "STD_CODE" "{G:\Embedded\DeviceStatusMon\source\Z-Stack Home 1.1.0_CC2538_COR\Projects\zstack\HomeAutomation\CurrentDetectionG1\Source\uip_user\uip_dhcpc.c}.382.10" 0 0 0 0 "" 0 "" 0
+Bp6=_ "STD_CODE" "{G:\Embedded\DeviceStatusMon\source\Z-Stack Home 1.1.0_CC2538_COR\Projects\zstack\HomeAutomation\CurrentDetectionG1\Source\uip_user\uip_dhcpc.c}.284.10" 0 0 0 0 "" 0 "" 0
+Bp7=_ "STD_CODE" "{G:\Embedded\DeviceStatusMon\source\Z-Stack Home 1.1.0_CC2538_COR\Projects\zstack\HomeAutomation\CurrentDetectionG1\Source\uip_user\uip_dhcpc.c}.277.9" 0 0 0 0 "" 0 "" 0
+Bp8=_ "STD_CODE" "{G:\Embedded\DeviceStatusMon\source\Z-Stack Home 1.1.0_CC2538_COR\Projects\zstack\HomeAutomation\CurrentDetectionG1\Source\uip_user\uip_tcpapp.c}.94.6" 0 0 0 0 "" 0 "" 0
+Bp9=_ "STD_CODE" "{G:\Embedded\DeviceStatusMon\source\Z-Stack Home 1.1.0_CC2538_COR\Projects\zstack\HomeAutomation\CurrentDetectionG1\Source\uip_user\uip_dhcpc.c}.253.4" 0 0 0 0 "" 0 "" 0
+Bp10=_ "STD_CODE" "{G:\Embedded\DeviceStatusMon\source\Z-Stack Home 1.1.0_CC2538_COR\Projects\zstack\ZMain\TI2538DB\ZMain.c}.251.3" 1 0 0 0 "" 0 "" 0
+Bp11=_ "STD_CODE" "{G:\Embedded\DeviceStatusMon\source\Z-Stack Home 1.1.0_CC2538_COR\Projects\zstack\HomeAutomation\CurrentDetectionG1\Source\driver\enc28j60\enc28j60.c}.266.4" 1 0 0 0 "" 0 "" 0
+Count=12
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
+[Aliases]
+A0=_ "C:\Users\知拓\Documents\GitHub\Embedded\DeviceStatusMon\source\Z-Stack Home 1.1.0_CC2538_COR\Components\hal\target\CC2538\hal_aes.c" ""
+A1=_ "C:\Users\知拓\Documents\GitHub\Embedded\DeviceStatusMon\source\Z-Stack Home 1.1.0_CC2538_COR\Projects\zstack\HomeAutomation\CurrentDetectionG1\Source\driver\enc28j60\enc28j60.c" ""
+A2=_ "C:\Users\知拓\Documents\GitHub\Embedded\DeviceStatusMon\source\Z-Stack Home 1.1.0_CC2538_COR\Projects\zstack\HomeAutomation\CurrentDetectionG1\Source\driver\enc28j60\enc28j60_spi.c" ""
+A3=_ "C:\Users\知拓\Documents\GitHub\Embedded\DeviceStatusMon\source\Z-Stack Home 1.1.0_CC2538_COR\Projects\zstack\HomeAutomation\CurrentDetectionG1\Source\uip\uip_arp.c" ""
+Count=4
+SuppressDialog=0
