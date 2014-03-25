@@ -179,7 +179,7 @@
           <state>CC2538_USE_ALTERNATE_INTERRUPT_MAP=1</state>
           <state>TC_LINKKEY_JOIN</state>
           <state>DEBUG_TRACE</state>
-          <state>PROTOTYPE</state>
+          <state>xPROTOTYPE</state>
         </option>
         <option>
           <name>CCPreprocFile</name>

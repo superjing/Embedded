@@ -7,7 +7,7 @@
 // write threee nv msg at one time
 #define NV_NUM_STORE  3
 
-#define NV_LEN         6
+#define NV_LEN         8
 #define NV_CONFIG_LEN 16
 
 extern uint32 lastNvTime;

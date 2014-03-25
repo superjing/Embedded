@@ -1,0 +1,6 @@
+[Sfr]
+sfr = "T3CC0",	"SFR",	0xcd,	1,	base=16,	modified
+
+
+[SfrGroupInfo]
+group = "Custom", "T3CC0"

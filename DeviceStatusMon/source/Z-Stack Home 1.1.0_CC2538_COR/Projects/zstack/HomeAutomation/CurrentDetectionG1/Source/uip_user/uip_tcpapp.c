@@ -10,7 +10,7 @@
 #include <stdio.h>
 
 #ifdef DEBUG_TRACE
-#define RF_MSG_SIZE 49
+#define RF_MSG_SIZE 53
 #else
 #define RF_MSG_SIZE ELEMENT_SIZE
 #endif
@@ -62,11 +62,13 @@ static void _uip_send(uint8 * buffer)
    FormatHexUint32Str(debugBuf + 12, buffer + 4);
    memcpy(debugBuf + 20, " t=0x", 5);
    FormatHexUint32Str(debugBuf + 25, buffer + 8);
-   memcpy(debugBuf + 33, " h=0x", 5);
+   memcpy(debugBuf + 33, " A=0x", 5);
    FormatHexUint8Str(debugBuf + 38, buffer + 12);
-   memcpy(debugBuf + 40, " l=0x", 5);
-   FormatHexUint8Str(debugBuf + 45, buffer + 13);
-   memcpy(debugBuf + 47, "\n\0", 2);
+   FormatHexUint8Str(debugBuf + 40, buffer + 13);
+   memcpy(debugBuf + 42, " B=0x", 5);
+   FormatHexUint8Str(debugBuf + 47, buffer + 14);
+   FormatHexUint8Str(debugBuf + 49, buffer + 15);
+   memcpy(debugBuf + 51, "\n\0", 2);
    uip_send(debugBuf, RF_MSG_SIZE);
 #else
    uip_send(buffer, RF_MSG_SIZE);

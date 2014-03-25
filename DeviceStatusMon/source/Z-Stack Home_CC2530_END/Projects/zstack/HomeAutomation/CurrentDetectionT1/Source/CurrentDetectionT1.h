@@ -34,10 +34,10 @@ extern "C"
 // Application Events (OSAL) - These are bit weighted definitions.
 #define DTCT_HEARTBEAT_MSG_EVT  0X0001
 
+typedef void (*PFUNC)(uint8 *);
 /*********************************************************************
  * MACROS
  */
-
 /*********************************************************************
  * FUNCTIONS
  */

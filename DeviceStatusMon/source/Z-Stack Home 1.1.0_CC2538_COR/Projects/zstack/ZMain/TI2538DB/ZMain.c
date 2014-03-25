@@ -243,6 +243,7 @@ int main( void )
   GPIOPinTypeGPIOOutput(GPIO_B_BASE, GPIO_PIN_2);
   GPIOPinTypeGPIOOutput(GPIO_B_BASE, GPIO_PIN_3);
   GPIOPinTypeGPIOOutput(GPIO_D_BASE, GPIO_PIN_2);
+  GPIOPinTypeGPIOOutput(GPIO_A_BASE, GPIO_PIN_3);
   GPIOPinWrite(GPIO_B_BASE, GPIO_PIN_3, 0);
 #endif
 
