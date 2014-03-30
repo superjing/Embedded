@@ -118,7 +118,6 @@ void CurrentDetectionG1_Init(uint8 task_id)
    initLiveList();
    InitFreeQueque(&queue);
 
-   osal_start_timerEx(CurrentDetectionG1_TaskID, CTDT_LED_EVT, CTDT_PERIODIC_TIMEOUT);
 }
 
 /*********************************************************************
@@ -155,7 +154,7 @@ uint16 CurrentDetectionG1_ProcessEvent( uint8 task_id, uint16 events )
                {
                   int emptyIndex = -1;
                   int index = findLiveList(MSGpkt->cmd.Data, &emptyIndex);
-                  HalLedBlink(HAL_LED_1, 2, 50, 500);
+                  HalLedBlink(HAL_LED_2, 2, 50, 500);
 
                   if (index == -1)
                   {
@@ -187,15 +186,12 @@ uint16 CurrentDetectionG1_ProcessEvent( uint8 task_id, uint16 events )
                CurrentDetectionG1_NwkState = (devStates_t)(MSGpkt->hdr.status);
                if (CurrentDetectionG1_NwkState == DEV_ZB_COORD)
                {
-                  HalLedBlink(HAL_LED_1, 2, 50, 500);
+                  // Turn on Green LED after CC2538 in network as coord.
+                  HalLedSet(HAL_LED_1, HAL_LED_MODE_ON);
                   osal_start_timerEx(
                      CurrentDetectionG1_TaskID,
                      CTDT_PERIODIC_EVT,
                      CTDT_PERIODIC_TIMEOUT);
-                  #ifndef PROTOTYPE
-                  // Turn on LED after CC2538 in network as coord.
-                  GPIOPinWrite(GPIO_B_BASE, GPIO_PIN_1, 0);
-                  #endif
                }
                break;
 
@@ -232,34 +228,6 @@ uint16 CurrentDetectionG1_ProcessEvent( uint8 task_id, uint16 events )
 
       // return unprocessed events
       return (events ^ CTDT_PERIODIC_EVT);
-   }
-
-
-   //For test LED
-   if (events & CTDT_LED_EVT)
-   {
-      osal_start_timerEx(
-         CurrentDetectionG1_TaskID,
-         CTDT_LED_EVT,
-         CTDT_PERIODIC_TIMEOUT);
-
-      CurrentDetectionG1_SendMessage();
-
-      if (0 == LedFlag)
-      {
-        GPIOPinWrite(GPIO_B_BASE, GPIO_PIN_1, 0);
-        GPIOPinWrite(GPIO_B_BASE, GPIO_PIN_2, 0);
-        LedFlag = 1;
-      }
-      else
-      {
-        GPIOPinWrite(GPIO_B_BASE, GPIO_PIN_1, GPIO_PIN_1);
-        GPIOPinWrite(GPIO_B_BASE, GPIO_PIN_2, GPIO_PIN_2);
-        LedFlag = 0;
-      }
-
-      // return unprocessed events
-      return (events ^ CTDT_LED_EVT);
    }
    // Discard unknown events
    return 0;

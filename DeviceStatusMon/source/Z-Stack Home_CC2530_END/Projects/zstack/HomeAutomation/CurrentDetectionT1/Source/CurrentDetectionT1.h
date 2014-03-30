@@ -29,7 +29,7 @@ extern "C"
 #define DTCT_PERIODIC_CLUSTERID 1
 
 // Send Message Timeout
-#define DTCT_TIMER_MSG_TIMEOUT  1000     // Every 1 seconds
+#define DTCT_TIMER_MSG_TIMEOUT  5    // Every 1 seconds
 
 // Application Events (OSAL) - These are bit weighted definitions.
 #define DTCT_HEARTBEAT_MSG_EVT  0X0001

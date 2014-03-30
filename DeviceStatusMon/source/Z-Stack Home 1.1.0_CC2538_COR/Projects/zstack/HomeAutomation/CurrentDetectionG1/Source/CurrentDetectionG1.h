@@ -21,7 +21,6 @@ extern "C"
 // Send Message Timeout
 #define CTDT_PERIODIC_TIMEOUT   1000
 #define CTDT_PERIODIC_EVT       0x0001
-#define CTDT_LED_EVT            0x0010
 
 extern uint8 CurrentDetectionG1_TaskID;
 extern void CurrentDetectionG1_Init(uint8 task_id);

@@ -323,15 +323,15 @@ extern void MAC_RfFrontendSetup(void);
 }
 
 /* ----------- LED's ---------- */
-#define HAL_TURN_OFF_LED1()       GPIOPinWrite(BSP_LED_BASE, BSP_LED_1, 0)
-#define HAL_TURN_OFF_LED2()       GPIOPinWrite(BSP_LED_BASE, BSP_LED_2, 0)
-#define HAL_TURN_OFF_LED3()       GPIOPinWrite(BSP_LED_BASE, BSP_LED_3, 0)
-#define HAL_TURN_OFF_LED4()       GPIOPinWrite(BSP_LED_BASE, BSP_LED_4, 0)
+#define HAL_TURN_ON_LED1()       GPIOPinWrite(BSP_LED_BASE, BSP_LED_1, 0)
+#define HAL_TURN_ON_LED2()       GPIOPinWrite(BSP_LED_BASE, BSP_LED_2, 0)
+#define HAL_TURN_ON_LED3()       GPIOPinWrite(BSP_LED_BASE, BSP_LED_3, 0)
+#define HAL_TURN_ON_LED4()       GPIOPinWrite(BSP_LED_BASE, BSP_LED_4, 0)
 
-#define HAL_TURN_ON_LED1()        GPIOPinWrite(BSP_LED_BASE, BSP_LED_1, BSP_LED_1)
-#define HAL_TURN_ON_LED2()        GPIOPinWrite(BSP_LED_BASE, BSP_LED_2, BSP_LED_2)
-#define HAL_TURN_ON_LED3()        GPIOPinWrite(BSP_LED_BASE, BSP_LED_3, BSP_LED_3)
-#define HAL_TURN_ON_LED4()        GPIOPinWrite(BSP_LED_BASE, BSP_LED_4, BSP_LED_4)
+#define HAL_TURN_OFF_LED1()        GPIOPinWrite(BSP_LED_BASE, BSP_LED_1, BSP_LED_1)
+#define HAL_TURN_OFF_LED2()        GPIOPinWrite(BSP_LED_BASE, BSP_LED_2, BSP_LED_2)
+#define HAL_TURN_OFF_LED3()        GPIOPinWrite(BSP_LED_BASE, BSP_LED_3, BSP_LED_3)
+#define HAL_TURN_OFF_LED4()        GPIOPinWrite(BSP_LED_BASE, BSP_LED_4, BSP_LED_4)
 
 /* ----------- Toggle the LEDs ---------- */
 #define HAL_TOGGLE_LED1()         GPIOPinWrite(BSP_LED_BASE, BSP_LED_1, ~(GPIOPinRead(BSP_LED_BASE, BSP_LED_1)))
