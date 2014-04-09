@@ -61,6 +61,7 @@
 /* HAL */
 #include "hal_lcd.h"
 
+extern bool inNetwork;
 /*********************************************************************
  * MACROS
  */
@@ -545,6 +546,7 @@ void nwk_Status( uint16 statusCode, uint16 statusValue )
       break;
 
     case NWK_ERROR_ASSOC_CNF_DENIED:
+      inNetwork = false;
       HalLcdWriteString((char*)AssocCnfFailStr, HAL_LCD_LINE_1 );
       HalLcdWriteValue( (uint32)(statusValue), 16, HAL_LCD_LINE_2 );
       break;

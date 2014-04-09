@@ -139,10 +139,8 @@ int main( void )
   zmain_lcd_init();
 #endif
 
-#ifdef WDT_IN_PM1
   /* If WDT is used, this is a good place to enable it. */
   WatchDogEnable( WDTIMX );
-#endif
 
   osal_start_system(); // No Return from here
 

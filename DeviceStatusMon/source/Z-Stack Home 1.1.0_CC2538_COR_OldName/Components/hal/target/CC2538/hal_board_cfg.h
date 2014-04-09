@@ -92,7 +92,7 @@
  */
 
 /* Vdd/3 / Internal Reference X ENOB --> (Vdd / 3) / 1.15 X 127 */
-#define VDD_2_0  74 /* 2.0 V required to safely read/write internal flash. */  
+#define VDD_2_0  74 /* 2.0 V required to safely read/write internal flash. */
 #define VDD_MIN_RUN   VDD_2_0
 #define VDD_MIN_NV   (VDD_2_0+4) /* 5% margin over minimum to survive a page erase and compaction */
 
@@ -215,7 +215,7 @@
 
 // Factory commmissioning location is now placed in the Lock Bits page.  The
 // certificates are stored at the locations defined below.
-// NOTE: these addresses MUST match those defined in the associated linker 
+// NOTE: these addresses MUST match those defined in the associated linker
 // control file (.icf)
 // NOTE: Commissioning items are aligned and padded to HAL_FLASH_WORD_SIZE
 
@@ -272,12 +272,12 @@ extern void MAC_RfFrontendSetup(void);
 }
 
 
-#ifdef HAL_PA_LNA 
-#define HAL_BOARD_PA_LNA_INIT()  st(GPIOPinTypeGPIOOutput(HGM_BASE, HGM_PIN); )                                
+#ifdef HAL_PA_LNA
+#define HAL_BOARD_PA_LNA_INIT()  st(GPIOPinTypeGPIOOutput(HGM_BASE, HGM_PIN); )
 #else
-#define HAL_BOARD_PA_LNA_INIT()      
+#define HAL_BOARD_PA_LNA_INIT()
 #endif
-     
+
 #define HAL_BOARD_COMMON_INIT()                                             \
 {                                                                           \
   /* Initialize NVIC Vector Table offset register */                        \
@@ -323,13 +323,13 @@ extern void MAC_RfFrontendSetup(void);
 }
 
 /* ----------- LED's ---------- */
-#define HAL_TURN_OFF_LED1()       GPIOPinWrite(BSP_LED_BASE, BSP_LED_1, 0)
-#define HAL_TURN_OFF_LED2()       GPIOPinWrite(BSP_LED_BASE, BSP_LED_2, 0)
+#define HAL_TURN_OFF_LED1()       GPIOPinWrite(BSP_LED_BASE, BSP_LED_1, BSP_LED_1)
+#define HAL_TURN_OFF_LED2()       GPIOPinWrite(BSP_LED_BASE, BSP_LED_2, BSP_LED_2)
 #define HAL_TURN_OFF_LED3()       GPIOPinWrite(BSP_LED_BASE, BSP_LED_3, 0)
 #define HAL_TURN_OFF_LED4()       GPIOPinWrite(BSP_LED_BASE, BSP_LED_4, 0)
 
-#define HAL_TURN_ON_LED1()        GPIOPinWrite(BSP_LED_BASE, BSP_LED_1, BSP_LED_1)
-#define HAL_TURN_ON_LED2()        GPIOPinWrite(BSP_LED_BASE, BSP_LED_2, BSP_LED_2)
+#define HAL_TURN_ON_LED1()        GPIOPinWrite(BSP_LED_BASE, BSP_LED_1, 0)
+#define HAL_TURN_ON_LED2()        GPIOPinWrite(BSP_LED_BASE, BSP_LED_2, 0)
 #define HAL_TURN_ON_LED3()        GPIOPinWrite(BSP_LED_BASE, BSP_LED_3, BSP_LED_3)
 #define HAL_TURN_ON_LED4()        GPIOPinWrite(BSP_LED_BASE, BSP_LED_4, BSP_LED_4)
 

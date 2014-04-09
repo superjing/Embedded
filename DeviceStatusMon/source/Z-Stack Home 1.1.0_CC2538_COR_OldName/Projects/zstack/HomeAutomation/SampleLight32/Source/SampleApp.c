@@ -141,7 +141,7 @@ uint16 SampleApp_ProcessEvent( uint8 task_id, uint16 events )
                {
                   int emptyIndex = -1;
                   int index = findLiveList(MSGpkt->cmd.Data, &emptyIndex);
-                  HalLedBlink(HAL_LED_2, 2, 50, 500);
+                  HalLedBlink(HAL_LED_1, 2, 50, 500);
                   if (index == -1)
                   {
                      if(!insertLiveList(emptyIndex, MSGpkt->cmd.Data))
@@ -172,7 +172,7 @@ uint16 SampleApp_ProcessEvent( uint8 task_id, uint16 events )
                SampleApp_NwkState = (devStates_t)(MSGpkt->hdr.status);
                if (SampleApp_NwkState == DEV_ZB_COORD)
                {
-                  HalLedBlink(HAL_LED_1, 2, 50, 500);
+                  HalLedBlink(HAL_LED_2, 2, 50, 500);
                   osal_start_timerEx(
                      SampleApp_TaskID,
                      SAMPLEAPP_PERIODIC_EVT,
@@ -204,7 +204,7 @@ uint16 SampleApp_ProcessEvent( uint8 task_id, uint16 events )
          SAMPLEAPP_PERIODIC_EVT,
          SAMPLEAPP_PERIODIC_TIMEOUT);
 
-      HalLedBlink(HAL_LED_2, 2, 50, 500);
+      //HalLedBlink(HAL_LED_2, 2, 50, 500);
 
       // Check live list for every 10s
       if (++timerTick == 10)

@@ -12,7 +12,7 @@ ByteLimit=50
 xds100serialNo=06EB1210040D
 xds100foundProbes=
 [DebugChecksum]
-Checksum=-1735434335
+Checksum=42753809
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -28,13 +28,6 @@ Fmt1=struct uip_conn-timer	3	0
 [watch_formats]
 Fmt0={W}0:MSGpkt->cmd.Data[0]	4	0
 Fmt1={W}0:value	4	0
-[Log file]
-LoggingEnabled=_ 0
-LogFile=_ ""
-Category=_ 0
-[TermIOLog]
-LoggingEnabled=_ 0
-LogFile=_ ""
 [Disassemble mode]
 mode=0
 [Breakpoints]
@@ -52,8 +45,15 @@ Bp10=_ "STD_CODE" "{G:\Z-Stack Home 1.1.0_CC2538_COR_OK\Projects\zstack\HomeAuto
 Bp11=_ "STD_CODE" "{G:\Z-Stack Home 1.1.0_CC2538_COR_OK\Projects\zstack\HomeAutomation\SampleLight32\Source\SampleApp.c}.465.4" 0 0 0 0 "" 0 "" 0
 Bp12=_ "STD_CODE" "{G:\Z-Stack Home 1.1.0_CC2538_COR_OK\Projects\zstack\HomeAutomation\SampleLight32\Source\SampleApp.c}.156.1" 0 0 0 0 "" 0 "" 0
 Bp13=_ "STD_CODE" "{G:\Z-Stack Home 1.1.0_CC2538_COR_OK\Projects\zstack\HomeAutomation\SampleLight32\Source\SampleApp.c}.58.1" 0 0 0 0 "" 0 "" 0
-Bp14=_ "STD_CODE" "{G:\source1_22\Z-Stack Home 1.1.0_CC2538_COR\Projects\zstack\ZMain\TI2538DB\ZMain.c}.280.7" 1 0 0 0 "" 0 "" 0
+Bp14=_ "STD_CODE" "{G:\source1_22\Z-Stack Home 1.1.0_CC2538_COR\Projects\zstack\ZMain\TI2538DB\ZMain.c}.280.7" 0 0 0 0 "" 0 "" 0
 Count=15
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
 [Aliases]
 A0=_ "G:\Z-Stack Home 1.1.0_CC2538_COR\Components\hal\target\CC2538\hal_key.c" ""
 A1=_ "G:\Z-Stack Home 1.1.0_CC2538_COR\Components\mac\low_level\srf05\mac_sleep.c" ""

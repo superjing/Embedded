@@ -281,6 +281,7 @@
           <state>MT_ZDO_FUNC</state>
           <state>LCD_SUPPORTED=DEBUG</state>
           <state>TC_LINKKEY_JOIN</state>
+          <state>DEBUG_TRACE</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -736,7 +737,7 @@
         </option>
         <option>
           <name>OutputFile</name>
-          <state>CurrentDetectionT1Cor.hex</state>
+          <state>CurrentDetectionT1.hex</state>
         </option>
         <option>
           <name>OutputFormat</name>
@@ -2437,6 +2438,7 @@
           <state>xPOWER_SAVING</state>
           <state>TC_LINKKEY_JOIN</state>
           <state>DEBUG_TRACE</state>
+          <state>xWDT_IN_PM1</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -3237,6 +3239,12 @@
   <group>
     <name>App</name>
     <file>
+      <name>$PROJ_DIR$\..\Source\CurrentDetectionT1.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\CurrentDetectionT1.h</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\Source\nv.c</name>
     </file>
     <file>
@@ -3250,12 +3258,6 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\Source\printDebug.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\Source\CurrentDetectionT1.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\Source\CurrentDetectionT1.h</name>
     </file>
   </group>
   <group>

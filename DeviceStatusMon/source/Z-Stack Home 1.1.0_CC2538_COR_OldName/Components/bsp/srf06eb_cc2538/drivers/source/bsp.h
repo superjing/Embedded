@@ -81,9 +81,15 @@ extern "C"
 #define BSP_3V3_EN              GPIO_PIN_4      //!< PB4
 
 // Board LED defines
+#ifdef PROTOTYPE
 #define BSP_LED_BASE            GPIO_C_BASE
 #define BSP_LED_1               GPIO_PIN_0      //!< PC0
 #define BSP_LED_2               GPIO_PIN_1      //!< PC1
+#else
+#define BSP_LED_BASE            GPIO_B_BASE
+#define BSP_LED_1               GPIO_PIN_1      //!< PB1: GREEN
+#define BSP_LED_2               GPIO_PIN_2      //!< PB2: RED
+#endif
 #define BSP_LED_3               GPIO_PIN_2      //!< PC2
 #define BSP_LED_4               GPIO_PIN_3      //!< PC3
 #define BSP_LED_ALL             (BSP_LED_1 | \

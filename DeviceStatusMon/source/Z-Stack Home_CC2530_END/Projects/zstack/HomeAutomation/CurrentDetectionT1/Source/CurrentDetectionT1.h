@@ -29,10 +29,14 @@ extern "C"
 #define DTCT_PERIODIC_CLUSTERID 1
 
 // Send Message Timeout
-#define DTCT_TIMER_MSG_TIMEOUT  5    // Every 1 seconds
+#define DTCT_TIMER_MSG_TIMEOUT  5    // Every 5ms
+// LED and WatchDog Timeout
+#define DTCT_LED_WTD_EVT_TIMEOUT   200   // Every 200ms
 
 // Application Events (OSAL) - These are bit weighted definitions.
 #define DTCT_HEARTBEAT_MSG_EVT  0X0001
+// LED and WatchDog EVT
+#define DTCT_LED_WTD_EVT        0x0100
 
 typedef void (*PFUNC)(uint8 *);
 /*********************************************************************

@@ -853,7 +853,7 @@ UINT16 SAPI_ProcessEvent( byte task_id, UINT16 events )
     else
     {
       // blink leds and wait for external input to config and restart
-      HalLedBlink(HAL_LED_2, 0, 50, 500);
+      //HalLedBlink(HAL_LED_2, 0, 50, 500);
     }
 
     return (events ^ ZB_ENTRY_EVENT );

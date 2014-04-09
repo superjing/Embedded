@@ -29,7 +29,7 @@
  */
 
 // If the data cannot be sent in 1 minute, we need to restart the stack.
-#define FAIL_TIEM_TO_RESTART (NV_NUM_STORE * 2)
+#define FAIL_TIME_TO_RESTART (NV_NUM_STORE * 2)
 
 /*********************************************************************
  * CONSTANTS
@@ -166,13 +166,6 @@ void CurrentDetectionT1_Init(uint8 task_id)
       zgDeviceLogicalType = ZG_DEVICETYPE_ROUTER;
 #endif // BUILD_ALL_DEVICES
 
-#if defined ( HOLD_AUTO_START )
-   // HOLD_AUTO_START is a compile option that will surpress ZDApp
-   //  from starting the device and wait for the application to
-   //  start the device.
-   ZDOInitDevice(0);
-#endif
-
    // Setup for the periodic message's destination address
    // Broadcast to everyone
    CurrentDetectionT1_Periodic_DstAddr.addrMode = (afAddrMode_t)Addr16Bit;
@@ -199,7 +192,12 @@ void CurrentDetectionT1_Init(uint8 task_id)
 
    memcpy(serialNumber, aExtendedAddress, SN_LEN);
 
-   osal_start_timerEx(CurrentDetectionT1_TaskID, DTCT_HEARTBEAT_MSG_EVT, 500);
+   //Feed WatchDog
+   WDCTL = 0xa0;
+   WDCTL = 0x50;
+
+   osal_start_timerEx(CurrentDetectionT1_TaskID, DTCT_HEARTBEAT_MSG_EVT, 10);
+   osal_start_timerEx(CurrentDetectionT1_TaskID, DTCT_LED_WTD_EVT, 10);
 }
 
 /*********************************************************************
@@ -238,7 +236,7 @@ uint16 CurrentDetectionT1_ProcessEvent(uint8 task_id, uint16 events)
 
 #ifdef DEBUG_TRACE
             case AF_INCOMING_MSG_CMD:
-               HalLedBlink(HAL_LED_1, 2, 50, 500);
+               //HalLedBlink(HAL_LED_1, 2, 50, 500);
 #endif
 
             // Received whenever the device changes state in the network
@@ -246,7 +244,7 @@ uint16 CurrentDetectionT1_ProcessEvent(uint8 task_id, uint16 events)
                CurrentDetectionT1_NwkState = (devStates_t)(MSGpkt->hdr.status);
                if (CurrentDetectionT1_NwkState == DEV_END_DEVICE)
                {
-                  //HalLedBlink(HAL_LED_1, 2, 50, 500);
+                  HalLedSet(HAL_LED_2,  HAL_LED_MODE_ON);
                   HalUARTWrite(0, EndDeviceStatus, strlen((char *)EndDeviceStatus));
                   inNetwork = true;
                }
@@ -281,26 +279,20 @@ uint16 CurrentDetectionT1_ProcessEvent(uint8 task_id, uint16 events)
 
       if (P2_0)
       {
-        HalLedBlink(HAL_LED_1, 2, 50, 500);
-        HalLedSet(HAL_LED_2,  HAL_LED_MODE_OFF);
-
-        osal_start_timerEx(
+         osal_start_timerEx(
             CurrentDetectionT1_TaskID,
             DTCT_HEARTBEAT_MSG_EVT,
             DTCT_TIMER_MSG_TIMEOUT*200);
 
-        // return unprocessed events
-        return (events ^ DTCT_HEARTBEAT_MSG_EVT);
+         return (events ^ DTCT_HEARTBEAT_MSG_EVT);
       }
 
       CurrentDetectionT1_SampleCurrentAdcValue();
 
-      // send heart bit every 2s.
+      // send heart beat every 2s.
       if (++timerCount == 400)
       {
          CurrentDetectionT1_SetAverageCurrentAdcValue(buf + 12, timerCount);
-
-         checkLedStatus();
          CurrentDetectionT1_RecoverHeartBeatMessage();
 
          if (inNetwork)
@@ -322,7 +314,7 @@ uint16 CurrentDetectionT1_ProcessEvent(uint8 task_id, uint16 events)
             CurrentDetectionT1_StoreHeartBeatMessage(buf + SN_LEN);
          }
 
-         if (heartBitFailNum == FAIL_TIEM_TO_RESTART)
+         if (heartBitFailNum == FAIL_TIME_TO_RESTART)
          {
             if (nvMsgNum != 0)
             {
@@ -334,7 +326,6 @@ uint16 CurrentDetectionT1_ProcessEvent(uint8 task_id, uint16 events)
          timerCount = 0;
       }
 
-      // Setup to send heartbeat again in 10s
       osal_start_timerEx(
             CurrentDetectionT1_TaskID,
             DTCT_HEARTBEAT_MSG_EVT,
@@ -344,6 +335,29 @@ uint16 CurrentDetectionT1_ProcessEvent(uint8 task_id, uint16 events)
       return (events ^ DTCT_HEARTBEAT_MSG_EVT);
    }
 
+   if (events & DTCT_LED_WTD_EVT)
+   {
+      //Feed WatchDog
+      WDCTL = 0xa0;
+      WDCTL = 0x50;
+
+      if (P2_0)
+      {
+        HalLedSet(HAL_LED_1,  HAL_LED_MODE_ON);
+        HalLedSet(HAL_LED_2,  HAL_LED_MODE_OFF);
+      }
+      else
+      {
+	checkLedStatus();
+      }
+
+      osal_start_timerEx(
+        CurrentDetectionT1_TaskID,
+        DTCT_LED_WTD_EVT,
+        DTCT_LED_WTD_EVT_TIMEOUT);
+
+      return (events ^ DTCT_LED_WTD_EVT);
+   }
    // Discard unknown events
    return 0;
 }
@@ -397,6 +411,7 @@ void CurrentDetectionT1_RecoverHeartBeatMessage(void)
             }
 
             PrintRecover(buf, true);
+            HalLedBlink(HAL_LED_2, 2, 20, 50);
          }
          else
          {
@@ -421,6 +436,7 @@ void CurrentDetectionT1_RecoverHeartBeatMessage(void)
       {
          --nvMsgNum;
          PrintRecover(buf, true);
+         HalLedBlink(HAL_LED_2, 2, 20, 50);;
       }
       else
       {
@@ -444,6 +460,7 @@ bool CurrentDetectionT1_SendHeartBeatMessage(uint8* buf)
             AF_DISCV_ROUTE,
             AF_DEFAULT_RADIUS) == afStatus_SUCCESS)
    {
+      HalLedBlink(HAL_LED_2, 2, 20, 50);
       return true;
    }
 
@@ -459,11 +476,11 @@ void checkLedStatus(void)
    HalLedSet(HAL_LED_1,  HAL_LED_MODE_OFF);
    if (!inNetwork)
    {
-      HalLedBlink(HAL_LED_2, 2, 50, 500);
+      HalLedBlink(HAL_LED_2, 4, 50, 190);
    }
    else
    {
-      HalLedSet(HAL_LED_2,  HAL_LED_MODE_ON);;
+      HalLedSet(HAL_LED_2,  HAL_LED_MODE_OFF);
    }
 
   return;
@@ -501,6 +518,7 @@ void CurrentDetectionT1_SendNeedRepairMessage(uint8* buf)
             AF_DEFAULT_RADIUS) == afStatus_SUCCESS)
    {
       repairReported = true;
+      HalLedBlink(HAL_LED_2, 2, 50, 50);
    }
 
    return;
@@ -530,8 +548,10 @@ void getP2_0Status(void)
 
 void CurrentDetectionT1_SampleCurrentAdcValue()
 {
-  adcValueSum[0] += HalAdcRead(HAL_ADC_CHN_AIN6, HAL_ADC_RESOLUTION_12);
-  adcValueSum[1] += HalAdcRead(HAL_ADC_CHN_AIN7, HAL_ADC_RESOLUTION_12);
+  //AC_IN0: P0_7
+  //AC-IN1: P0_6
+  adcValueSum[0] += HalAdcRead(HAL_ADC_CHN_AIN7, HAL_ADC_RESOLUTION_12);
+  adcValueSum[1] += HalAdcRead(HAL_ADC_CHN_AIN6, HAL_ADC_RESOLUTION_12);
 
   return;
 }
