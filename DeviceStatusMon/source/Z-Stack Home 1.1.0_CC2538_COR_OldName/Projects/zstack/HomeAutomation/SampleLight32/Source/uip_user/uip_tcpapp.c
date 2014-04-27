@@ -19,7 +19,12 @@ extern LockFreeQueue queue;
 
 static uint8 last_uip_msg[ELEMENT_SIZE];
 
-#ifdef DEBUG_TRACE
+uint8_t ipAddr[IPADDR_LEN] = {10, 144, 3, 129};
+
+uint8_t httpBuffer_Head[] = "POST /power/data HTTP/1.1\r\nHost:abc:9090\r\nContent-Type:application/x-www-form-urlencoded\r\nContent-Length:37\r\n\r\n";
+uint8_t httpBuffer_Body[] = "sn=0123456789abcdef&ad1=1234&ad2=5678";
+
+
 static void FormatHexUint32Str(uint8 *dst, uint8 * src)
 {
    uint8 i = 0;
@@ -50,7 +55,23 @@ static void FormatHexUint8Str(uint8 *dst, uint8 * src)
    }
 }
 
-#endif
+static void _uip_send_http(uint8 * buffer)
+{
+   uint8 debugBuf[161] = {0};
+   uint8 headLen = (sizeof(httpBuffer_Head)/sizeof(httpBuffer_Head[0]) - 1);
+   uint8 bodyLen = (sizeof(httpBuffer_Body)/sizeof(httpBuffer_Body[0]) - 1);
+
+   memcpy(debugBuf, httpBuffer_Head, headLen);
+   FormatHexUint32Str(httpBuffer_Body + 3, buffer);
+   FormatHexUint32Str(httpBuffer_Body + 11, buffer + 4);
+   FormatHexUint8Str(httpBuffer_Body + 24, buffer + 12);
+   FormatHexUint8Str(httpBuffer_Body + 26, buffer + 13);
+   FormatHexUint8Str(httpBuffer_Body + 33, buffer + 14);
+   FormatHexUint8Str(httpBuffer_Body + 35, buffer + 15);
+   memcpy(debugBuf + headLen, httpBuffer_Body, bodyLen);
+
+   uip_send(debugBuf, headLen + bodyLen);
+}
 
 static void _uip_send(uint8 * buffer)
 {
@@ -82,8 +103,8 @@ static void _uip_send(uint8 * buffer)
 static void tcp_client_reconnect(void)
 {
    uip_ipaddr_t ipaddr;
-   uip_ipaddr(&ipaddr, 10, 144, 3, 104);
-   uip_connect(&ipaddr, HTONS(1234));
+   uip_ipaddr(&ipaddr, ipAddr[0], ipAddr[1], ipAddr[2], ipAddr[3]);
+   uip_connect(&ipaddr, HTONS(9090));
 }
 
 void tcp_client_demo_appcall_user(void)
@@ -104,14 +125,27 @@ void tcp_client_demo_appcall_user(void)
 
    if (QueueLength(&queue) != 0)
    {
+#if 0
       FreeQueuePop(&queue, buffer);
       _uip_send(buffer);
+#endif
+      FreeQueuePop(&queue, buffer);
+      _uip_send_http(buffer);
    }
    else
    {
       if (nv_read_msg(buffer))
       {
          _uip_send(buffer);
+      }
+   }
+
+   if (uip_newdata())
+   {
+      if ((IPADDR_CMD_LEN == uip_datalen()) && (IPADDR_CMD == ((uint8*)uip_appdata)[0]))
+      {
+        memcpy(ipAddr, ((uint8*)uip_appdata + 1), IPADDR_LEN);
+        tcp_client_reconnect();
       }
    }
 }

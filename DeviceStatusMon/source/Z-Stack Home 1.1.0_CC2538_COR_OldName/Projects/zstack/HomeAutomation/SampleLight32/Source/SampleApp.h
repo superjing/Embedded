@@ -7,9 +7,9 @@ extern "C"
 #endif
 
 #include "ZComDef.h"
-      
+
 #define HEARTBEAT_ENDPOINT           10
-  
+
 #define SAMPLEAPP_PROFID             0x0F08
 #define SAMPLEAPP_DEVICEID           0x0001
 #define SAMPLEAPP_DEVICE_VERSION     0
@@ -21,7 +21,11 @@ extern "C"
 // Send Message Timeout
 #define SAMPLEAPP_PERIODIC_TIMEOUT   1000
 #define SAMPLEAPP_PERIODIC_EVT       0x0001
-  
+
+//WTD EVT
+#define SAMPLEAPP_WTD_EVT            0x0010
+#define SAMPLEAPP_WTD_TIMEOUT        500
+
 extern uint8 SampleApp_TaskID;
 extern void SampleApp_Init(uint8 task_id);
 extern UINT16 SampleApp_ProcessEvent( uint8 task_id, uint16 events );

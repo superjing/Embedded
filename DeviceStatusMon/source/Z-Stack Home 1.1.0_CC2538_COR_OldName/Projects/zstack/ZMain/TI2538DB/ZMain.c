@@ -63,6 +63,7 @@
 #include "uip_arp.h"
 #include "clock_arch.h"
 #include "uip_tcpapp.h"
+#include "Watchdog.h"
 
 #define BUF ((struct uip_eth_hdr *)&uip_buf[0])
 
@@ -180,6 +181,7 @@ extern char dhcpdone;
  *
  * @return  Don't care
  */
+//#define BOOTLOADER_BACKDOOR_DISABLE     0xEFFFFFFF
 int main( void )
 {
   // Turn off interrupts
@@ -233,11 +235,6 @@ int main( void )
   zmain_lcd_init();
 #endif
 
-#ifdef WDT_IN_PM1
-  /* If WDT is used, this is a good place to enable it. */
-  WatchDogEnable( WDTIMX );
-#endif
-
 #ifndef PROTOTYPE
   GPIOPinTypeGPIOOutput(GPIO_B_BASE, GPIO_PIN_1);
   GPIOPinTypeGPIOOutput(GPIO_B_BASE, GPIO_PIN_2);
@@ -245,6 +242,7 @@ int main( void )
   GPIOPinTypeGPIOOutput(GPIO_D_BASE, GPIO_PIN_2);
   GPIOPinTypeGPIOOutput(GPIO_A_BASE, GPIO_PIN_3);
   GPIOPinWrite(GPIO_B_BASE, GPIO_PIN_3, 0);
+  GPIOPinWrite(GPIO_B_BASE, GPIO_PIN_2, GPIO_PIN_2);
 #endif
 
   arptimer = 0;
@@ -259,6 +257,8 @@ int main( void )
   // Use zigbee IEEE Mac address as dhcp Mac address
   dhcpc_init(aExtendedAddress + 2, 6);
 
+  WatchdogEnable( WATCHDOG_INTERVAL_32768 );
+
   for(;;)
   {
     osal_run_system();
@@ -267,11 +267,6 @@ int main( void )
     {
       tpc_app_init();
       dhcpdone = 0;
-
-      #ifndef PROTOTYPE
-      // Turn on LED after dhcp get ip address
-      GPIOPinWrite(GPIO_B_BASE, GPIO_PIN_2, 1);
-      #endif
     }
   }
 

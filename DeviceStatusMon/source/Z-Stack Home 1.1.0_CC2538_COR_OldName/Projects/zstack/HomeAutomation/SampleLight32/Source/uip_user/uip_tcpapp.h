@@ -20,6 +20,12 @@ struct example_state {
 
 #define UIP_MSG_SIZE 100
 
+#define IPADDR_LEN   4
+
+//command length of change ipadrr
+#define IPADDR_CMD_LEN   (IPADDR_LEN + 1)
+#define IPADDR_CMD       (0xAD)
+
 typedef struct example_state uip_tcp_appstate_t;
 
 #endif

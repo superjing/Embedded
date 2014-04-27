@@ -16,6 +16,7 @@
 #include "SampleAppHw.h"
 
 #include "string.h"
+#include "Watchdog.h"
 
 /*********************************************************************
  * GLOBAL VARIABLES
@@ -105,6 +106,10 @@ void SampleApp_Init(uint8 task_id)
 
    initLiveList();
    InitFreeQueque(&queue);
+
+   WatchdogClear();
+
+   osal_start_timerEx(SampleApp_TaskID, SAMPLEAPP_WTD_EVT, SAMPLEAPP_WTD_TIMEOUT);
 }
 
 /*********************************************************************
@@ -141,7 +146,7 @@ uint16 SampleApp_ProcessEvent( uint8 task_id, uint16 events )
                {
                   int emptyIndex = -1;
                   int index = findLiveList(MSGpkt->cmd.Data, &emptyIndex);
-                  HalLedBlink(HAL_LED_1, 2, 50, 500);
+                  HalLedBlink(HAL_LED_1, 2, 50, 50);
                   if (index == -1)
                   {
                      if(!insertLiveList(emptyIndex, MSGpkt->cmd.Data))
@@ -215,6 +220,16 @@ uint16 SampleApp_ProcessEvent( uint8 task_id, uint16 events )
 
       // return unprocessed events
       return (events ^ SAMPLEAPP_PERIODIC_EVT);
+   }
+
+   if (events & SAMPLEAPP_WTD_EVT)
+   {
+     WatchdogClear();
+
+     osal_start_timerEx(SampleApp_TaskID, SAMPLEAPP_WTD_EVT, SAMPLEAPP_WTD_TIMEOUT);
+
+     WatchdogEnable( WATCHDOG_INTERVAL_32768 );
+     return (events ^ SAMPLEAPP_WTD_EVT);
    }
 
    // Discard unknown events
