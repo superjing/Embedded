@@ -5,6 +5,7 @@
 #include "SampleApp.h"
 #include "OSAL.h"
 #include "nv.h"
+#include "OnBoard.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -19,11 +20,9 @@ extern LockFreeQueue queue;
 
 static uint8 last_uip_msg[ELEMENT_SIZE];
 
-uint8_t ipAddr[IPADDR_LEN] = {10, 144, 3, 129};
+uint8_t ipAddr[IPADDR_LEN] = {10, 144, 3, 104};
 
-uint8_t httpBuffer_Head[] = "POST /power/data HTTP/1.1\r\nHost:abc:9090\r\nContent-Type:application/x-www-form-urlencoded\r\nContent-Length:37\r\n\r\n";
-uint8_t httpBuffer_Body[] = "sn=0123456789abcdef&ad1=1234&ad2=5678";
-
+static uint8 buffer[ELEMENT_SIZE] = {0};
 
 static void FormatHexUint32Str(uint8 *dst, uint8 * src)
 {
@@ -55,19 +54,46 @@ static void FormatHexUint8Str(uint8 *dst, uint8 * src)
    }
 }
 
-static void _uip_send_http(uint8 * buffer)
+uint8 httpBuffer_Head[] = "POST /power/data HTTP/1.1\r\nHost:abc:9090\r\nContent-Type:application/x-www-form-urlencoded\r\nContent-Length:95\r\n\r\n";
+uint8 httpBuffer_Body[] = "tag=01&len=50&g1sn=0123456789abcdef&sn=0123456789abcdef&time=12345678&ad1=1234&ad2=5678&live=01";
+
+ConverList converlist[] =
 {
-   uint8 debugBuf[161] = {0};
+    {httpBuffer_Body + 0x13,       aExtendedAddress + 0,  FormatHexUint32Str},
+    {httpBuffer_Body + 0x13 + 0x8, aExtendedAddress + 4,  FormatHexUint32Str},
+    {httpBuffer_Body + 0x27,       buffer + 0,            FormatHexUint32Str},
+    {httpBuffer_Body + 0x27 + 0x8, buffer + 4,            FormatHexUint32Str},
+    {httpBuffer_Body + 0x3d,       buffer + 8,            FormatHexUint32Str},
+    {httpBuffer_Body + 0x4a,       buffer + 12,           FormatHexUint8Str },
+    {httpBuffer_Body + 0x4c,       buffer + 13,           FormatHexUint8Str },
+    {httpBuffer_Body + 0x53,       buffer + 14,           FormatHexUint8Str },
+    {httpBuffer_Body + 0x55,       buffer + 15,           FormatHexUint8Str },
+    {httpBuffer_Body + 0x5d,       buffer + 16,           FormatHexUint8Str },
+};
+
+uint8 converlistNum = sizeof(converlist)/sizeof(converlist[0]);
+
+void converBuf2HttpStr(void)
+{
+   uint8 i = 0;
+
+   for (i = 0; i < converlistNum; i++)
+   {
+     converlist[i].converFunc(converlist[i].dstBuf, converlist[i].srcBuf);
+   }
+
+   return;
+}
+
+
+static void _uip_send_http(void)
+{
+   uint8 debugBuf[207] = {0};
    uint8 headLen = (sizeof(httpBuffer_Head)/sizeof(httpBuffer_Head[0]) - 1);
    uint8 bodyLen = (sizeof(httpBuffer_Body)/sizeof(httpBuffer_Body[0]) - 1);
 
+   converBuf2HttpStr();
    memcpy(debugBuf, httpBuffer_Head, headLen);
-   FormatHexUint32Str(httpBuffer_Body + 3, buffer);
-   FormatHexUint32Str(httpBuffer_Body + 11, buffer + 4);
-   FormatHexUint8Str(httpBuffer_Body + 24, buffer + 12);
-   FormatHexUint8Str(httpBuffer_Body + 26, buffer + 13);
-   FormatHexUint8Str(httpBuffer_Body + 33, buffer + 14);
-   FormatHexUint8Str(httpBuffer_Body + 35, buffer + 15);
    memcpy(debugBuf + headLen, httpBuffer_Body, bodyLen);
 
    uip_send(debugBuf, headLen + bodyLen);
@@ -109,8 +135,6 @@ static void tcp_client_reconnect(void)
 
 void tcp_client_demo_appcall_user(void)
 {
-   uint8_t buffer[ELEMENT_SIZE];
-
    if (uip_aborted() || uip_timedout() || uip_closed())
    {
       tcp_client_reconnect();
@@ -130,7 +154,7 @@ void tcp_client_demo_appcall_user(void)
       _uip_send(buffer);
 #endif
       FreeQueuePop(&queue, buffer);
-      _uip_send_http(buffer);
+      _uip_send_http();
    }
    else
    {

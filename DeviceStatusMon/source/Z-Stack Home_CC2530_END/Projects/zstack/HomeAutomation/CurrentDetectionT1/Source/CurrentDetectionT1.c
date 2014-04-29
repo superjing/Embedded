@@ -272,7 +272,7 @@ uint16 CurrentDetectionT1_ProcessEvent(uint8 task_id, uint16 events)
    //  (setup in CurrentDetectionT1_Init()).
    if (events & DTCT_HEARTBEAT_MSG_EVT)
    {
-      uint8 buf[SN_LEN + NV_LEN];
+      uint8 buf[SN_LEN + NV_LEN + 1];
       uint32 curTime = lastNvTime + osal_GetSystemClock();
       memcpy(buf, serialNumber, SN_LEN);
       memcpy(buf + SN_LEN, &curTime, sizeof(curTime));
@@ -300,6 +300,7 @@ uint16 CurrentDetectionT1_ProcessEvent(uint8 task_id, uint16 events)
 
          if (inNetwork)
          {
+            buf[SN_LEN + NV_LEN] = 1;
             // Send the Heartbeat Message
             if (!CurrentDetectionT1_SendHeartBeatMessage(buf))
             {
@@ -384,7 +385,7 @@ void CurrentDetectionT1_SerialCMD(mtOSALSerialData_t *cmdMsg)
 
 void CurrentDetectionT1_RecoverHeartBeatMessage(void)
 {
-   uint8 buf[SN_LEN + NV_LEN];
+   uint8 buf[SN_LEN + NV_LEN + 1];
 
    if (!inNetwork)
    {
@@ -397,12 +398,12 @@ void CurrentDetectionT1_RecoverHeartBeatMessage(void)
       {
          nv_read_msg(recoverMsgNum - 1, buf + SN_LEN);
          memcpy(buf, serialNumber, SN_LEN);
-
+         buf[SN_LEN + NV_LEN] = 0;
          if (AF_DataRequest(
                   &CurrentDetectionT1_Periodic_DstAddr,
                   &CurrentDetectionT1_epDesc,
                   DTCT_PERIODIC_CLUSTERID,
-                  SN_LEN + NV_LEN,
+                  SN_LEN + NV_LEN + 1,
                   buf,
                   &CurrentDetectionT1_TransID,
                   AF_DISCV_ROUTE,
@@ -426,12 +427,13 @@ void CurrentDetectionT1_RecoverHeartBeatMessage(void)
    {
       memcpy(buf, serialNumber, SN_LEN);
       memcpy(buf + SN_LEN, rfData[nvMsgNum - 1].data, NV_LEN);
+      buf[SN_LEN + NV_LEN] = 0;
 
       if (AF_DataRequest(
                &CurrentDetectionT1_Periodic_DstAddr,
                &CurrentDetectionT1_epDesc,
                DTCT_PERIODIC_CLUSTERID,
-               SN_LEN + NV_LEN,
+               SN_LEN + NV_LEN + 1,
                buf,
                &CurrentDetectionT1_TransID,
                AF_DISCV_ROUTE,
@@ -457,7 +459,7 @@ bool CurrentDetectionT1_SendHeartBeatMessage(uint8* buf)
             &CurrentDetectionT1_Periodic_DstAddr,
             &CurrentDetectionT1_epDesc,
             DTCT_PERIODIC_CLUSTERID,
-            SN_LEN + NV_LEN,
+            SN_LEN + NV_LEN + 1,
             buf,
             &CurrentDetectionT1_TransID,
             AF_DISCV_ROUTE,

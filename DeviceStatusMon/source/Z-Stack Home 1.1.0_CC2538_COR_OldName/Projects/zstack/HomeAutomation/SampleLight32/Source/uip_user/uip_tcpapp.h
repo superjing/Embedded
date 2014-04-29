@@ -28,4 +28,13 @@ struct example_state {
 
 typedef struct example_state uip_tcp_appstate_t;
 
+typedef void (*PFUNC)(uint8 *, uint8 *);
+
+typedef struct ConverListStr
+{
+	uint8 * dstBuf;
+	uint8 * srcBuf;
+	PFUNC   converFunc;
+}ConverList;
+
 #endif

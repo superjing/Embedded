@@ -5,7 +5,7 @@
 #include <stdbool.h>
 
 #define MAX_ELEMENT_NUM 32
-#define ELEMENT_SIZE    16
+#define ELEMENT_SIZE    17
 
 typedef struct
 {
