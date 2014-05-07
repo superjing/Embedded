@@ -180,6 +180,7 @@
           <state>TC_LINKKEY_JOIN</state>
           <state>xDEBUG_TRACE</state>
           <state>PROTOTYPE</state>
+          <state>BOOTLOADER_BACKDOOR_DISABLE=0xEFFFFFFF</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -2943,6 +2944,12 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\Source\uip_user\uip_dhcpc.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Source\uip_user\uip_httpapp.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Source\uip_user\uip_httpapp.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Source\uip_user\uip_tcpapp.c</name>

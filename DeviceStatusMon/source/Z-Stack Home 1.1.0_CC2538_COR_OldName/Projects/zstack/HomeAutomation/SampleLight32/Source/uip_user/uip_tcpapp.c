@@ -1,5 +1,6 @@
 #include "uip_dhcpc.h"
 #include "uip_tcpapp.h"
+#include "uip_httpapp.h"
 #include "uip.h"
 #include "queue.h"
 #include "SampleApp.h"
@@ -17,87 +18,13 @@
 #endif
 
 extern LockFreeQueue queue;
+extern uint8 CorSendGap;
 
 static uint8 last_uip_msg[ELEMENT_SIZE];
 
 uint8_t ipAddr[IPADDR_LEN] = {10, 144, 3, 104};
 
-static uint8 buffer[ELEMENT_SIZE] = {0};
-
-static void FormatHexUint32Str(uint8 *dst, uint8 * src)
-{
-   uint8 i = 0;
-   uint8 * ptr = src;
-
-   for (i = 0; i < (sizeof(uint32) * 2); ptr++)
-   {
-      uint8 ch;
-      ch = (*ptr >> 4) & 0x0F;
-      dst[i++] = ch + (( ch < 10 ) ? '0' : '7');
-      ch = *ptr & 0x0F;
-      dst[i++] = ch + (( ch < 10 ) ? '0' : '7');
-   }
-}
-
-static void FormatHexUint8Str(uint8 *dst, uint8 * src)
-{
-   uint8 i = 0;
-   uint8 * ptr = src;
-
-   for (i = 0; i < (sizeof(uint8) * 2); ptr++)
-   {
-      uint8 ch;
-      ch = (*ptr >> 4) & 0x0F;
-      dst[i++] = ch + (( ch < 10 ) ? '0' : '7');
-      ch = *ptr & 0x0F;
-      dst[i++] = ch + (( ch < 10 ) ? '0' : '7');
-   }
-}
-
-uint8 httpBuffer_Head[] = "POST /power/data HTTP/1.1\r\nHost:abc:9090\r\nContent-Type:application/x-www-form-urlencoded\r\nContent-Length:95\r\n\r\n";
-uint8 httpBuffer_Body[] = "tag=01&len=50&g1sn=0123456789abcdef&sn=0123456789abcdef&time=12345678&ad1=1234&ad2=5678&live=01";
-
-ConverList converlist[] =
-{
-    {httpBuffer_Body + 0x13,       aExtendedAddress + 0,  FormatHexUint32Str},
-    {httpBuffer_Body + 0x13 + 0x8, aExtendedAddress + 4,  FormatHexUint32Str},
-    {httpBuffer_Body + 0x27,       buffer + 0,            FormatHexUint32Str},
-    {httpBuffer_Body + 0x27 + 0x8, buffer + 4,            FormatHexUint32Str},
-    {httpBuffer_Body + 0x3d,       buffer + 8,            FormatHexUint32Str},
-    {httpBuffer_Body + 0x4a,       buffer + 12,           FormatHexUint8Str },
-    {httpBuffer_Body + 0x4c,       buffer + 13,           FormatHexUint8Str },
-    {httpBuffer_Body + 0x53,       buffer + 14,           FormatHexUint8Str },
-    {httpBuffer_Body + 0x55,       buffer + 15,           FormatHexUint8Str },
-    {httpBuffer_Body + 0x5d,       buffer + 16,           FormatHexUint8Str },
-};
-
-uint8 converlistNum = sizeof(converlist)/sizeof(converlist[0]);
-
-void converBuf2HttpStr(void)
-{
-   uint8 i = 0;
-
-   for (i = 0; i < converlistNum; i++)
-   {
-     converlist[i].converFunc(converlist[i].dstBuf, converlist[i].srcBuf);
-   }
-
-   return;
-}
-
-
-static void _uip_send_http(void)
-{
-   uint8 debugBuf[207] = {0};
-   uint8 headLen = (sizeof(httpBuffer_Head)/sizeof(httpBuffer_Head[0]) - 1);
-   uint8 bodyLen = (sizeof(httpBuffer_Body)/sizeof(httpBuffer_Body[0]) - 1);
-
-   converBuf2HttpStr();
-   memcpy(debugBuf, httpBuffer_Head, headLen);
-   memcpy(debugBuf + headLen, httpBuffer_Body, bodyLen);
-
-   uip_send(debugBuf, headLen + bodyLen);
-}
+extern uint8 buffer[ELEMENT_SIZE];
 
 static void _uip_send(uint8 * buffer)
 {
@@ -131,6 +58,7 @@ static void tcp_client_reconnect(void)
    uip_ipaddr_t ipaddr;
    uip_ipaddr(&ipaddr, ipAddr[0], ipAddr[1], ipAddr[2], ipAddr[3]);
    uip_connect(&ipaddr, HTONS(9090));
+   uip_listen(HTONS(9090));
 }
 
 void tcp_client_demo_appcall_user(void)
@@ -149,10 +77,6 @@ void tcp_client_demo_appcall_user(void)
 
    if (QueueLength(&queue) != 0)
    {
-#if 0
-      FreeQueuePop(&queue, buffer);
-      _uip_send(buffer);
-#endif
       FreeQueuePop(&queue, buffer);
       _uip_send_http();
    }
@@ -160,17 +84,13 @@ void tcp_client_demo_appcall_user(void)
    {
       if (nv_read_msg(buffer))
       {
-         _uip_send(buffer);
+         _uip_send_http();
       }
    }
 
    if (uip_newdata())
    {
-      if ((IPADDR_CMD_LEN == uip_datalen()) && (IPADDR_CMD == ((uint8*)uip_appdata)[0]))
-      {
-        memcpy(ipAddr, ((uint8*)uip_appdata + 1), IPADDR_LEN);
-        tcp_client_reconnect();
-      }
+      ip_cmd_process(uip_datalen(), (uint8*)uip_appdata);
    }
 }
 
@@ -183,15 +103,28 @@ void tpc_app_call(void)
 {
    switch(uip_conn->lport)
    {
-      case HTONS(1234):
+      case HTONS(9090):
          tcp_client_demo_appcall_user();
          break;
    }
 
    switch(uip_conn->rport)
    {
-      case HTONS(1234):
+      case HTONS(9090):
          tcp_client_demo_appcall_user();
          break;
    }
+}
+
+void ip_cmd_process(uint8 cmdLen, uint8 * cmd)
+{
+  if ((5 == cmdLen) && (0 == memcmp("hello", cmd, 5)))
+  {
+    uip_send("I get hello", 11);
+  }
+
+  if ((2 == cmdLen) && (0xEF == cmd[0]))
+  {
+    CorSendGap = cmd[1];
+  }
 }

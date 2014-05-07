@@ -8,3 +8,22 @@ DeviceStatusMon/source/Z-Stack Home_CC2530_END/CC2530.PO
 DeviceStatusMon/source/Z-Stack Home_CC2530_END/CC2530.PFI
 DeviceStatusMon/source/Z-Stack Home_CC2530_END/CC2530.PR
 DeviceStatusMon/source/Z-Stack Home_CC2530_END/CC2530.PRI
+*.IAD
+*.IMB
+*.bin
+*.bin
+*.out
+*.sim
+*.IAB
+*.IMD
+*.PO
+DeviceStatusMon/source/Z-Stack Home 1.1.0_CC2538_COR_OldName/CC2538_OldName.PFI
+*.PR
+*.PRI
+*.PS
+*.SearchResults
+*.WK3
+*.hex
+*.bat
+*.dni
+*.hex

@@ -181,7 +181,6 @@ extern char dhcpdone;
  *
  * @return  Don't care
  */
-//#define BOOTLOADER_BACKDOOR_DISABLE     0xEFFFFFFF
 int main( void )
 {
   // Turn off interrupts

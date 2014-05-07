@@ -12,7 +12,7 @@ ByteLimit=50
 xds100serialNo=06EB1210040D
 xds100foundProbes=
 [DebugChecksum]
-Checksum=1665896309
+Checksum=2090126794
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -28,6 +28,16 @@ Fmt1=struct uip_conn-timer	3	0
 [watch_formats]
 Fmt0={W}0:MSGpkt->cmd.Data[0]	4	0
 Fmt1={W}0:value	4	0
+[Disassemble mode]
+mode=0
+[Breakpoints]
+Bp0=_ "STD_CODE" "{G:\Github\Embedded\DeviceStatusMon\source\Z-Stack Home 1.1.0_CC2538_COR_OldName\Projects\zstack\ZMain\TI2538DB\ZMain.c}.268.7" 0 0 0 0 "" 0 "" 0
+Bp1=_ "STD_CODE" "{G:\Github\Embedded\DeviceStatusMon\source\Z-Stack Home 1.1.0_CC2538_COR_OldName\Projects\zstack\HomeAutomation\SampleLight32\Source\uip_user\uip_tcpapp.c}.93.7" 0 0 0 0 "" 0 "" 0
+Bp2=_ "STD_CODE" "{G:\Github\Embedded\DeviceStatusMon\source\Z-Stack Home 1.1.0_CC2538_COR_OldName\Projects\zstack\HomeAutomation\SampleLight32\Source\uip_user\uip_tcpapp.c}.93.7" 0 0 0 0 "" 0 "" 0
+Bp3=_ "STD_CODE" "{G:\Github\Embedded\DeviceStatusMon\source\Z-Stack Home 1.1.0_CC2538_COR_OldName\Projects\zstack\HomeAutomation\SampleLight32\Source\SampleApp.c}.177.24" 1 0 0 0 "" 0 "" 0
+Bp4=_ "STD_CODE" "{G:\Github\Embedded\DeviceStatusMon\source\Z-Stack Home 1.1.0_CC2538_COR_OldName\Projects\zstack\HomeAutomation\SampleLight32\Source\SampleApp.c}.151.23" 1 0 0 0 "" 0 "" 0
+Bp5=_ "STD_CODE" "{G:\Github\Embedded\DeviceStatusMon\source\Z-Stack Home 1.1.0_CC2538_COR_OldName\Projects\zstack\HomeAutomation\SampleLight32\Source\SampleApp.c}.145.16" 1 0 0 0 "" 0 "" 0
+Count=6
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -35,11 +45,6 @@ Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 0
 LogFile=_ ""
-[Disassemble mode]
-mode=0
-[Breakpoints]
-Bp0=_ "STD_CODE" "{G:\Github\Embedded\DeviceStatusMon\source\Z-Stack Home 1.1.0_CC2538_COR_OldName\Projects\zstack\ZMain\TI2538DB\ZMain.c}.269.7" 0 0 0 0 "" 0 "" 0
-Count=1
 [Aliases]
 A0=_ "G:\Z-Stack Home 1.1.0_CC2538_COR\Components\hal\target\CC2538\hal_key.c" ""
 A1=_ "G:\Z-Stack Home 1.1.0_CC2538_COR\Components\mac\low_level\srf05\mac_sleep.c" ""

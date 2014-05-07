@@ -404,7 +404,7 @@
         </option>
         <option>
           <name>OCProbeConfig</name>
-          <state></state>
+          <state>$TOOLKIT_DIR$\config\debugger\TexasInstruments\CC2538.ProbeConfig</state>
         </option>
         <option>
           <name>CMSISDAPProbeConfigRadio</name>
@@ -664,7 +664,7 @@
         </option>
         <option>
           <name>OCProbeConfig</name>
-          <state></state>
+          <state>$TOOLKIT_DIR$\config\debugger\TexasInstruments\CC2538.ProbeConfig</state>
         </option>
         <option>
           <name>IjetProbeConfigRadio</name>
@@ -969,7 +969,7 @@
         <option>
           <name>CEmuCommPort</name>
           <version>0</version>
-          <state>0</state>
+          <state>4</state>
         </option>
         <option>
           <name>jtago</name>
@@ -1036,7 +1036,7 @@
         </option>
         <option>
           <name>CCPEMicroJtagSpeed</name>
-          <state>#UNINITIALIZED#</state>
+          <state>5000</state>
         </option>
         <option>
           <name>CCJPEMicroShowSettings</name>
@@ -1091,7 +1091,7 @@
         <debug>1</debug>
         <option>
           <name>CRDIDriverDll</name>
-          <state>###Uninitialized###</state>
+          <state>Browse to your RDI driver</state>
         </option>
         <option>
           <name>CRDILogFileCheck</name>
@@ -1186,7 +1186,7 @@
         <debug>1</debug>
         <option>
           <name>CThirdPartyDriverDll</name>
-          <state>###Uninitialized###</state>
+          <state>Browse to your third-party driver</state>
         </option>
         <option>
           <name>CThirdPartyLogFileCheck</name>

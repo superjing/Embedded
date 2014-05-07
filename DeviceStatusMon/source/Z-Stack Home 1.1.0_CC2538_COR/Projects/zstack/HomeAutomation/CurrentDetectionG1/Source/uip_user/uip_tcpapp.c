@@ -19,6 +19,10 @@ extern LockFreeQueue queue;
 
 static uint8 last_uip_msg[ELEMENT_SIZE];
 
+uint8_t ipAddr[4] = {10, 144, 3, 129};
+
+uint8_t httpBuffer[] = "POST /power/data HTTP/1.1\nHost:localhost:9090\nsn:12345678\nad1:1234\nad2:5678\n\n\n";
+
 #ifdef DEBUG_TRACE
 static void FormatHexUint32Str(uint8 *dst, uint8 * src)
 {
@@ -82,8 +86,8 @@ static void _uip_send(uint8 * buffer)
 static void tcp_client_reconnect(void)
 {
    uip_ipaddr_t ipaddr;
-   uip_ipaddr(&ipaddr, 10, 144, 3, 104);
-   uip_connect(&ipaddr, HTONS(1234));
+   uip_ipaddr(&ipaddr, 10, 144, 3, 129);
+   uip_connect(&ipaddr, HTONS(9090));
 }
 
 void tcp_client_demo_appcall_user(void)
@@ -112,8 +116,11 @@ void tcp_client_demo_appcall_user(void)
 
    if (QueueLength(&queue) != 0)
    {
+#if 0
       FreeQueuePop(&queue, buffer);
       _uip_send(buffer);
+#endif
+      uip_send(httpBuffer, sizeof(httpBuffer)/sizeof(httpBuffer[0]));
    }
    else
    {

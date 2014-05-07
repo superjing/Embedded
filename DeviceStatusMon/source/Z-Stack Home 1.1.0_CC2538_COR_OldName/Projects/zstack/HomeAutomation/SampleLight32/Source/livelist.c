@@ -28,7 +28,7 @@ int findLiveList(uint8 * sn, int * emptyIndex)
 
       if (0 == memcmp(sn, liveList.LiveElem[i].sn, SN_LEN))
       {
-         return i;
+        return i;
       }
    }
 
@@ -69,3 +69,24 @@ void resetLiveList(void)
    }
 
 }
+
+void setSendGapCount(int index)
+{
+  liveList.LiveElem[index].sendGapCount++;
+}
+
+void clearSendGapCount(int index)
+{
+  liveList.LiveElem[index].sendGapCount = 0;
+}
+
+uint8 getSendGapCount(int index)
+{
+  if (-1 == index)
+  {
+    return 0;
+  }
+
+  return liveList.LiveElem[index].sendGapCount;
+}
+

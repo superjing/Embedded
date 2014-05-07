@@ -55,6 +55,7 @@ devStates_t SampleApp_NwkState;
 // This is the unique message ID (counter)
 uint8 SampleApp_TransID;
 
+uint8 CorSendGap = 1;
 /*********************************************************************
  * @fn SampleApp_Init
  *
@@ -144,9 +145,10 @@ uint16 SampleApp_ProcessEvent( uint8 task_id, uint16 events )
                if ((MSGpkt->endPoint == HEARTBEAT_ENDPOINT)
                 && (ELEMENT_SIZE == MSGpkt->cmd.DataLength))
                {
-                  int emptyIndex = -1;
-                  int index = findLiveList(MSGpkt->cmd.Data, &emptyIndex);
                   HalLedBlink(HAL_LED_1, 2, 50, 50);
+                  int emptyIndex = -1;
+
+                  int index = findLiveList(MSGpkt->cmd.Data, &emptyIndex);
                   if (index == -1)
                   {
                      if(!insertLiveList(emptyIndex, MSGpkt->cmd.Data))
@@ -157,17 +159,25 @@ uint16 SampleApp_ProcessEvent( uint8 task_id, uint16 events )
                   else
                   {
                      setLiveStatus(index, true);
+                     setSendGapCount(index);
                   }
 
-                  if (IsFreeQueueFull(&queue))
+                  index = (index == -1)?(emptyIndex):(index);
+
+                  if (CorSendGap == getSendGapCount(index))
                   {
-                     // If the queue is full, write current msg to the nv.
-                     nv_write_msg(MSGpkt->cmd.Data);
-                  }
-                  else
-                  {
-                     // If the queue is not full, push the msg to the queue.
-                     FreeQueuePush(&queue, MSGpkt->cmd.Data);
+                    if (IsFreeQueueFull(&queue))
+                    {
+                       // If the queue is full, write current msg to the nv.
+                       nv_write_msg(MSGpkt->cmd.Data);
+                    }
+                    else
+                    {
+                       // If the queue is not full, push the msg to the queue.
+                       FreeQueuePush(&queue, MSGpkt->cmd.Data);
+                    }
+
+                    clearSendGapCount(index);
                   }
                }
                break;
@@ -208,8 +218,6 @@ uint16 SampleApp_ProcessEvent( uint8 task_id, uint16 events )
          SampleApp_TaskID,
          SAMPLEAPP_PERIODIC_EVT,
          SAMPLEAPP_PERIODIC_TIMEOUT);
-
-      //HalLedBlink(HAL_LED_2, 2, 50, 500);
 
       // Check live list for every 10s
       if (++timerTick == 10)

@@ -190,11 +190,11 @@ void CurrentDetectionT1_Init(uint8 task_id)
    HalAdcInit();
    HalAdcSetReference(HAL_ADC_REF_AVDD);
 #ifdef DEBUG_TRACE
-   memset(serialNumber, 0, SN_LEN);
-   serialNumber[SN_LEN - 1] = 20;
-#else
-   memcpy(serialNumber, aExtendedAddress, SN_LEN);
+   //memset(serialNumber, 0, SN_LEN);
+   //serialNumber[SN_LEN - 1] = 20;
 #endif
+
+   memcpy(serialNumber, aExtendedAddress, SN_LEN);
    //Feed WatchDog
    WDCTL = 0xa0;
    WDCTL = 0x50;
@@ -564,7 +564,7 @@ void CurrentDetectionT1_SampleCurrentAdcValue()
 void CurrentDetectionT1_SetAverageCurrentAdcValue(uint8* buf, uint16 timerCount)
 {
   uint16 adcValue = 0;
-#ifdef DEBUG_TRACE
+#if 0
   static uint16 increNum = 0;
   buf[0] = (++increNum) >> 8;
   buf[1] = increNum & 0x00FF;
@@ -572,7 +572,8 @@ void CurrentDetectionT1_SetAverageCurrentAdcValue(uint8* buf, uint16 timerCount)
   buf[3] = buf[1];
   //Clear Warning
   adcValue++;
-#else
+#endif
+
   adcValue = (adcValueSum[0]/timerCount);
   buf[0] = adcValue >> 8;
   buf[1] = adcValue & 0x00FF;
@@ -582,7 +583,6 @@ void CurrentDetectionT1_SetAverageCurrentAdcValue(uint8* buf, uint16 timerCount)
 
   adcValueSum[0] = 0;
   adcValueSum[1] = 0;
-#endif
 
   return;
 }

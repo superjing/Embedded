@@ -28,13 +28,6 @@ struct example_state {
 
 typedef struct example_state uip_tcp_appstate_t;
 
-typedef void (*PFUNC)(uint8 *, uint8 *);
-
-typedef struct ConverListStr
-{
-	uint8 * dstBuf;
-	uint8 * srcBuf;
-	PFUNC   converFunc;
-}ConverList;
+void ip_cmd_process(uint8 cmdLen, uint8 * cmd);
 
 #endif
