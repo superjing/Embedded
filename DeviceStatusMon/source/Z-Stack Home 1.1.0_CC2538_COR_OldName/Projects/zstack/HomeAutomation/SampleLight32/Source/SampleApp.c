@@ -55,7 +55,7 @@ devStates_t SampleApp_NwkState;
 // This is the unique message ID (counter)
 uint8 SampleApp_TransID;
 
-uint8 CorSendGap = 1;
+uint8 gCorSendGap = 1;
 /*********************************************************************
  * @fn SampleApp_Init
  *
@@ -140,31 +140,18 @@ uint16 SampleApp_ProcessEvent( uint8 task_id, uint16 events )
       {
          switch (MSGpkt->hdr.event)
          {
-               // Received when a messages is received (OTA) for this endpoint
+            // Received when a messages is received (OTA) for this endpoint
             case AF_INCOMING_MSG_CMD:
                if ((MSGpkt->endPoint == HEARTBEAT_ENDPOINT)
                 && (ELEMENT_SIZE == MSGpkt->cmd.DataLength))
                {
                   HalLedBlink(HAL_LED_1, 2, 50, 50);
-                  int emptyIndex = -1;
-
-                  int index = findLiveList(MSGpkt->cmd.Data, &emptyIndex);
-                  if (index == -1)
+                  uint8 * gapCount = setLiveStatus(MSGpkt->cmd.Data);
+                  if (NULL ==  gapCount)
                   {
-                     if(!insertLiveList(emptyIndex, MSGpkt->cmd.Data))
-                     {
-                        break;
-                     }
+                     break;
                   }
-                  else
-                  {
-                     setLiveStatus(index, true);
-                     setSendGapCount(index);
-                  }
-
-                  index = (index == -1)?(emptyIndex):(index);
-
-                  if (CorSendGap == getSendGapCount(index))
+                  if (gCorSendGap == *gapCount)
                   {
                     if (IsFreeQueueFull(&queue))
                     {
@@ -176,8 +163,8 @@ uint16 SampleApp_ProcessEvent( uint8 task_id, uint16 events )
                        // If the queue is not full, push the msg to the queue.
                        FreeQueuePush(&queue, MSGpkt->cmd.Data);
                     }
-
-                    clearSendGapCount(index);
+                    //reset the gap count.
+                    *gapCount = 0;
                   }
                }
                break;
@@ -219,11 +206,14 @@ uint16 SampleApp_ProcessEvent( uint8 task_id, uint16 events )
          SAMPLEAPP_PERIODIC_EVT,
          SAMPLEAPP_PERIODIC_TIMEOUT);
 
-      // Check live list for every 10s
-      if (++timerTick == 10)
+      // Check live list for every 5s
+      if (++timerTick == 5)
       {
+         uint32 currentTime = osal_GetSystemClock();
+         // If the T1 message doesn't arrive in 10s, we weill reset it.
+         resetLiveList(currentTime, 10000);
+         
          timerTick = 0;
-         resetLiveList();
       }
 
       // return unprocessed events

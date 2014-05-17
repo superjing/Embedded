@@ -9,8 +9,8 @@ typedef struct tLiveElem
 {
   uint8 sn[SN_LEN];
   uint8 sendGapCount;
+  uint32 timestamp;
   bool liveStatus;
-  bool liveInUse;
 }tLiveElem;
 
 typedef struct tLiveList
@@ -19,13 +19,7 @@ typedef struct tLiveList
    uint8 liveCount;
 }tLiveList;
 
-void initLiveList(void);
-int findLiveList(uint8* sn, int* emptyIndex);
-void setLiveStatus(int index, bool alive);
-bool insertLiveList(int index, uint8 * sn);
-void resetLiveList(void);
-void setSendGapCount(int index);
-uint8 getSendGapCount(int index);
-void clearSendGapCount(int index);
-
+void  initLiveList(void);
+void  resetLiveList(uint32 currentTime, uint32 timeout);
+uint8 * setLiveStatus(uint8 * sn);
 #endif

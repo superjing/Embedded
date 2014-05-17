@@ -1,92 +1,79 @@
 #include "livelist.h"
 #include "comdef.h"
+#include "OSAL_Timers.h"
 #include <string.h>
 
 static tLiveList liveList;
 
-void initLiveList( void )
+void initLiveList(void)
 {
    memset(&liveList, 0, sizeof(tLiveList));
 }
 
-int findLiveList(uint8 * sn, int * emptyIndex)
-{
-   int i = 0;
-
-   *emptyIndex = -1;
-
-   for (; i < MAX_END_NUM; i++)
-   {
-      if (!liveList.LiveElem[i].liveInUse)
-      {
-         if (*emptyIndex == -1)
-         {
-            *emptyIndex = i;
-            continue;
-         }
-      }
-
-      if (0 == memcmp(sn, liveList.LiveElem[i].sn, SN_LEN))
-      {
-        return i;
-      }
-   }
-
-   return -1;
-}
-
-void setLiveStatus(int index, bool alive)
-{
-   liveList.LiveElem[index].liveStatus = alive;
-}
-
-bool insertLiveList(int index, uint8 * sn)
+static bool insertLiveList(int index, uint8 * sn)
 {
    if (index >= MAX_END_NUM)
    {
       return false;
    }
+
    memcpy(liveList.LiveElem[index].sn, sn , SN_LEN);
-   setLiveStatus(index, true);
-   liveList.LiveElem[index].liveInUse = true;
+   
    ++liveList.liveCount;
    return true;
 }
 
-void resetLiveList(void)
+uint8 * setLiveStatus(uint8 * sn)
 {
-   uint8 i = 0;
-
-   for (; i < MAX_END_NUM; i++)
+   int insertIndex = -1;
+   int i = 0;
+   
+   for (; i < MAX_END_NUM; ++i)
    {
-      if (liveList.LiveElem[i].liveInUse && !liveList.LiveElem[i].liveStatus)
+      if (liveList.LiveElem[i].liveStatus)
       {
-         --liveList.liveCount;
-         liveList.LiveElem[i].liveInUse = false;
+         if (0 == memcmp(sn, liveList.LiveElem[i].sn, SN_LEN))
+         {
+            break;
+         }
       }
-
-      liveList.LiveElem[i].liveStatus = false;
+      
+      if (insertIndex == -1)
+      {
+         insertIndex = i;
+      }
    }
-
+   
+   if (i == MAX_END_NUM)
+   {
+      if (!insertLiveList(insertIndex, sn))
+      {
+         return NULL;
+      }
+      i = insertIndex;
+   }
+   
+   liveList.LiveElem[i].liveStatus = true;
+   liveList.LiveElem[i].timestamp = osal_GetSystemClock();
+   ++liveList.LiveElem[i].sendGapCount;
+   
+   return &(liveList.LiveElem[i].sendGapCount);
 }
 
-void setSendGapCount(int index)
+void resetLiveList(uint32 currentTime, uint32 timeout)
 {
-  liveList.LiveElem[index].sendGapCount++;
+   for (uint8 i = 0; i < MAX_END_NUM; ++i)
+   {
+      if (!liveList.LiveElem[i].liveStatus)
+      {
+         continue;
+      }
+      
+      if (currentTime - liveList.LiveElem[i].timestamp > timeout)
+      {
+         //rest the element in the live list if timeout
+         memset(&liveList.LiveElem[i], 0, sizeof(tLiveElem));
+         --liveList.liveCount;
+      }
+   }
 }
-
-void clearSendGapCount(int index)
-{
-  liveList.LiveElem[index].sendGapCount = 0;
-}
-
-uint8 getSendGapCount(int index)
-{
-  if (-1 == index)
-  {
-    return 0;
-  }
-
-  return liveList.LiveElem[index].sendGapCount;
-}
-

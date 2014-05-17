@@ -76,7 +76,7 @@ tRfData rfData[NV_NUM_STORE];
 
 bool inNetwork = false;
 
-uint32 adcValueSum[2] = {0};
+static uint32 adcValueSum[2] = {0};
 /*********************************************************************
  * LOCAL FUNCTIONS
  */
@@ -91,11 +91,10 @@ void checkLedStatus(void);
 void checkWorkingStatus(void);
 void setSn(uint8 *uartMsg);
 void resetNvConfig(uint8 *uartMsg);
-void getP2_0Status(void);
 
 static PFUNC cmdProcFuncs[] = {setSn, resetNvConfig};
 
-static void revertUint32Bytes(uint8 * buf)
+static void swapUint32Bytes(uint8 * buf)
 {
    uint8 temp = buf[0];
    buf[0] = buf[3];
@@ -276,7 +275,7 @@ uint16 CurrentDetectionT1_ProcessEvent(uint8 task_id, uint16 events)
       uint32 curTime = lastNvTime + osal_GetSystemClock();
       memcpy(buf, serialNumber, SN_LEN);
       memcpy(buf + SN_LEN, &curTime, sizeof(curTime));
-      revertUint32Bytes(buf + SN_LEN);
+      swapUint32Bytes(buf + SN_LEN);
 
       CurrentDetectionT1_SendNeedRepairMessage(buf);
 
@@ -287,6 +286,7 @@ uint16 CurrentDetectionT1_ProcessEvent(uint8 task_id, uint16 events)
             DTCT_HEARTBEAT_MSG_EVT,
             DTCT_TIMER_MSG_TIMEOUT*200);
 
+         // The repairing status, no need to send ADC value any more.
          return (events ^ DTCT_HEARTBEAT_MSG_EVT);
       }
 
@@ -493,24 +493,24 @@ void checkLedStatus(void)
 
 void CurrentDetectionT1_SendNeedRepairMessage(uint8* buf)
 {
-   static bool repairReported = false;
    static bool preP2_0 = false;
-   uint32 needRepairFlag = 0x78563412;
+   
+   bool sendRepair = false;
 
    //If P20 has a rising edge, we send a need repair message
-   if ((P2_0^preP2_0) && (P2_0))
+   if ((P2_0 ^ preP2_0) && (P2_0))
    {
-      repairReported = false;
+      sendRepair = true;
    }
 
    preP2_0 = P2_0;
 
-   if (repairReported)
+   if (!sendRepair)
    {
       return;
    }
 
-   memcpy(buf + 12, &needRepairFlag, sizeof(needRepairFlag));
+   buf[SN_LEN + NV_LEN] = 2;
 
    if (AF_DataRequest(
             &CurrentDetectionT1_Periodic_DstAddr,
@@ -522,7 +522,6 @@ void CurrentDetectionT1_SendNeedRepairMessage(uint8* buf)
             AF_DISCV_ROUTE,
             AF_DEFAULT_RADIUS) == afStatus_SUCCESS)
    {
-      repairReported = true;
       HalLedBlink(HAL_LED_2, 2, 50, 50);
    }
 
@@ -541,16 +540,6 @@ static void resetNvConfig(uint8 *uartMsg)
    return;
 }
 
-void getP2_0Status(void)
-{
-  uint8 str[] = {'P', '2', '_', '0', '=', '0', '\n'};
-  str[5] = P2_0 + '0';
-
-  HalUARTWrite(0, str, 7);
-
-  return;
-}
-
 void CurrentDetectionT1_SampleCurrentAdcValue()
 {
   //AC_IN0: P0_7
@@ -563,18 +552,7 @@ void CurrentDetectionT1_SampleCurrentAdcValue()
 
 void CurrentDetectionT1_SetAverageCurrentAdcValue(uint8* buf, uint16 timerCount)
 {
-  uint16 adcValue = 0;
-#if 0
-  static uint16 increNum = 0;
-  buf[0] = (++increNum) >> 8;
-  buf[1] = increNum & 0x00FF;
-  buf[2] = buf[0];
-  buf[3] = buf[1];
-  //Clear Warning
-  adcValue++;
-#endif
-
-  adcValue = (adcValueSum[0]/timerCount);
+  uint16 adcValue = (adcValueSum[0]/timerCount);
   buf[0] = adcValue >> 8;
   buf[1] = adcValue & 0x00FF;
   adcValue = (adcValueSum[1]/timerCount);

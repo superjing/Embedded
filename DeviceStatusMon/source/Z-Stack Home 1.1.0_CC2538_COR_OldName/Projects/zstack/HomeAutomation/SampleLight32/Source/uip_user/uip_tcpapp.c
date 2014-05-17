@@ -17,41 +17,12 @@
 #define RF_MSG_SIZE ELEMENT_SIZE
 #endif
 
+#define TCP_PORT 9090
+
 extern LockFreeQueue queue;
-extern uint8 CorSendGap;
+extern uint8 gCorSendGap;
 
-static uint8 last_uip_msg[ELEMENT_SIZE];
-
-uint8_t ipAddr[IPADDR_LEN] = {10, 144, 3, 104};
-
-extern uint8 buffer[ELEMENT_SIZE];
-
-static void _uip_send(uint8 * buffer)
-{
-#ifdef DEBUG_TRACE
-   uint8 debugBuf[RF_MSG_SIZE];
-
-   memcpy(debugBuf, "s=0x", 4);
-   FormatHexUint32Str(debugBuf + 4, buffer);
-   FormatHexUint32Str(debugBuf + 12, buffer + 4);
-   memcpy(debugBuf + 20, " t=0x", 5);
-   FormatHexUint32Str(debugBuf + 25, buffer + 8);
-   memcpy(debugBuf + 33, " A=0x", 5);
-   FormatHexUint8Str(debugBuf + 38, buffer + 12);
-   FormatHexUint8Str(debugBuf + 40, buffer + 13);
-   memcpy(debugBuf + 42, " B=0x", 5);
-   FormatHexUint8Str(debugBuf + 47, buffer + 14);
-   FormatHexUint8Str(debugBuf + 49, buffer + 15);
-   memcpy(debugBuf + 51, "\n\0", 2);
-   uip_send(debugBuf, RF_MSG_SIZE);
-#else
-   uip_send(buffer, RF_MSG_SIZE);
-#endif
-   if (last_uip_msg != buffer)
-   {
-      memcpy(last_uip_msg, buffer, ELEMENT_SIZE);
-   }
-}
+static uint8_t ipAddr[IPADDR_LEN] = {10, 144, 3, 104};
 
 static void tcp_client_reconnect(void)
 {
@@ -61,8 +32,9 @@ static void tcp_client_reconnect(void)
    uip_listen(HTONS(9090));
 }
 
-void tcp_client_demo_appcall_user(void)
+void tcp_client_appcall_user(void)
 {
+   uint8 buffer[ELEMENT_SIZE];
    if (uip_aborted() || uip_timedout() || uip_closed())
    {
       tcp_client_reconnect();
@@ -71,20 +43,20 @@ void tcp_client_demo_appcall_user(void)
 
    if (uip_rexmit())
    {
-      _uip_send(last_uip_msg);
+      _uip_send_rexmit_http();
       return;
    }
 
    if (QueueLength(&queue) != 0)
    {
       FreeQueuePop(&queue, buffer);
-      _uip_send_http();
+      _uip_send_http(buffer);
    }
    else
    {
       if (nv_read_msg(buffer))
       {
-         _uip_send_http();
+         _uip_send_http(buffer);
       }
    }
 
@@ -103,28 +75,33 @@ void tpc_app_call(void)
 {
    switch(uip_conn->lport)
    {
-      case HTONS(9090):
-         tcp_client_demo_appcall_user();
+      case HTONS(TCP_PORT):
+         tcp_client_appcall_user();
          break;
    }
 
    switch(uip_conn->rport)
    {
-      case HTONS(9090):
-         tcp_client_demo_appcall_user();
+      case HTONS(TCP_PORT):
+         tcp_client_appcall_user();
          break;
    }
 }
+
+#define SET_GAP_COUNT_CMD 0xEF
+#define SET_GAP_COUNT_CMD_LEN (sizeof(SET_GAP_COUNT_CMD) + sizeof(gCorSendGap))
 
 void ip_cmd_process(uint8 cmdLen, uint8 * cmd)
 {
   if ((5 == cmdLen) && (0 == memcmp("hello", cmd, 5)))
   {
     uip_send("I get hello", 11);
+    return;
   }
 
-  if ((2 == cmdLen) && (0xEF == cmd[0]))
+  if ((SET_GAP_COUNT_CMD_LEN == cmdLen) && (SET_GAP_COUNT_CMD == cmd[0]))
   {
-    CorSendGap = cmd[1];
+    gCorSendGap = cmd[1];
+    return;
   }
 }
