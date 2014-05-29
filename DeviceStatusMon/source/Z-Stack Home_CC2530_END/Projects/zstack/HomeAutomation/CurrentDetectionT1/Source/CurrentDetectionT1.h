@@ -18,7 +18,7 @@ extern "C"
 // These constants are only for example and should be changed to the
 // device's needs
 
-#define HEARTBEAT_ENDPOINT           10
+#define HEARTBEAT_ENDPOINT      10
 
 #define DTCT_PROFID             0x0F08
 #define DTCT_DEVICEID           0x0001

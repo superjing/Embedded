@@ -28,8 +28,25 @@
  * MACROS
  */
 
-// If the data cannot be sent in 1 minute, we need to restart the stack.
-#define FAIL_TIME_TO_RESTART (NV_NUM_STORE * 2)
+#define FAIL_TIME_TO_RESTART (MAX_RECOVER_MSG_IN_MEN * 2)
+//index 16
+#define HEART_BIT_STATUS_INDEX (SN_LEN + NV_LEN)
+//index 12
+#define HEART_BIT_AD1_INDEX (SN_LEN + TIME_LEN)
+#define HEART_BIT_MSG_LEN  (SN_LEN + NV_LEN + 1)
+
+#define HEART_BIT_STATUS_REPAIR_MASK           0x8
+#define HEART_BIT_STATUS_REALTIME_MASK         0x4
+#define HEART_BIT_STATUS_POWER_SUPPLY_MASK     0x2
+#define HEART_BIT_STATUS_BATTERY_CHARGING_MASK 0x1
+
+#define SET_HEART_BIT_STATUS(sendToG1Data, mask, value) \
+do \
+{ \
+   if (value) sendToG1Data[HEART_BIT_STATUS_INDEX] = sendToG1Data[HEART_BIT_STATUS_INDEX] | mask; \
+   else sendToG1Data[HEART_BIT_STATUS_INDEX] = sendToG1Data[HEART_BIT_STATUS_INDEX] & ~mask; \
+}while(0)
+
 
 /*********************************************************************
  * CONSTANTS
@@ -72,7 +89,7 @@ uint8 CurrentDetectionT1_TransID;
 
 afAddrType_t CurrentDetectionT1_Periodic_DstAddr;
 
-tRfData rfData[NV_NUM_STORE];
+tRfData rfData[MAX_RECOVER_MSG_IN_MEN];
 
 bool inNetwork = false;
 
@@ -81,12 +98,13 @@ static uint32 adcValueSum[2] = {0};
  * LOCAL FUNCTIONS
  */
 void CurrentDetectionT1_SerialCMD(mtOSALSerialData_t* cmdMsg);
-bool CurrentDetectionT1_SendHeartBeatMessage(uint8* buf);
-void CurrentDetectionT1_RecoverHeartBeatMessage(void);
-void CurrentDetectionT1_StoreHeartBeatMessage(uint8* buf);
-void CurrentDetectionT1_SendNeedRepairMessage(uint8* buf);
+bool CurrentDetectionT1_SendHeartBeatMessage(uint8* sendToG1Data);
+void CurrentDetectionT1_RecoverHeartBeatMessage(uint8* sendToG1Data);
+void CurrentDetectionT1_StoreHeartBeatMessage(uint8* sendToG1Data);
+bool CurrentDetectionT1_HandleSendRepairMessage(uint8 * sendToG1Data);
 void CurrentDetectionT1_SampleCurrentAdcValue(void);
-void CurrentDetectionT1_SetAverageCurrentAdcValue(uint8* buf, uint16 timerCount);
+void CurrentDetectionT1_SetAverageCurrentAdcValue(uint8* sendToG1Data, uint16 timerCount);
+bool CurrentDetectionT1_CheckDelta(uint8* nvBuf);
 void checkLedStatus(void);
 void checkWorkingStatus(void);
 void setSn(uint8 *uartMsg);
@@ -271,41 +289,44 @@ uint16 CurrentDetectionT1_ProcessEvent(uint8 task_id, uint16 events)
    //  (setup in CurrentDetectionT1_Init()).
    if (events & DTCT_HEARTBEAT_MSG_EVT)
    {
-      uint8 buf[SN_LEN + NV_LEN + 1];
-      uint32 curTime = lastNvTime + osal_GetSystemClock();
-      memcpy(buf, serialNumber, SN_LEN);
-      memcpy(buf + SN_LEN, &curTime, sizeof(curTime));
-      swapUint32Bytes(buf + SN_LEN);
+      uint8 sendToG1Data[HEART_BIT_MSG_LEN];
+      memcpy(sendToG1Data, serialNumber, SN_LEN);
 
-      CurrentDetectionT1_SendNeedRepairMessage(buf);
-
-      if (P2_0)
+      if (CurrentDetectionT1_HandleSendRepairMessage(sendToG1Data))
       {
          osal_start_timerEx(
             CurrentDetectionT1_TaskID,
             DTCT_HEARTBEAT_MSG_EVT,
-            DTCT_TIMER_MSG_TIMEOUT*200);
+            DTCT_TIMER_MSG_TIMEOUT);
 
          // The repairing status, no need to send ADC value any more.
          return (events ^ DTCT_HEARTBEAT_MSG_EVT);
       }
 
       CurrentDetectionT1_SampleCurrentAdcValue();
+      
+      ++timerCount;
+      
+      // send recovery message every 0.5s.
+      if (timerCount == 100 || timerCount == 200 || timerCount == 300)
+      {
+         CurrentDetectionT1_RecoverHeartBeatMessage(sendToG1Data);
+      }
 
       // send heart beat every 2s.
-      if (++timerCount == 400)
+      else if (timerCount == 400)
       {
-         CurrentDetectionT1_SetAverageCurrentAdcValue(buf + 12, timerCount);
-         CurrentDetectionT1_RecoverHeartBeatMessage();
-
+         CurrentDetectionT1_SetAverageCurrentAdcValue(sendToG1Data, timerCount);
+         SET_HEART_BIT_STATUS(sendToG1Data , HEART_BIT_STATUS_POWER_SUPPLY_MASK, 0);
+         SET_HEART_BIT_STATUS(sendToG1Data , HEART_BIT_STATUS_BATTERY_CHARGING_MASK, 1);
+         
          if (inNetwork)
          {
-            buf[SN_LEN + NV_LEN] = 1;
             // Send the Heartbeat Message
-            if (!CurrentDetectionT1_SendHeartBeatMessage(buf))
+            if (!CurrentDetectionT1_SendHeartBeatMessage(sendToG1Data))
             {
                ++heartBitFailNum;
-               CurrentDetectionT1_StoreHeartBeatMessage(buf + SN_LEN);
+               CurrentDetectionT1_StoreHeartBeatMessage(sendToG1Data);
             }
             else
             {
@@ -315,12 +336,15 @@ uint16 CurrentDetectionT1_ProcessEvent(uint8 task_id, uint16 events)
          else
          {
             ++heartBitFailNum;
-            CurrentDetectionT1_StoreHeartBeatMessage(buf + SN_LEN);
+            if(CurrentDetectionT1_CheckDelta(sendToG1Data))
+            {
+                CurrentDetectionT1_StoreHeartBeatMessage(sendToG1Data);
+            }
          }
 
          if (heartBitFailNum == FAIL_TIME_TO_RESTART)
          {
-            if (nvMsgNum != 0)
+            if (recoverMsgNumInMem != 0)
             {
                nv_write_msg();
             }
@@ -366,13 +390,50 @@ uint16 CurrentDetectionT1_ProcessEvent(uint8 task_id, uint16 events)
    return 0;
 }
 
-void CurrentDetectionT1_StoreHeartBeatMessage(uint8* nvBuf)
+void CurrentDetectionT1_StoreHeartBeatMessage(uint8* sendToG1Data)
 {
-   memcpy(rfData[nvMsgNum++].data, nvBuf, NV_LEN);
-   if (nvMsgNum == NV_NUM_STORE)
+   memcpy(rfData[recoverMsgNumInMem++].data, sendToG1Data + SN_LEN, NV_LEN);
+   if (recoverMsgNumInMem == MAX_RECOVER_MSG_IN_MEN)
    {
       nv_write_msg();
    }
+}
+
+bool CurrentDetectionT1_CheckDelta(uint8* sendToG1Data)
+{
+  uint16 curAd1Value;
+  uint16 lastAd1Value;
+  //uint16 lastAd2Value;
+  if (recoverMsgNumInMem == 0)
+  {
+     uint8 buf[NV_LEN];
+     if (!nv_read_last_msg(buf))
+     {
+        return true;
+     }
+     
+     lastAd1Value = (buf[TIME_LEN] << 8) + buf[TIME_LEN + 1];;
+     //lastAd2Value = (buf[TIME_LEN + 2] << 8) + buf[TIME_LEN + 3];
+  }
+  else
+  {
+     uint8 * buf = rfData[recoverMsgNumInMem - 1].data;
+     lastAd1Value = (buf[TIME_LEN] << 8) + buf[TIME_LEN + 1];
+     //lastAd2Value = (buf[TIME_LEN + 2] << 8) + buf[TIME_LEN + 3];
+  }
+  
+  curAd1Value = sendToG1Data[SN_LEN + TIME_LEN + 1];
+  
+  if ( (lastAd1Value > curAd1Value) && ((lastAd1Value - curAd1Value) > delta)) 
+  {
+      return true;
+  }
+  else if ( (lastAd1Value < curAd1Value) && ((curAd1Value - lastAd1Value) > delta)) 
+  {
+      return true;
+  }
+
+  return false;
 }
 
 void CurrentDetectionT1_SerialCMD(mtOSALSerialData_t *cmdMsg)
@@ -383,84 +444,82 @@ void CurrentDetectionT1_SerialCMD(mtOSALSerialData_t *cmdMsg)
    return;
 }
 
-void CurrentDetectionT1_RecoverHeartBeatMessage(void)
+void CurrentDetectionT1_RecoverHeartBeatMessage(uint8* sendToG1Buf)
 {
-   uint8 buf[SN_LEN + NV_LEN + 1];
-
    if (!inNetwork)
    {
      return;
    }
 
-   if (nvMsgNum == 0)
+   if (recoverMsgNumInMem == 0)
    {
-      if (recoverMsgNum != 0)
+      if (nv_read_last_msg(sendToG1Buf + SN_LEN))
       {
-         nv_read_msg(recoverMsgNum - 1, buf + SN_LEN);
-         memcpy(buf, serialNumber, SN_LEN);
-         buf[SN_LEN + NV_LEN] = 0;
+         SET_HEART_BIT_STATUS(sendToG1Buf , HEART_BIT_STATUS_REALTIME_MASK, 0);
+         
          if (AF_DataRequest(
                   &CurrentDetectionT1_Periodic_DstAddr,
                   &CurrentDetectionT1_epDesc,
                   DTCT_PERIODIC_CLUSTERID,
-                  SN_LEN + NV_LEN + 1,
-                  buf,
+                  HEART_BIT_MSG_LEN,
+                  sendToG1Buf,
                   &CurrentDetectionT1_TransID,
                   AF_DISCV_ROUTE,
                   AF_DEFAULT_RADIUS ) == afStatus_SUCCESS)
          {
-            if (--recoverMsgNum == 0)
+            if (--recoverMsgNumInNv == 0)
             {
                nv_write_config();
             }
 
-            PrintRecover(buf, true);
+            PrintRecover(sendToG1Buf, true);
             HalLedBlink(HAL_LED_2, 2, 20, 50);
          }
          else
          {
-            PrintRecover(buf, false);
+            PrintRecover(sendToG1Buf, false);
          }
       }
    }
    else
    {
-      memcpy(buf, serialNumber, SN_LEN);
-      memcpy(buf + SN_LEN, rfData[nvMsgNum - 1].data, NV_LEN);
-      buf[SN_LEN + NV_LEN] = 0;
+      memcpy(sendToG1Buf + SN_LEN, rfData[recoverMsgNumInMem - 1].data, NV_LEN);
+     SET_HEART_BIT_STATUS(sendToG1Buf , HEART_BIT_STATUS_REALTIME_MASK, 0);
 
       if (AF_DataRequest(
                &CurrentDetectionT1_Periodic_DstAddr,
                &CurrentDetectionT1_epDesc,
                DTCT_PERIODIC_CLUSTERID,
-               SN_LEN + NV_LEN + 1,
-               buf,
+               HEART_BIT_MSG_LEN,
+               sendToG1Buf,
                &CurrentDetectionT1_TransID,
                AF_DISCV_ROUTE,
                AF_DEFAULT_RADIUS ) == afStatus_SUCCESS)
       {
-         --nvMsgNum;
-         PrintRecover(buf, true);
-         HalLedBlink(HAL_LED_2, 2, 20, 50);;
+         --recoverMsgNumInMem;
+         PrintRecover(sendToG1Buf, true);
+         HalLedBlink(HAL_LED_2, 2, 20, 50);
       }
       else
       {
-         PrintRecover(buf, false);
+         PrintRecover(sendToG1Buf, false);
       }
    }
 }
 
-bool CurrentDetectionT1_SendHeartBeatMessage(uint8* buf)
+bool CurrentDetectionT1_SendHeartBeatMessage(uint8* sendToG1Data)
 {
-   ShowHeartBeatInfo(buf);
+   SET_HEART_BIT_STATUS(sendToG1Data , HEART_BIT_STATUS_REALTIME_MASK, 1);
+            
+   ShowHeartBeatInfo(sendToG1Data);
    ShowRssiInfo();
 
    if (AF_DataRequest(
             &CurrentDetectionT1_Periodic_DstAddr,
             &CurrentDetectionT1_epDesc,
             DTCT_PERIODIC_CLUSTERID,
-            SN_LEN + NV_LEN + 1,
-            buf,
+            HEART_BIT_MSG_LEN,
+            sendToG1Data,
             &CurrentDetectionT1_TransID,
             AF_DISCV_ROUTE,
             AF_DEFAULT_RADIUS) == afStatus_SUCCESS)
@@ -491,7 +550,7 @@ void checkLedStatus(void)
   return;
 }
 
-void CurrentDetectionT1_SendNeedRepairMessage(uint8* buf)
+static bool CurrentDetectionT1_CheckNeedSendRepairMessage(void)
 {
    static bool preP2_0 = false;
    
@@ -505,27 +564,45 @@ void CurrentDetectionT1_SendNeedRepairMessage(uint8* buf)
 
    preP2_0 = P2_0;
 
-   if (!sendRepair)
+   return sendRepair;
+}
+
+bool CurrentDetectionT1_HandleSendRepairMessage(uint8 * sendToG1Data)
+{
+   static bool needResendRepair = false;
+   static uint32 repairTime;
+
+   if (needResendRepair || CurrentDetectionT1_CheckNeedSendRepairMessage())
    {
-      return;
-   }
-
-   buf[SN_LEN + NV_LEN] = 2;
-
-   if (AF_DataRequest(
+      if (!needResendRepair)
+      {
+         repairTime = lastNvTime + osal_GetSystemClock();
+      }
+      memcpy(sendToG1Data + SN_LEN, &repairTime, sizeof(repairTime));
+      swapUint32Bytes(sendToG1Data + SN_LEN);
+      
+      SET_HEART_BIT_STATUS(sendToG1Data , HEART_BIT_STATUS_REPAIR_MASK, 1);
+           
+      if (AF_DataRequest(
             &CurrentDetectionT1_Periodic_DstAddr,
             &CurrentDetectionT1_epDesc,
             DTCT_PERIODIC_CLUSTERID,
-            SN_LEN + NV_LEN,
-            buf,
+            HEART_BIT_MSG_LEN,
+            sendToG1Data,
             &CurrentDetectionT1_TransID,
             AF_DISCV_ROUTE,
             AF_DEFAULT_RADIUS) == afStatus_SUCCESS)
-   {
-      HalLedBlink(HAL_LED_2, 2, 50, 50);
+      {
+         HalLedBlink(HAL_LED_2, 2, 50, 50);
+         needResendRepair = false;
+      }
+      else
+      {
+         needResendRepair = true;
+      }
    }
 
-   return;
+    return (P2_0);
 }
 
 static void setSn(uint8 *uartMsg)
@@ -550,17 +627,23 @@ void CurrentDetectionT1_SampleCurrentAdcValue()
   return;
 }
 
-void CurrentDetectionT1_SetAverageCurrentAdcValue(uint8* buf, uint16 timerCount)
+void CurrentDetectionT1_SetAverageCurrentAdcValue(uint8* sendToG1Data, uint16 timerCount)
 {
-  uint16 adcValue = (adcValueSum[0]/timerCount);
-  buf[0] = adcValue >> 8;
-  buf[1] = adcValue & 0x00FF;
-  adcValue = (adcValueSum[1]/timerCount);
-  buf[2] = adcValue >> 8;
-  buf[3] = adcValue & 0x00FF;
+   uint16 adcValue = (adcValueSum[0]/timerCount);
 
-  adcValueSum[0] = 0;
-  adcValueSum[1] = 0;
+   uint32 curTime = lastNvTime + osal_GetSystemClock();
+   memcpy(sendToG1Data + SN_LEN, &curTime, sizeof(curTime));
+   swapUint32Bytes(sendToG1Data + SN_LEN);
+   
+   sendToG1Data[HEART_BIT_AD1_INDEX] = adcValue >> 8;
+   sendToG1Data[HEART_BIT_AD1_INDEX + 1] = adcValue & 0x00FF;
+   
+   adcValue = (adcValueSum[1]/timerCount);
+   sendToG1Data[HEART_BIT_AD1_INDEX + 2] = adcValue >> 8;
+   sendToG1Data[HEART_BIT_AD1_INDEX + 3] = adcValue & 0x00FF;
 
-  return;
+   adcValueSum[0] = 0;
+   adcValueSum[1] = 0;
+
+   return;
 }
