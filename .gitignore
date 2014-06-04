@@ -27,3 +27,7 @@ DeviceStatusMon/source/Z-Stack Home 1.1.0_CC2538_COR_OldName/CC2538_OldName.PFI
 *.bat
 *.dni
 *.hex
+*.cout
+*.pbi
+*.wsdt
+*.wsdt

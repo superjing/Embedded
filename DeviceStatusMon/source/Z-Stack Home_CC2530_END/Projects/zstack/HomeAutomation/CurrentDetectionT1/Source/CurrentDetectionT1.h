@@ -29,7 +29,7 @@ extern "C"
 #define DTCT_PERIODIC_CLUSTERID 1
 
 // Send Message Timeout
-#define DTCT_TIMER_MSG_TIMEOUT  5    // Every 5ms
+#define DTCT_TIMER_MSG_TIMEOUT  1    // Every 1ms
 // LED and WatchDog Timeout
 #define DTCT_LED_WTD_EVT_TIMEOUT   200   // Every 200ms
 
@@ -37,6 +37,12 @@ extern "C"
 #define DTCT_HEARTBEAT_MSG_EVT  0X0001
 // LED and WatchDog EVT
 #define DTCT_LED_WTD_EVT        0x0100
+
+//index 16
+#define HEART_BIT_STATUS_INDEX (SN_LEN + NV_LEN)
+//index 12
+#define HEART_BIT_AD1_INDEX (SN_LEN + TIME_LEN)
+#define HEART_BIT_MSG_LEN  (SN_LEN + NV_LEN + 1)
 
 typedef void (*PFUNC)(uint8 *);
 /*********************************************************************
@@ -55,7 +61,6 @@ extern void CurrentDetectionT1_Init( uint8 task_id );
  * Task Event Processor for the Generic Application
  */
 extern UINT16 CurrentDetectionT1_ProcessEvent( uint8 task_id, uint16 events );
-
 
 /*********************************************************************
 *********************************************************************/

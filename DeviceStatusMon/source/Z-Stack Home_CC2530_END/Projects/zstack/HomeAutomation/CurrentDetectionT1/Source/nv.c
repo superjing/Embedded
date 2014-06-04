@@ -19,7 +19,7 @@ uint32 recoverMsgNumInNv = 0;
 uint8  serialNumber[SN_LEN] = {0};
 
 //todo send from tcp
-uint32 delta = DELTA_DEFUALT;
+uint16 delta = DELTA_DEFAULT;
 
 void nv_read_config(void)
 {
@@ -31,7 +31,7 @@ void nv_read_config(void)
    memcpy(&lastNvTime, nv_buffer + SN_LEN, TIME_LEN);
    memcpy(&recoverMsgNumInNv, nv_buffer + SN_LEN + TIME_LEN, MSG_NUM_LEN);
    memcpy(&delta, nv_buffer + SN_LEN + TIME_LEN + MSG_NUM_LEN, DELTA_LEN);
-   
+
    if (recoverMsgNumInNv == 0xFFFFFFFF)
    {
       recoverMsgNumInNv = 0;
@@ -41,10 +41,15 @@ void nv_read_config(void)
    {
       lastNvTime = 0;
    }
-   
-   if (delta == 0xFFFFFFFF)
+
+   if (delta == 0xFFFF)
    {
-      delta = DELTA_DEFUALT;
+      delta = DELTA_DEFAULT;
+   }
+
+   if (heartbitRate == 0xFFFF)
+   {
+     heartbitRate = RATE_DEFAULT;
    }
 }
 
@@ -57,6 +62,7 @@ void nv_write_config(void)
    memcpy(nv_buffer + SN_LEN, &curTime, TIME_LEN);
    memcpy(nv_buffer + SN_LEN + TIME_LEN, &recoverMsgNumInNv, MSG_NUM_LEN);
    memcpy(nv_buffer + SN_LEN + TIME_LEN + MSG_NUM_LEN, &delta, DELTA_LEN);
+   memcpy(nv_buffer + SN_LEN + TIME_LEN + MSG_NUM_LEN + DELTA_LEN, &heartbitRate, DELTA_LEN);
 
    osal_nv_item_init(NV_CONFIG_DATA, NV_CONFIG_LEN, NULL);
    osal_nv_write(NV_CONFIG_DATA, 0, NV_CONFIG_LEN, nv_buffer);
@@ -66,13 +72,14 @@ void nv_reset_config(void)
 {
    uint8 nv_buffer[NV_CONFIG_LEN];
    uint32 curTime = 0;
-   delta = DELTA_DEFUALT;
+   delta = DELTA_DEFAULT;
+   heartbitRate = RATE_DEFAULT;
    recoverMsgNumInNv = 0;
    memset(serialNumber, 0, SN_LEN);
    memcpy(nv_buffer, serialNumber, SN_LEN);
    memcpy(nv_buffer + SN_LEN, &curTime, TIME_LEN);
    memcpy(nv_buffer + SN_LEN + TIME_LEN, &recoverMsgNumInNv, MSG_NUM_LEN);
-   memcpy(nv_buffer + SN_LEN + TIME_LEN + MSG_NUM_LEN, &delta, DELTA_LEN);  
+   memcpy(nv_buffer + SN_LEN + TIME_LEN + MSG_NUM_LEN, &delta, DELTA_LEN);
 
    osal_nv_item_init(NV_CONFIG_DATA, NV_CONFIG_LEN, NULL);
    osal_nv_write(NV_CONFIG_DATA, 0, NV_CONFIG_LEN, nv_buffer);

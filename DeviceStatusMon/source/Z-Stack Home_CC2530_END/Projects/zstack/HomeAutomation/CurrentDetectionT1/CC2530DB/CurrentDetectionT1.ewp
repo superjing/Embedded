@@ -3259,6 +3259,12 @@
     <file>
       <name>$PROJ_DIR$\..\Source\printDebug.h</name>
     </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\T1CmdProcess.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\T1CmdProcess.h</name>
+    </file>
   </group>
   <group>
     <name>HAL</name>
