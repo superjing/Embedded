@@ -48,7 +48,7 @@ do \
 #define HEARTBIT_TIME_UINT           (1920)
 //There is 1920/60 = 120 cycles in one heartbit time unit
 #define CYCLE_NUM_IN_UINT            (120)
-
+#define ADC_ACCQUIRE_RATE            (16)
 /*********************************************************************
  * CONSTANTS
  */
@@ -93,11 +93,8 @@ afAddrType_t CurrentDetectionT1_Periodic_DstAddr;
 tRfData rfData[MAX_RECOVER_MSG_IN_MEN];
 
 bool inNetwork = false;
-bool firstAlarmCheck = false;
 
 static uint32 adcValueSum[2] = {0};
-
-uint16 heartbitRate = 1;
 /*********************************************************************
  * LOCAL FUNCTIONS
  */
@@ -261,8 +258,6 @@ uint16 CurrentDetectionT1_ProcessEvent(uint8 task_id, uint16 events)
 
             case AF_INCOMING_MSG_CMD:
                CurrentDetectionT1_RfCMD(MSGpkt->cmd.DataLength, MSGpkt->cmd.Data);
-               //deltaInfo[8] =  MSGpkt->cmd.Data[9] + '0';
-               //HalUARTWrite(0, deltaInfo, 10);
 
             // Received whenever the device changes state in the network
             case ZDO_STATE_CHANGE:
@@ -272,7 +267,6 @@ uint16 CurrentDetectionT1_ProcessEvent(uint8 task_id, uint16 events)
                   HalLedSet(HAL_LED_2,  HAL_LED_MODE_ON);
                   HalUARTWrite(0, EndDeviceStatus, strlen((char *)EndDeviceStatus));
                   inNetwork = true;
-                  firstAlarmCheck = true;
                }
                break;
 
@@ -324,7 +318,7 @@ uint16 CurrentDetectionT1_ProcessEvent(uint8 task_id, uint16 events)
       // send heart beat every 1.92s.
       else if (timerCount == (HEARTBIT_TIME_UINT * heartbitRate))
       {
-         CurrentDetectionT1_SetAverageCurrentAdcValue(sendToG1Data, (CYCLE_NUM_IN_UINT * heartbitRate));
+         CurrentDetectionT1_SetAverageCurrentAdcValue(sendToG1Data, timerCount);
          SET_HEART_BIT_STATUS(sendToG1Data , HEART_BIT_STATUS_POWER_SUPPLY_MASK, 0);
          SET_HEART_BIT_STATUS(sendToG1Data , HEART_BIT_STATUS_BATTERY_CHARGING_MASK, 1);
 
@@ -559,11 +553,12 @@ void checkLedStatus(void)
 static bool CurrentDetectionT1_CheckNeedSendRepairMessage(void)
 {
    static bool preP2_0 = false;
+   static bool firstAlarmCheck = true;
    bool sendRepair = false;
 
-   if (firstAlarmCheck)
+   if (firstAlarmCheck && inNetwork)
    {
-     if (inNetwork && (P2_0))
+     if (P2_0)
      {
        sendRepair = true;
      }
@@ -654,7 +649,7 @@ void CurrentDetectionT1_SampleCurrentAdcValue(void)
     maxAdcValueInCycle[1] = currentAdcValue;
   }
 
-  if (++timerCountInCycle == 16)
+  if (++timerCountInCycle == ADC_ACCQUIRE_RATE)
   {
     adcValueSum[0] += maxAdcValueInCycle[0];
     adcValueSum[1] += maxAdcValueInCycle[1];
@@ -662,9 +657,6 @@ void CurrentDetectionT1_SampleCurrentAdcValue(void)
     maxAdcValueInCycle[1] = 0;
     timerCountInCycle = 0;
   }
-
-  //adcValueSum[0] += HalAdcRead(HAL_ADC_CHN_AIN7, HAL_ADC_RESOLUTION_12);
-  //adcValueSum[1] += HalAdcRead(HAL_ADC_CHN_AIN6, HAL_ADC_RESOLUTION_12);
 
   return;
 }

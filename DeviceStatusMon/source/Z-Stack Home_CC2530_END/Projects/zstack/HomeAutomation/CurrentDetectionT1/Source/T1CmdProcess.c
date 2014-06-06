@@ -7,18 +7,15 @@
 #include "CurrentDetectionT1.h"
 #include "AF.h"
 
-/*
+
 //For Test
-#define SET_T1_DELTA_CMD_LEN    (13)
-#define SET_T1_RATE_CMD_LEN     (13)
 #define SET_UINT16_CMD_LEN      (13)
 #define CMD_VALUE_OFFSET        (9)
-*/
 
-#define SET_T1_DELTA_CMD_LEN    (3)
-#define SET_T1_RATE_CMD_LEN     (3)
+/*
 #define SET_UINT16_CMD_LEN      (3)
 #define CMD_VALUE_OFFSET        (1)
+*/
 
 #define RESPONSE_ORG_VALUE_INDEX     (HEART_BIT_AD1_INDEX)
 #define RESPONSE_NEW_VALUE_INDEX     (HEART_BIT_AD1_INDEX + 2)
@@ -30,7 +27,7 @@ extern afAddrType_t CurrentDetectionT1_Periodic_DstAddr;
 extern endPointDesc_t CurrentDetectionT1_epDesc;
 extern uint8 CurrentDetectionT1_TransID;
 
-static void CurrentDetectionT1_SetUint16Variable(uint16 cmdLen, uint8 * cmd, uint16 * variable);
+static void sendCommandResponse_uint16(uint16 cmdLen, uint8 * cmd, uint16 * variable);
 
 enum
 {
@@ -43,11 +40,11 @@ void CurrentDetectionT1_RfCMD(uint16 cmdLen, uint8 *cmd)
   switch (cmd[0])
   {
      case kSetDelta:
-       CurrentDetectionT1_SetUint16Variable(cmdLen, cmd, &delta);
+       sendCommandResponse_uint16(cmdLen, cmd, &delta);
        break;
 
      case kSetRate:
-       CurrentDetectionT1_SetUint16Variable(cmdLen, cmd, &heartbitRate);
+       sendCommandResponse_uint16(cmdLen, cmd, &heartbitRate);
        break;
 
      default:
@@ -55,7 +52,7 @@ void CurrentDetectionT1_RfCMD(uint16 cmdLen, uint8 *cmd)
   }
 }
 
-static void CurrentDetectionT1_SetUint16Variable(uint16 cmdLen, uint8 * cmd, uint16 * variable)
+static void sendCommandResponse_uint16(uint16 cmdLen, uint8 * cmd, uint16 * variable)
 {
     if ((SET_UINT16_CMD_LEN != cmdLen) || (NULL == cmd))
     {
@@ -88,9 +85,7 @@ static void CurrentDetectionT1_SetUint16Variable(uint16 cmdLen, uint8 * cmd, uin
           AF_DISCV_ROUTE,
           AF_DEFAULT_RADIUS) == afStatus_SUCCESS)
     {
-       (*variable) = 0;
-       (*variable) = ((*variable) | (uint16)cmd[CMD_VALUE_OFFSET]) << 8;
-       (*variable) |= cmd[CMD_VALUE_OFFSET + 1];
+       (*variable) = ((uint16)(cmd[CMD_VALUE_OFFSET]) << 8) + cmd[CMD_VALUE_OFFSET + 1];
 
        //Write new variable value to nv
        nv_write_config();
