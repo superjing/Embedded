@@ -29,7 +29,7 @@
  * MACROS
  */
 
-#define FAIL_TIME_TO_RESTART (MAX_RECOVER_MSG_IN_MEN * 2)
+#define FAIL_TIMES_TO_RESTART 5
 
 #define HEART_BIT_STATUS_REPAIR_MASK           0x8
 #define HEART_BIT_STATUS_REALTIME_MASK         0x4
@@ -258,6 +258,8 @@ uint16 CurrentDetectionT1_ProcessEvent(uint8 task_id, uint16 events)
 
             case AF_INCOMING_MSG_CMD:
                CurrentDetectionT1_RfCMD(MSGpkt->cmd.DataLength, MSGpkt->cmd.Data);
+               HalLedBlink(HAL_LED_2, 2, 20, 50);
+               break;
 
             // Received whenever the device changes state in the network
             case ZDO_STATE_CHANGE:
@@ -290,6 +292,8 @@ uint16 CurrentDetectionT1_ProcessEvent(uint8 task_id, uint16 events)
    if (events & DTCT_HEARTBEAT_MSG_EVT)
    {
       uint8 sendToG1Data[HEART_BIT_MSG_LEN];
+      sendToG1Data[HEART_BIT_MSG_LEN - 1] = 0;
+      
       memcpy(sendToG1Data, serialNumber, SN_LEN);
 
       if (CurrentDetectionT1_HandleSendRepairMessage(sendToG1Data))
@@ -307,7 +311,6 @@ uint16 CurrentDetectionT1_ProcessEvent(uint8 task_id, uint16 events)
 
       ++timerCount;
 
-      // send recovery message every 0.5s.
       if ((timerCount == (480 * heartbitRate))
           || (timerCount == (960 * heartbitRate))
           || (timerCount == (1440 * heartbitRate)))
@@ -340,11 +343,11 @@ uint16 CurrentDetectionT1_ProcessEvent(uint8 task_id, uint16 events)
             ++heartBitFailNum;
             if(CurrentDetectionT1_CheckDelta(sendToG1Data))
             {
-                CurrentDetectionT1_StoreHeartBeatMessage(sendToG1Data);
+               CurrentDetectionT1_StoreHeartBeatMessage(sendToG1Data);
             }
          }
 
-         if (heartBitFailNum == FAIL_TIME_TO_RESTART)
+         if (heartBitFailNum == FAIL_TIMES_TO_RESTART)
          {
             if (recoverMsgNumInMem != 0)
             {
@@ -484,7 +487,7 @@ void CurrentDetectionT1_RecoverHeartBeatMessage(uint8* sendToG1Buf)
    else
    {
       memcpy(sendToG1Buf + SN_LEN, rfData[recoverMsgNumInMem - 1].data, NV_LEN);
-     SET_HEART_BIT_STATUS(sendToG1Buf , HEART_BIT_STATUS_REALTIME_MASK, 0);
+      SET_HEART_BIT_STATUS(sendToG1Buf , HEART_BIT_STATUS_REALTIME_MASK, 0);
 
       if (AF_DataRequest(
                &CurrentDetectionT1_Periodic_DstAddr,
@@ -553,30 +556,30 @@ void checkLedStatus(void)
 static bool CurrentDetectionT1_CheckNeedSendRepairMessage(void)
 {
    static bool preP2_0 = false;
-   static bool firstAlarmCheck = true;
-   bool sendRepair = false;
+   static bool hasRisingEdge = false;
 
-   if (firstAlarmCheck && inNetwork)
+   //If P20 has a rising edge, we send a need repair message
+   if (!preP2_0 && P2_0)
    {
-     if (P2_0)
-     {
-       sendRepair = true;
-     }
-
-     firstAlarmCheck = false;
+      preP2_0 = true;
+      
+      if (!inNetwork)
+      {
+         hasRisingEdge = true;
+         return false;
+      }
+      return true;
    }
-   else
+   
+   if (P2_0 && hasRisingEdge && inNetwork)
    {
-     //If P20 has a rising edge, we send a need repair message
-     if ((P2_0 ^ preP2_0) && (P2_0))
-     {
-        sendRepair = true;
-     }
+       preP2_0 = P2_0;
+       hasRisingEdge = false;
+       return true;
    }
-
+   
    preP2_0 = P2_0;
-
-   return sendRepair;
+   return false;
 }
 
 bool CurrentDetectionT1_HandleSendRepairMessage(uint8 * sendToG1Data)

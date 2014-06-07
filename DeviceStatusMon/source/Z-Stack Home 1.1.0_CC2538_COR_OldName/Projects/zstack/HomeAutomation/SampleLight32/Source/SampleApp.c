@@ -17,6 +17,9 @@
 
 #include "string.h"
 #include "Watchdog.h"
+   
+// refresh live list every 5 minutes.
+#define REFRESH_LIVE_LIST_TIMER 5
 
 /*********************************************************************
  * GLOBAL VARIABLES
@@ -43,6 +46,12 @@ const SimpleDescriptionFormat_t SampleApp_HeartBeatSimpleDesc =
 
 endPointDesc_t SampleApp_HeartBeatEpDesc;
 
+// This is the Endpoint/Interface description. It is defined here, but
+// filled-in in CurrentDetectionT1_Init(). Another way to go would be to fill
+// in the structure here and make it a "const" (in code space).  The
+// way it's defined in this sample app it is define in RAM.
+endPointDesc_t CurrentDetectionT1_epDesc;
+
 LockFreeQueue queue;
 
 // Task ID for internal task/event processing
@@ -55,7 +64,6 @@ devStates_t SampleApp_NwkState;
 // This is the unique message ID (counter)
 uint8 SampleApp_TransID;
 
-uint8 gCorSendGap = 1;
 /*********************************************************************
  * @fn SampleApp_Init
  *
@@ -97,7 +105,7 @@ void SampleApp_Init(uint8 task_id)
    // start the device.
    ZDOInitDevice(0);
 #endif
-
+   
    SampleApp_HeartBeatEpDesc.endPoint = HEARTBEAT_ENDPOINT;
    SampleApp_HeartBeatEpDesc.task_id = &SampleApp_TaskID;
    SampleApp_HeartBeatEpDesc.simpleDesc
@@ -128,8 +136,6 @@ void SampleApp_Init(uint8 task_id)
  */
 uint16 SampleApp_ProcessEvent( uint8 task_id, uint16 events )
 {
-   static int timerTick = 0;
-
    afIncomingMSGPacket_t *MSGpkt;
    (void)task_id; // Intentionally unreferenced parameter
 
@@ -146,25 +152,19 @@ uint16 SampleApp_ProcessEvent( uint8 task_id, uint16 events )
                 && (ELEMENT_SIZE == MSGpkt->cmd.DataLength))
                {
                   HalLedBlink(HAL_LED_1, 2, 50, 50);
-                  uint8 * gapCount = setLiveStatus(MSGpkt->cmd.Data);
-                  if (NULL ==  gapCount)
+                  if (!setLiveStatus(MSGpkt->cmd.Data, &(MSGpkt->srcAddr)))
                   {
                      break;
                   }
-                  if (gCorSendGap == *gapCount)
+                  if (IsFreeQueueFull(&queue))
                   {
-                    if (IsFreeQueueFull(&queue))
-                    {
-                       // If the queue is full, write current msg to the nv.
-                       nv_write_msg(MSGpkt->cmd.Data);
-                    }
-                    else
-                    {
-                       // If the queue is not full, push the msg to the queue.
-                       FreeQueuePush(&queue, MSGpkt->cmd.Data);
-                    }
-                    //reset the gap count.
-                    *gapCount = 0;
+                     // If the queue is full, write current msg to the nv.
+                     nv_write_msg(MSGpkt->cmd.Data);
+                  }
+                  else
+                  {
+                     // If the queue is not full, push the msg to the queue.
+                     FreeQueuePush(&queue, MSGpkt->cmd.Data);
                   }
                }
                break;
@@ -201,18 +201,18 @@ uint16 SampleApp_ProcessEvent( uint8 task_id, uint16 events )
    // (setup in SampleApp_Init()).
    if (events & SAMPLEAPP_PERIODIC_EVT)
    {
+      static int timerTick = 0;
+     
       osal_start_timerEx(
          SampleApp_TaskID,
          SAMPLEAPP_PERIODIC_EVT,
          SAMPLEAPP_PERIODIC_TIMEOUT);
 
       // Check live list for every 5s
-      if (++timerTick == 5)
+      if (++timerTick == REFRESH_LIVE_LIST_TIMER)
       {
-         uint32 currentTime = osal_GetSystemClock();
          // If the T1 message doesn't arrive in 10s, we weill reset it.
-         resetLiveList(currentTime, 10000);
-         
+         refreshLiveList(osal_GetSystemClock(), REFRESH_LIVE_LIST_TIMER * 2000);
          timerTick = 0;
       }
 
@@ -222,12 +222,11 @@ uint16 SampleApp_ProcessEvent( uint8 task_id, uint16 events )
 
    if (events & SAMPLEAPP_WTD_EVT)
    {
-     WatchdogClear();
+       WatchdogClear();
+       osal_start_timerEx(SampleApp_TaskID, SAMPLEAPP_WTD_EVT, SAMPLEAPP_WTD_TIMEOUT);
 
-     osal_start_timerEx(SampleApp_TaskID, SAMPLEAPP_WTD_EVT, SAMPLEAPP_WTD_TIMEOUT);
-
-     WatchdogEnable( WATCHDOG_INTERVAL_32768 );
-     return (events ^ SAMPLEAPP_WTD_EVT);
+       WatchdogEnable( WATCHDOG_INTERVAL_32768 );
+       return (events ^ SAMPLEAPP_WTD_EVT);
    }
 
    // Discard unknown events

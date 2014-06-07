@@ -23,7 +23,7 @@ static bool insertLiveList(int index, uint8 * sn)
    return true;
 }
 
-uint8 * setLiveStatus(uint8 * sn)
+bool setLiveStatus(uint8 * sn, afAddrType_t * srcAddr)
 {
    int insertIndex = -1;
    int i = 0;
@@ -48,19 +48,22 @@ uint8 * setLiveStatus(uint8 * sn)
    {
       if (!insertLiveList(insertIndex, sn))
       {
-         return NULL;
+         return false;
       }
       i = insertIndex;
    }
    
-   liveList.LiveElem[i].liveStatus = true;
+   if (!liveList.LiveElem[i].liveStatus)
+   {
+      memcpy(&(liveList.LiveElem[i].srcAddr), srcAddr, sizeof(afAddrType_t));
+      liveList.LiveElem[i].liveStatus = true;
+   }
    liveList.LiveElem[i].timestamp = osal_GetSystemClock();
-   ++liveList.LiveElem[i].sendGapCount;
    
-   return &(liveList.LiveElem[i].sendGapCount);
+   return true;
 }
 
-void resetLiveList(uint32 currentTime, uint32 timeout)
+void refreshLiveList(uint32 currentTime, uint32 timeout)
 {
    for (uint8 i = 0; i < MAX_END_NUM; ++i)
    {
@@ -76,4 +79,19 @@ void resetLiveList(uint32 currentTime, uint32 timeout)
          --liveList.liveCount;
       }
    }
+}
+
+afAddrType_t * findSrcAddr(uint8 * sn)
+{
+   int i = 0;
+   
+   for (; i < MAX_END_NUM; ++i)
+   {
+      if (liveList.LiveElem[i].liveStatus 
+          && (memcmp(sn, liveList.LiveElem[i].sn, SN_LEN) == 0))
+      {
+          return &(liveList.LiveElem[i].srcAddr);
+      }
+   }
+   return NULL;
 }

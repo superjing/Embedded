@@ -3,9 +3,10 @@
 #include "uip_httpapp.h"
 #include "uip.h"
 #include "queue.h"
-#include "SampleApp.h"
 #include "OSAL.h"
 #include "nv.h"
+#include "livelist.h"
+#include "command.h"
 #include "OnBoard.h"
 
 #include <string.h>
@@ -20,7 +21,6 @@
 #define TCP_PORT 9090
 
 extern LockFreeQueue queue;
-extern uint8 gCorSendGap;
 
 static uint8_t ipAddr[IPADDR_LEN] = {10, 144, 3, 104};
 
@@ -62,7 +62,7 @@ void tcp_client_appcall_user(void)
 
    if (uip_newdata())
    {
-      ip_cmd_process(uip_datalen(), (uint8*)uip_appdata);
+      process_ip_command(uip_datalen(), (uint8*)uip_appdata);
    }
 }
 
@@ -86,22 +86,4 @@ void tpc_app_call(void)
          tcp_client_appcall_user();
          break;
    }
-}
-
-#define SET_GAP_COUNT_CMD 0xEF
-#define SET_GAP_COUNT_CMD_LEN (sizeof(SET_GAP_COUNT_CMD) + sizeof(gCorSendGap))
-
-void ip_cmd_process(uint8 cmdLen, uint8 * cmd)
-{
-  if ((5 == cmdLen) && (0 == memcmp("hello", cmd, 5)))
-  {
-    uip_send("I get hello", 11);
-    return;
-  }
-
-  if ((SET_GAP_COUNT_CMD_LEN == cmdLen) && (SET_GAP_COUNT_CMD == cmd[0]))
-  {
-    gCorSendGap = cmd[1];
-    return;
-  }
 }

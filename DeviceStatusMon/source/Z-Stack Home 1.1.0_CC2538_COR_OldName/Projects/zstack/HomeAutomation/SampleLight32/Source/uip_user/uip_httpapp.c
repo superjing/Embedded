@@ -10,21 +10,6 @@
 
 static uint8 last_uip_msg[ELEMENT_SIZE];
 
-static void FormatHexUint32Str(uint8 *dst, uint8 * src)
-{
-   uint8 i = 0;
-   uint8 * ptr = src;
-
-   for (i = 0; i < (sizeof(uint32) * 2); ptr++)
-   {
-      uint8 ch;
-      ch = (*ptr >> 4) & 0x0F;
-      dst[i++] = ch + (( ch < 10 ) ? '0' : '7');
-      ch = *ptr & 0x0F;
-      dst[i++] = ch + (( ch < 10 ) ? '0' : '7');
-   }
-}
-
 static void FormatHexUint8Str(uint8 *dst, uint8 * src)
 {
    uint8 i = 0;
@@ -38,6 +23,26 @@ static void FormatHexUint8Str(uint8 *dst, uint8 * src)
       ch = *ptr & 0x0F;
       dst[i++] = ch + (( ch < 10 ) ? '0' : '7');
    }
+}
+
+static void FormatHexUint32Str(uint8 *dst, uint8 * src)
+{
+   FormatHexUint8Str(dst, src);
+   FormatHexUint8Str(dst + 2, src + 1);
+   FormatHexUint8Str(dst + 4, src + 2);
+   FormatHexUint8Str(dst + 6, src + 3);
+}
+
+static void FormatHexUint16Str(uint8 *dst, uint8 * src)
+{
+   FormatHexUint8Str(dst, src);
+   FormatHexUint8Str(dst + 2, src + 1);
+}
+
+static void FormatSnStr(uint8 *dst, uint8 * src)
+{
+   FormatHexUint32Str(dst, src);
+   FormatHexUint32Str(dst + 8, src + 4);
 }
 
 static uint8 odd_even_check(uint8 * buffer, uint8 bufLen)
@@ -63,69 +68,82 @@ static uint8 set_crc_result(uint8 * buffer)
   return (odd_even_check(aExtendedAddress, SN_LEN) ^ odd_even_check(buffer, ELEMENT_SIZE));
 }
 
-typedef void (*PFUNC)(uint8 *, uint8 *);
+static uint8 httpHeartBitBuffer[] =
+   "POST /power/data HTTP/1.1\r\n"
+   "Host:abc:9090\r\n"
+   "Content-Type:application/x-www-form-urlencoded\r\n"
+   "Content-Length:110\r\n\r\n"
+   "tag=EE&len=52&type=01&g1sn=004B1200CB4CA603&sn=0000000000000014&time=00010AC7&ad1=0017&ad2=0017&live=01&crc=01";
 
-typedef struct ConverListStr
+static uint8 httpCommandResp[] =
+   "POST /power/response HTTP/1.1\r\n"
+   "Host:abc:9090\r\n"
+   "Content-Type:application/x-www-form-urlencoded\r\n"
+   "Content-Length:63\r\n\r\n"
+   "tag=EA&value=0000&g1sn=004B1200CB4CA603&sn=0000000000000014";
+
+enum
 {
-  uint8 * dstBuf;
-  uint8   offset;
-  PFUNC   converFunc;
-}tConverList;
-
-static uint8 httpBuffer_Head[] = "POST /power/data HTTP/1.1\r\nHost:abc:9090\r\nContent-Type:application/x-www-form-urlencoded\r\nContent-Length:110\r\n\r\n";
-static uint8 httpBuffer_Body[] = "tag=EE&len=52&type=01&g1sn=004B1200CB4CA603&sn=0000000000000014&time=00010AC7&ad1=0017&ad2=0017&live=01&crc=01";
-
-static tConverList converlist[] =
-{
-    // base : aExtendedAddress
-    {httpBuffer_Body + 0x1b,       0,  FormatHexUint32Str},
-    {httpBuffer_Body + 0x1b + 0x8, 4,  FormatHexUint32Str},
-    // base : buffer reveived from T1
-    {httpBuffer_Body + 0x2f,       0,  FormatHexUint32Str},
-    {httpBuffer_Body + 0x2f + 0x8, 4,  FormatHexUint32Str},
-    {httpBuffer_Body + 0x45,       8,  FormatHexUint32Str},
-    {httpBuffer_Body + 0x52,       12, FormatHexUint8Str },
-    {httpBuffer_Body + 0x54,       13, FormatHexUint8Str },
-    {httpBuffer_Body + 0x5b,       14, FormatHexUint8Str },
-    {httpBuffer_Body + 0x5d,       15, FormatHexUint8Str },
-    {httpBuffer_Body + 0x65,       16, FormatHexUint8Str },
-    // base : cdc result
-    {httpBuffer_Body + 0x6c,       0,  FormatHexUint8Str },
+  // POST /power/data HTTP/1.1\r\nHost:abc:9090\r\nContent-Type:application/x-www-form-urlencoded\r\nContent-Length:110\r\n\r\n
+  kHeartBitHttpHeadLen = 112,
+  kHeartBitHttpLen = sizeof(httpHeartBitBuffer) - 1,
+  
+  kHeartBitHttpGsnIndex = kHeartBitHttpHeadLen + 27,
+  kHeartBitHttpTsnIndex = kHeartBitHttpHeadLen + 47,
+  kHeartBitHttpTimeStampIndex = kHeartBitHttpHeadLen + 69,
+  kHeartBitHttpValue1Index = kHeartBitHttpHeadLen + 82,
+  kHeartBitHttpValue2Index = kHeartBitHttpHeadLen + 91,
+  kHeartBitHttpLiveIndex = kHeartBitHttpHeadLen + 101,
+  kHeartBitHttpCdcIndex = kHeartBitHttpHeadLen + 108
 };
 
-static void converBuf2HttpStr(uint8 * aExtendedAddress, uint8 * buffer, uint8 crc_result)
+enum
 {
-   uint8 i = 0;
+  // POST /power/response HTTP/1.1\r\nHost:abc:9090\r\nContent-Type:application/x-www-form-urlencoded\r\nContent-Length:63\r\n\r\n
+  kCommandRespHeadLen = 115,
+  kCommandRespHttpLen = sizeof(httpCommandResp) - 1,
 
-   converlist[i].converFunc(converlist[i].dstBuf, aExtendedAddress + converlist[0].offset);
-   ++i;
-   
-   converlist[i].converFunc(converlist[i].dstBuf, aExtendedAddress + converlist[i].offset);
-   ++i;
-   
-   for (i = 2; i < sizeof(converlist)/sizeof(converlist[0]) - 1; ++i)
-   {
-     converlist[i].converFunc(converlist[i].dstBuf, buffer + converlist[i].offset);
-   }
-   
-   converlist[i].converFunc(converlist[i].dstBuf, &crc_result);
-   return;
+  kCommandRespHttpTagIndex = kCommandRespHeadLen + 4,
+  kCommandRespHttpValueIndex = kCommandRespHeadLen + 13,
+  kCommandRespHttpGsnIndex = kCommandRespHeadLen + 23,
+  kCommandRespHttpTsnIndex = kCommandRespHeadLen + 43,
+};
+
+static void converBuf2HeartBitHttpStr(uint8 * aExtendedAddress, uint8 * buffer, uint8 crc_result)
+{
+   FormatSnStr(httpHeartBitBuffer + kHeartBitHttpGsnIndex, aExtendedAddress);
+   FormatSnStr(httpHeartBitBuffer + kHeartBitHttpTsnIndex, buffer);
+   FormatHexUint32Str(httpHeartBitBuffer + kHeartBitHttpTimeStampIndex, buffer + 8);
+   FormatHexUint16Str(httpHeartBitBuffer + kHeartBitHttpValue1Index, buffer + 12);
+   FormatHexUint16Str(httpHeartBitBuffer + kHeartBitHttpValue2Index, buffer + 14);
+   FormatHexUint8Str(httpHeartBitBuffer + kHeartBitHttpLiveIndex, buffer + 16);
+   FormatHexUint8Str(httpHeartBitBuffer + kHeartBitHttpCdcIndex, &crc_result);
 }
 
-#define HEAD_LEN (sizeof(httpBuffer_Head)/sizeof(httpBuffer_Head[0]) - 1)
-#define BODY_LEN (sizeof(httpBuffer_Body)/sizeof(httpBuffer_Body[0]) - 1)
+static void converBuf2CommandRespHttpStr(
+      uint8 * aExtendedAddress, uint8 * buffer)
+{
+   uint8 command = buffer[ELEMENT_SIZE  - 1] & 0x7F;
+
+   FormatHexUint8Str(httpCommandResp + kCommandRespHttpTagIndex, &command);
+   FormatHexUint16Str(httpCommandResp + kCommandRespHttpValueIndex, buffer + 14);
+   FormatSnStr(httpCommandResp + kCommandRespHttpGsnIndex, aExtendedAddress);
+   FormatSnStr(httpCommandResp + kCommandRespHttpTsnIndex, buffer);
+}
 
 void _uip_send_http(uint8 * buffer)
 {
-   uint8 dataBuf[HEAD_LEN + BODY_LEN + 1];
+   if (buffer[ELEMENT_SIZE  - 1] & 0x80)
+   {
+       converBuf2CommandRespHttpStr(aExtendedAddress, buffer);
+       uip_send(httpCommandResp, kCommandRespHttpLen);
+   }
+   else
+   {
+      converBuf2HeartBitHttpStr(aExtendedAddress, buffer, set_crc_result(buffer));
+      uip_send(httpHeartBitBuffer, kHeartBitHttpLen);
+   }
 
-   converBuf2HttpStr(aExtendedAddress, buffer, set_crc_result(buffer));
-   
-   memcpy(dataBuf, httpBuffer_Head, HEAD_LEN);
-   memcpy(dataBuf + HEAD_LEN, httpBuffer_Body, BODY_LEN);
-
-   uip_send(dataBuf, HEAD_LEN + BODY_LEN);
-   
    if (last_uip_msg != buffer)
    {
       memcpy(last_uip_msg, buffer, ELEMENT_SIZE);

@@ -13,7 +13,7 @@ struct example_state
 };
 
 #ifndef UIP_APPCALL
-#define UIP_APPCALL     tcp_client_appcall_user
+#define UIP_APPCALL   tcp_client_appcall_user
 #endif
 
 #define UIP_APPSTATE_SIZE  (sizeof(struct example_state))
@@ -22,12 +22,5 @@ struct example_state
 
 #define IPADDR_LEN   4
 
-//command length of change ipadrr
-#define IPADDR_CMD_LEN   (IPADDR_LEN + 1)
-#define IPADDR_CMD       (0xAD)
-
 typedef struct example_state uip_tcp_appstate_t;
-
-void ip_cmd_process(uint8 cmdLen, uint8 * cmd);
-
 #endif

@@ -11,7 +11,7 @@
 #define RATE_LEN    (2)
 
 // When the recovery message number reaches to this marco, do the nv opration.
-#define MAX_RECOVER_MSG_IN_MEN  (3)
+#define MAX_RECOVER_MSG_IN_MEN  (30)
 
 // 4bytes time, 2bytes AD1, 2bytes AD2
 #define NV_LEN  (8)

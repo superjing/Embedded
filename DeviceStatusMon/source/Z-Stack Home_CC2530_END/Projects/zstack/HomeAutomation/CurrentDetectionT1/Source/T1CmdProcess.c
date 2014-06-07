@@ -9,13 +9,12 @@
 
 
 //For Test
-#define SET_UINT16_CMD_LEN      (13)
-#define CMD_VALUE_OFFSET        (9)
+//#define SET_UINT16_CMD_LEN      (13)
+///#define CMD_VALUE_OFFSET        (9)
 
-/*
 #define SET_UINT16_CMD_LEN      (3)
 #define CMD_VALUE_OFFSET        (1)
-*/
+
 
 #define RESPONSE_ORG_VALUE_INDEX     (HEART_BIT_AD1_INDEX)
 #define RESPONSE_NEW_VALUE_INDEX     (HEART_BIT_AD1_INDEX + 2)
@@ -61,6 +60,7 @@ static void sendCommandResponse_uint16(uint16 cmdLen, uint8 * cmd, uint16 * vari
 
     uint8 responseToG1Data[HEART_BIT_MSG_LEN];
     memcpy(responseToG1Data, serialNumber, SN_LEN);
+
     uint32 curTime = lastNvTime + osal_GetSystemClock();
     memcpy(responseToG1Data + SN_LEN, &curTime, sizeof(curTime));
 
@@ -74,7 +74,7 @@ static void sendCommandResponse_uint16(uint16 cmdLen, uint8 * cmd, uint16 * vari
 
     //Set status byte: bit7:1  bit6-bit0: cmd[0]
     responseToG1Data[HEART_BIT_STATUS_INDEX] = (cmd[0]) | (0x80);
-
+    
     if (AF_DataRequest(
           &CurrentDetectionT1_Periodic_DstAddr,
           &CurrentDetectionT1_epDesc,
