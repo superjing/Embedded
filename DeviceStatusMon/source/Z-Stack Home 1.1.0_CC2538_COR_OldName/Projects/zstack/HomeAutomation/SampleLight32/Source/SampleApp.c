@@ -17,7 +17,7 @@
 
 #include "string.h"
 #include "Watchdog.h"
-   
+
 // refresh live list every 5 minutes.
 #define REFRESH_LIVE_LIST_TIMER 5
 
@@ -105,7 +105,7 @@ void SampleApp_Init(uint8 task_id)
    // start the device.
    ZDOInitDevice(0);
 #endif
-   
+
    SampleApp_HeartBeatEpDesc.endPoint = HEARTBEAT_ENDPOINT;
    SampleApp_HeartBeatEpDesc.task_id = &SampleApp_TaskID;
    SampleApp_HeartBeatEpDesc.simpleDesc
@@ -202,7 +202,7 @@ uint16 SampleApp_ProcessEvent( uint8 task_id, uint16 events )
    if (events & SAMPLEAPP_PERIODIC_EVT)
    {
       static int timerTick = 0;
-     
+
       osal_start_timerEx(
          SampleApp_TaskID,
          SAMPLEAPP_PERIODIC_EVT,

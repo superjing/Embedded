@@ -13,7 +13,8 @@ struct example_state
 };
 
 #ifndef UIP_APPCALL
-#define UIP_APPCALL   tcp_client_appcall_user
+//#define UIP_APPCALL   tcp_client_appcall_user
+#define UIP_APPCALL tpc_app_call
 #endif
 
 #define UIP_APPSTATE_SIZE  (sizeof(struct example_state))

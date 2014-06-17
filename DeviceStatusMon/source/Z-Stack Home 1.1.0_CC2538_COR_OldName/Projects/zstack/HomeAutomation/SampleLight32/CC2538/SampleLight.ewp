@@ -179,7 +179,7 @@
           <state>CC2538_USE_ALTERNATE_INTERRUPT_MAP=1</state>
           <state>TC_LINKKEY_JOIN</state>
           <state>xDEBUG_TRACE</state>
-          <state>PROTOTYPE</state>
+          <state>xPROTOTYPE</state>
           <state>BOOTLOADER_BACKDOOR_DISABLE=0xEFFFFFFF</state>
         </option>
         <option>
@@ -2958,6 +2958,12 @@
         <name>$PROJ_DIR$\..\Source\uip_user\uip_tcpapp.h</name>
       </file>
     </group>
+    <file>
+      <name>$PROJ_DIR$\..\Source\command.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\command.h</name>
+    </file>
     <file>
       <name>$PROJ_DIR$\..\Source\livelist.c</name>
     </file>

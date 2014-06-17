@@ -8,6 +8,7 @@
 #include "livelist.h"
 #include "command.h"
 #include "OnBoard.h"
+#include "hal_led.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -17,6 +18,8 @@
 #else
 #define RF_MSG_SIZE ELEMENT_SIZE
 #endif
+
+#define HTTP_RESPONSE_HEAD_LEN  (353)
 
 #define TCP_PORT 9090
 
@@ -29,7 +32,6 @@ static void tcp_client_reconnect(void)
    uip_ipaddr_t ipaddr;
    uip_ipaddr(&ipaddr, ipAddr[0], ipAddr[1], ipAddr[2], ipAddr[3]);
    uip_connect(&ipaddr, HTONS(9090));
-   uip_listen(HTONS(9090));
 }
 
 void tcp_client_appcall_user(void)
@@ -66,9 +68,21 @@ void tcp_client_appcall_user(void)
    }
 }
 
+void tcp_server_appcall_user(void)
+{
+   if (uip_newdata())
+   {
+     //TODO: Check HTTP_RESPONSE_HEAD_LEN
+      process_ip_command((uip_datalen() - HTTP_RESPONSE_HEAD_LEN), ((uint8*)uip_appdata + HTTP_RESPONSE_HEAD_LEN));
+   }
+}
+
 void tpc_app_init(void)
 {
    tcp_client_reconnect();
+
+   //Only listen one time after get IP address
+   uip_listen(HTONS(9090));
 }
 
 void tpc_app_call(void)
@@ -76,7 +90,7 @@ void tpc_app_call(void)
    switch(uip_conn->lport)
    {
       case HTONS(TCP_PORT):
-         tcp_client_appcall_user();
+         tcp_server_appcall_user();
          break;
    }
 
