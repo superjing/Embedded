@@ -293,7 +293,7 @@ uint16 CurrentDetectionT1_ProcessEvent(uint8 task_id, uint16 events)
    {
       uint8 sendToG1Data[HEART_BIT_MSG_LEN];
       sendToG1Data[HEART_BIT_MSG_LEN - 1] = 0;
-      
+
       memcpy(sendToG1Data, serialNumber, SN_LEN);
 
       if (CurrentDetectionT1_HandleSendRepairMessage(sendToG1Data))
@@ -321,7 +321,7 @@ uint16 CurrentDetectionT1_ProcessEvent(uint8 task_id, uint16 events)
       // send heart beat every 1.92s.
       else if (timerCount == (HEARTBIT_TIME_UINT * heartbitRate))
       {
-         CurrentDetectionT1_SetAverageCurrentAdcValue(sendToG1Data, timerCount);
+         CurrentDetectionT1_SetAverageCurrentAdcValue(sendToG1Data, CYCLE_NUM_IN_UINT * heartbitRate);
          SET_HEART_BIT_STATUS(sendToG1Data , HEART_BIT_STATUS_POWER_SUPPLY_MASK, 0);
          SET_HEART_BIT_STATUS(sendToG1Data , HEART_BIT_STATUS_BATTERY_CHARGING_MASK, 1);
 
@@ -456,7 +456,7 @@ void CurrentDetectionT1_RecoverHeartBeatMessage(uint8* sendToG1Buf)
 
    if (recoverMsgNumInMem == 0)
    {
-      if (nv_read_last_msg(sendToG1Buf + SN_LEN))
+      if (nv_read_msg(sendToG1Buf + SN_LEN))
       {
          SET_HEART_BIT_STATUS(sendToG1Buf , HEART_BIT_STATUS_REALTIME_MASK, 0);
 
@@ -486,7 +486,10 @@ void CurrentDetectionT1_RecoverHeartBeatMessage(uint8* sendToG1Buf)
    }
    else
    {
-      memcpy(sendToG1Buf + SN_LEN, rfData[recoverMsgNumInMem - 1].data, NV_LEN);
+      static uint16 memMsgIndex = 0;
+
+      //memcpy(sendToG1Buf + SN_LEN, rfData[recoverMsgNumInMem - 1].data, NV_LEN);
+      memcpy(sendToG1Buf + SN_LEN, rfData[memMsgIndex].data, NV_LEN);
       SET_HEART_BIT_STATUS(sendToG1Buf , HEART_BIT_STATUS_REALTIME_MASK, 0);
 
       if (AF_DataRequest(
@@ -500,6 +503,11 @@ void CurrentDetectionT1_RecoverHeartBeatMessage(uint8* sendToG1Buf)
                AF_DEFAULT_RADIUS ) == afStatus_SUCCESS)
       {
          --recoverMsgNumInMem;
+         memMsgIndex++;
+         if (0 == recoverMsgNumInMem)
+         {
+           memMsgIndex = 0;
+         }
          PrintRecover(sendToG1Buf, true);
          HalLedBlink(HAL_LED_2, 2, 20, 50);
       }
@@ -562,7 +570,7 @@ static bool CurrentDetectionT1_CheckNeedSendRepairMessage(void)
    if (!preP2_0 && P2_0)
    {
       preP2_0 = true;
-      
+
       if (!inNetwork)
       {
          hasRisingEdge = true;
@@ -570,14 +578,14 @@ static bool CurrentDetectionT1_CheckNeedSendRepairMessage(void)
       }
       return true;
    }
-   
+
    if (P2_0 && hasRisingEdge && inNetwork)
    {
        preP2_0 = P2_0;
        hasRisingEdge = false;
        return true;
    }
-   
+
    preP2_0 = P2_0;
    return false;
 }

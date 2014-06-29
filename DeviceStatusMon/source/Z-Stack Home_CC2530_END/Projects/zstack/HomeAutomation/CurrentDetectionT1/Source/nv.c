@@ -82,7 +82,7 @@ void nv_reset_config(void)
    memcpy(nv_buffer + SN_LEN + TIME_LEN, &recoverMsgNumInNv, MSG_NUM_LEN);
    memcpy(nv_buffer + SN_LEN + TIME_LEN + MSG_NUM_LEN, &delta, DELTA_LEN);
    memcpy(nv_buffer + SN_LEN + TIME_LEN + MSG_NUM_LEN + DELTA_LEN, &heartbitRate, DELTA_LEN);
-   
+
    osal_nv_item_init(NV_CONFIG_DATA, NV_CONFIG_LEN, NULL);
    osal_nv_write(NV_CONFIG_DATA, 0, NV_CONFIG_LEN, nv_buffer);
 }
@@ -123,5 +123,20 @@ bool nv_read_last_msg(uint8* nvBuf)
    }
    osal_nv_item_init(NV_RECOVER_DATA + recoverMsgNumInNv - 1, NV_LEN, NULL);
    osal_nv_read(NV_RECOVER_DATA + recoverMsgNumInNv - 1, 0, NV_LEN, nvBuf);
+   return true;
+}
+
+bool nv_read_msg(uint8* nvBuf)
+{
+   static uint16 nvMsgIndex = 0;
+   if (recoverMsgNumInNv == 0)
+   {
+      nvMsgIndex = 0;
+      return false;
+   }
+   osal_nv_item_init(NV_RECOVER_DATA + nvMsgIndex, NV_LEN, NULL);
+   osal_nv_read(NV_RECOVER_DATA + nvMsgIndex, 0, NV_LEN, nvBuf);
+   nvMsgIndex++;
+
    return true;
 }

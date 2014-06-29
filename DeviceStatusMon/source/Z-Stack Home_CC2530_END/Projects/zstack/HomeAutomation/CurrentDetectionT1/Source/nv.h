@@ -18,7 +18,7 @@
 
 #define NV_CONFIG_LEN (SN_LEN + TIME_LEN + MSG_NUM_LEN + DELTA_LEN + RATE_LEN)
 
-#define DELTA_DEFAULT  (20)
+#define DELTA_DEFAULT  (60)
 #define RATE_DEFAULT   (1)
 
 extern uint32 lastNvTime;
@@ -38,4 +38,5 @@ void nv_write_config(void);
 void nv_reset_config(void);
 void nv_write_msg(void);
 bool nv_read_last_msg(uint8* nvBuf);
+bool nv_read_msg(uint8* nvBuf);
 #endif
