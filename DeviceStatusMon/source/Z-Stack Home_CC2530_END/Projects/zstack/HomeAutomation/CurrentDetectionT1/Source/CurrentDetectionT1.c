@@ -17,12 +17,12 @@
 #include "hal_adc.h"
 
 #include "nv.h"
+#include "mem.h"
+#include "string.h"
 #include "printDebug.h"
 
 #include "CurrentDetectionT1.h"
 #include "CurrentDetectionT1Hw.h"
-
-#include "string.h"
 
 #include "T1CmdProcess.h"
 /*********************************************************************
@@ -89,8 +89,6 @@ devStates_t CurrentDetectionT1_NwkState;
 uint8 CurrentDetectionT1_TransID;
 
 afAddrType_t CurrentDetectionT1_Periodic_DstAddr;
-
-tRfData rfData[MAX_RECOVER_MSG_IN_MEN];
 
 bool inNetwork = false;
 
@@ -349,7 +347,7 @@ uint16 CurrentDetectionT1_ProcessEvent(uint8 task_id, uint16 events)
 
          if (heartBitFailNum == FAIL_TIMES_TO_RESTART)
          {
-            if (recoverMsgNumInMem != 0)
+            if (nv_mem_number())
             {
                nv_write_msg();
             }
@@ -397,8 +395,9 @@ uint16 CurrentDetectionT1_ProcessEvent(uint8 task_id, uint16 events)
 
 void CurrentDetectionT1_StoreHeartBeatMessage(uint8* sendToG1Data)
 {
-   memcpy(rfData[recoverMsgNumInMem++].data, sendToG1Data + SN_LEN, NV_LEN);
-   if (recoverMsgNumInMem == MAX_RECOVER_MSG_IN_MEN)
+   nv_mem_write(sendToG1Data + SN_LEN);
+   
+   if (nv_mem_full())
    {
       nv_write_msg();
    }
@@ -409,7 +408,7 @@ bool CurrentDetectionT1_CheckDelta(uint8* sendToG1Data)
   uint16 curAd1Value;
   uint16 lastAd1Value;
 
-  if (recoverMsgNumInMem == 0)
+  if (nv_mem_number() == 0)
   {
      uint8 buf[NV_LEN];
      if (!nv_read_last_msg(buf))
@@ -421,7 +420,11 @@ bool CurrentDetectionT1_CheckDelta(uint8* sendToG1Data)
   }
   else
   {
-     uint8 * buf = rfData[recoverMsgNumInMem - 1].data;
+     uint8 * buf = nv_mem_read_last();
+     if (buf == NULL)
+     {
+        return true;
+     }
      lastAd1Value = (buf[TIME_LEN] << 8) + buf[TIME_LEN + 1];
   }
 
@@ -454,7 +457,7 @@ void CurrentDetectionT1_RecoverHeartBeatMessage(uint8* sendToG1Buf)
      return;
    }
 
-   if (recoverMsgNumInMem == 0)
+   if (nv_number())
    {
       if (nv_read_msg(sendToG1Buf + SN_LEN))
       {
@@ -470,11 +473,12 @@ void CurrentDetectionT1_RecoverHeartBeatMessage(uint8* sendToG1Buf)
                   AF_DISCV_ROUTE,
                   AF_DEFAULT_RADIUS ) == afStatus_SUCCESS)
          {
-            if (--recoverMsgNumInNv == 0)
+            nv_next();
+            
+            if (nv_number() == 0)
             {
                nv_write_config();
             }
-
             PrintRecover(sendToG1Buf, true);
             HalLedBlink(HAL_LED_2, 2, 20, 50);
          }
@@ -484,12 +488,9 @@ void CurrentDetectionT1_RecoverHeartBeatMessage(uint8* sendToG1Buf)
          }
       }
    }
-   else
+   else if (nv_mem_number())
    {
-      static uint16 memMsgIndex = 0;
-
-      //memcpy(sendToG1Buf + SN_LEN, rfData[recoverMsgNumInMem - 1].data, NV_LEN);
-      memcpy(sendToG1Buf + SN_LEN, rfData[memMsgIndex].data, NV_LEN);
+      memcpy(sendToG1Buf + SN_LEN, nv_mem_read(), NV_LEN);
       SET_HEART_BIT_STATUS(sendToG1Buf , HEART_BIT_STATUS_REALTIME_MASK, 0);
 
       if (AF_DataRequest(
@@ -502,12 +503,7 @@ void CurrentDetectionT1_RecoverHeartBeatMessage(uint8* sendToG1Buf)
                AF_DISCV_ROUTE,
                AF_DEFAULT_RADIUS ) == afStatus_SUCCESS)
       {
-         --recoverMsgNumInMem;
-         memMsgIndex++;
-         if (0 == recoverMsgNumInMem)
-         {
-           memMsgIndex = 0;
-         }
+         nv_mem_next();
          PrintRecover(sendToG1Buf, true);
          HalLedBlink(HAL_LED_2, 2, 20, 50);
       }
