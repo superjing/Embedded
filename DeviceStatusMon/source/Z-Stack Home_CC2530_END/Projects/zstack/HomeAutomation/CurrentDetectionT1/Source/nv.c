@@ -11,7 +11,8 @@
 #define NV_CONFIG_DATA  0x1000
 #define NV_RECOVER_DATA 0x1020
 
-uint32 lastNvTime = 0;
+uint32 lastNvTime_h = 0;
+uint32 lastNvTime_l = 0;
 uint8  serialNumber[SN_LEN] = {0};
 
 static uint8 _beginIndex = 0;
@@ -20,6 +21,17 @@ static uint8 _endIndex = 0;
 uint16 delta = DELTA_DEFAULT;
 uint16 heartbitRate = RATE_DEFAULT;
 
+static uint32 _initOsalTime = 0;
+uint32 get_osal_SystemClock(void)
+{
+   return _initOsalTime;
+}
+
+void reset_osal_SystemClock(void)
+{
+   _initOsalTime = osal_GetSystemClock();
+}
+
 void nv_read_config(void)
 {
    uint8 nv_buffer[NV_CONFIG_LEN];
@@ -27,11 +39,12 @@ void nv_read_config(void)
    osal_nv_item_init(NV_CONFIG_DATA, NV_CONFIG_LEN, NULL);
    osal_nv_read(NV_CONFIG_DATA, 0, NV_CONFIG_LEN, nv_buffer);
    memcpy(serialNumber, nv_buffer, SN_LEN);
-   memcpy(&lastNvTime, nv_buffer + SN_LEN, TIME_LEN);
-   memcpy(&_beginIndex, nv_buffer + SN_LEN + TIME_LEN, MSG_NUM_LEN);
-   memcpy(&_endIndex, nv_buffer + SN_LEN + TIME_LEN + MSG_NUM_LEN, MSG_NUM_LEN);
-   memcpy(&delta, nv_buffer + SN_LEN + TIME_LEN + MSG_NUM_LEN + MSG_NUM_LEN, DELTA_LEN);
-   memcpy(&heartbitRate, nv_buffer + SN_LEN + TIME_LEN + MSG_NUM_LEN + MSG_NUM_LEN + DELTA_LEN, RATE_LEN);
+   memcpy(&lastNvTime_h, nv_buffer + SN_LEN, TIME_LEN);
+   memcpy(&lastNvTime_l, nv_buffer + SN_LEN + TIME_LEN, TIME_LEN);
+   memcpy(&_beginIndex, nv_buffer + SN_LEN + TIME_LEN * 2, MSG_NUM_LEN);
+   memcpy(&_endIndex, nv_buffer + SN_LEN + TIME_LEN * 2 + MSG_NUM_LEN, MSG_NUM_LEN);
+   memcpy(&delta, nv_buffer + SN_LEN + TIME_LEN * 2 + MSG_NUM_LEN * 2, DELTA_LEN);
+   memcpy(&heartbitRate, nv_buffer + SN_LEN + TIME_LEN * 2 + MSG_NUM_LEN * 2 + DELTA_LEN, RATE_LEN);
 
    if (_beginIndex == 0xFF)
    {
@@ -43,9 +56,10 @@ void nv_read_config(void)
       _endIndex = 0;
    }
 
-   if (lastNvTime == 0xFFFFFFFF)
+   if (lastNvTime_h == 0xFFFFFFFF)
    {
-      lastNvTime = 0;
+      lastNvTime_h = 0;
+      lastNvTime_l = 0;
    }
 
    if (delta == 0xFFFF)
@@ -62,20 +76,24 @@ void nv_read_config(void)
 void nv_write_config(void)
 {
    uint8 nv_buffer[NV_CONFIG_LEN];
-   uint32 curTime = lastNvTime + osal_GetSystemClock();
-
+   uint32 curTime_l = lastNvTime_l + get_osal_SystemClock();
+   if (curTime_l < lastNvTime_l)
+   {
+      ++lastNvTime_h;
+   }
    memcpy(nv_buffer, serialNumber, SN_LEN);
-   memcpy(nv_buffer + SN_LEN, &curTime, TIME_LEN);
-   memcpy(nv_buffer + SN_LEN + TIME_LEN, &_beginIndex, MSG_NUM_LEN);
-   memcpy(nv_buffer + SN_LEN + TIME_LEN + MSG_NUM_LEN, &_endIndex, MSG_NUM_LEN);
-   memcpy(nv_buffer + SN_LEN + TIME_LEN + MSG_NUM_LEN + MSG_NUM_LEN, &delta, DELTA_LEN);
-   memcpy(nv_buffer + SN_LEN + TIME_LEN + MSG_NUM_LEN + MSG_NUM_LEN + DELTA_LEN, &heartbitRate, RATE_LEN);
+   memcpy(nv_buffer + SN_LEN, &lastNvTime_h, TIME_LEN);
+   memcpy(nv_buffer + SN_LEN + TIME_LEN, &curTime_l, TIME_LEN);
+   memcpy(nv_buffer + SN_LEN + TIME_LEN * 2, &_beginIndex, MSG_NUM_LEN);
+   memcpy(nv_buffer + SN_LEN + TIME_LEN * 2 + MSG_NUM_LEN, &_endIndex, MSG_NUM_LEN);
+   memcpy(nv_buffer + SN_LEN + TIME_LEN * 2 + MSG_NUM_LEN + MSG_NUM_LEN, &delta, DELTA_LEN);
+   memcpy(nv_buffer + SN_LEN + TIME_LEN * 2 + MSG_NUM_LEN + MSG_NUM_LEN + DELTA_LEN, &heartbitRate, RATE_LEN);
 
    osal_nv_item_init(NV_CONFIG_DATA, NV_CONFIG_LEN, NULL);
    osal_nv_write(NV_CONFIG_DATA, 0, NV_CONFIG_LEN, nv_buffer);
 }
 
-void nv_reset_config(void)
+/*void nv_reset_config(void)
 {
    uint8 nv_buffer[NV_CONFIG_LEN];
    uint32 curTime = 0;
@@ -93,7 +111,7 @@ void nv_reset_config(void)
 
    osal_nv_item_init(NV_CONFIG_DATA, NV_CONFIG_LEN, NULL);
    osal_nv_write(NV_CONFIG_DATA, 0, NV_CONFIG_LEN, nv_buffer);
-}
+}*/
 
 void nv_next(void)
 {

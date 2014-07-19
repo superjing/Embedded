@@ -61,8 +61,16 @@ static void sendCommandResponse_uint16(uint16 cmdLen, uint8 * cmd, uint16 * vari
     uint8 responseToG1Data[HEART_BIT_MSG_LEN];
     memcpy(responseToG1Data, serialNumber, SN_LEN);
 
-    uint32 curTime = lastNvTime + osal_GetSystemClock();
-    memcpy(responseToG1Data + SN_LEN, &curTime, sizeof(curTime));
+    uint32 curTime_h = lastNvTime_h;
+    uint32 curTime_l = lastNvTime_l + osal_GetSystemClock();
+    
+    if (curTime_l < lastNvTime_l)
+    {
+       ++curTime_h;
+    }
+    
+    memcpy(responseToG1Data + SN_LEN, &curTime_h, sizeof(curTime_h));
+    memcpy(responseToG1Data + SN_LEN + TIME_LEN, &curTime_l, sizeof(curTime_l));
 
     //Set original value in reponse data.
     responseToG1Data[RESPONSE_ORG_VALUE_INDEX] = (*variable) >> 8;
