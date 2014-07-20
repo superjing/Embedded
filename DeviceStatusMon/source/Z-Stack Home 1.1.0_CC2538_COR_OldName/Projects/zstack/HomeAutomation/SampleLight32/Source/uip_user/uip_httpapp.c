@@ -72,9 +72,8 @@ static uint8 httpHeartBitBuffer[] =
    "POST /power/data HTTP/1.1\r\n"
    "Host:abc:9090\r\n"
    "Content-Type:application/x-www-form-urlencoded\r\n"
-   "Content-Length:110\r\n\r\n"
-   "tag=EE&len=52&type=01&g1sn=004B1200CB4CA603&sn=0000000000000014&time=00010AC7&ad1=0017&ad2=0017&live=01&crc=01";
-
+   "Content-Length:128\r\n\r\n"
+   "tag=EE&len=60&type=01&g1sn=004B1200CB4CA603&sn=0000000000000014&time_h=00010AC7&time_l=01020304&ad1=0017&ad2=0017&live=01&crc=01";
 static uint8 httpCommandResp[] =
    "POST /power/response HTTP/1.1\r\n"
    "Host:abc:9090\r\n"
@@ -87,14 +86,15 @@ enum
   // POST /power/data HTTP/1.1\r\nHost:abc:9090\r\nContent-Type:application/x-www-form-urlencoded\r\nContent-Length:110\r\n\r\n
   kHeartBitHttpHeadLen = 112,
   kHeartBitHttpLen = sizeof(httpHeartBitBuffer) - 1,
-  
+
   kHeartBitHttpGsnIndex = kHeartBitHttpHeadLen + 27,
   kHeartBitHttpTsnIndex = kHeartBitHttpHeadLen + 47,
-  kHeartBitHttpTimeStampIndex = kHeartBitHttpHeadLen + 69,
-  kHeartBitHttpValue1Index = kHeartBitHttpHeadLen + 82,
-  kHeartBitHttpValue2Index = kHeartBitHttpHeadLen + 91,
-  kHeartBitHttpLiveIndex = kHeartBitHttpHeadLen + 101,
-  kHeartBitHttpCdcIndex = kHeartBitHttpHeadLen + 108
+  kHeartBitHttpTimeStampHIndex = kHeartBitHttpHeadLen + 71,
+  kHeartBitHttpTimeStampLIndex = kHeartBitHttpHeadLen + 87,
+  kHeartBitHttpValue1Index = kHeartBitHttpHeadLen + 100,
+  kHeartBitHttpValue2Index = kHeartBitHttpHeadLen + 109,
+  kHeartBitHttpLiveIndex = kHeartBitHttpHeadLen + 119,
+  kHeartBitHttpCdcIndex = kHeartBitHttpHeadLen + 126
 };
 
 enum
@@ -113,10 +113,11 @@ static void converBuf2HeartBitHttpStr(uint8 * aExtendedAddress, uint8 * buffer, 
 {
    FormatSnStr(httpHeartBitBuffer + kHeartBitHttpGsnIndex, aExtendedAddress);
    FormatSnStr(httpHeartBitBuffer + kHeartBitHttpTsnIndex, buffer);
-   FormatHexUint32Str(httpHeartBitBuffer + kHeartBitHttpTimeStampIndex, buffer + 8);
-   FormatHexUint16Str(httpHeartBitBuffer + kHeartBitHttpValue1Index, buffer + 12);
-   FormatHexUint16Str(httpHeartBitBuffer + kHeartBitHttpValue2Index, buffer + 14);
-   FormatHexUint8Str(httpHeartBitBuffer + kHeartBitHttpLiveIndex, buffer + 16);
+   FormatHexUint32Str(httpHeartBitBuffer + kHeartBitHttpTimeStampHIndex, buffer + 8);
+   FormatHexUint32Str(httpHeartBitBuffer + kHeartBitHttpTimeStampLIndex, buffer + 12);
+   FormatHexUint16Str(httpHeartBitBuffer + kHeartBitHttpValue1Index, buffer + 16);
+   FormatHexUint16Str(httpHeartBitBuffer + kHeartBitHttpValue2Index, buffer + 18);
+   FormatHexUint8Str(httpHeartBitBuffer + kHeartBitHttpLiveIndex, buffer + 20);
    FormatHexUint8Str(httpHeartBitBuffer + kHeartBitHttpCdcIndex, &crc_result);
 }
 
