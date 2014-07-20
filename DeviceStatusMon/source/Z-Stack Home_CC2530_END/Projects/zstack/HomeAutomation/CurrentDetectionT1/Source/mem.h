@@ -4,10 +4,10 @@
 #include "hal_types.h"
 
 // When the recovery message number reaches to this marco, do the nv opration.
-#define MAX_RECOVER_MSG_IN_MEN  (30)
+#define MAX_RECOVER_MSG_IN_MEN  (10)
 
-// 4bytes time, 2bytes AD1, 2bytes AD2
-#define NV_LEN  (8)
+// 4bytes time_h, 4bytes time_l, 2bytes AD1, 2bytes AD2
+#define NV_LEN  (12)
 
 uint8  nv_mem_number(void);
 uint8* nv_mem_read(void);

@@ -38,10 +38,10 @@ extern "C"
 // LED and WatchDog EVT
 #define DTCT_LED_WTD_EVT        0x0100
 
-//index 16
+//index 20
 #define HEART_BIT_STATUS_INDEX (SN_LEN + NV_LEN)
-//index 12
-#define HEART_BIT_AD1_INDEX (SN_LEN + TIME_LEN)
+//index 16
+#define HEART_BIT_AD1_INDEX (SN_LEN + TIME_LEN + TIME_LEN)
 #define HEART_BIT_MSG_LEN  (SN_LEN + NV_LEN + 1)
 
 typedef void (*PFUNC)(uint8 *);
