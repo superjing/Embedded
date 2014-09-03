@@ -9,6 +9,7 @@
 #include "command.h"
 #include "OnBoard.h"
 #include "hal_led.h"
+#include "hal_mcu.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -100,4 +101,37 @@ void tpc_app_call(void)
          tcp_client_appcall_user();
          break;
    }
+}
+
+void tcp_reset_ip_addr(uint8 len, uint8 * newIpAddr)
+{
+  if (IPADDR_LEN != len)
+  {
+    return;
+  }
+
+  memcpy(ipAddr, newIpAddr, IPADDR_LEN);
+
+  nv_write_ipaddr(ipAddr);
+
+  tpc_app_init();
+
+  HAL_SYSTEM_RESET();
+
+  return;
+}
+
+void tcp_ipaddr_init(void)
+{
+  uint8 ipAddrBuf[IPADDR_LEN] = {0};
+  uint8 invalidIp[IPADDR_LEN] = {0xFF, 0xFF, 0xFF, 0xFF};
+
+  nv_read_ipaddr(ipAddrBuf);
+
+  if (0 != memcmp(invalidIp, ipAddrBuf, IPADDR_LEN))
+  {
+    memcpy(ipAddr, ipAddrBuf, IPADDR_LEN);
+  }
+
+  return;
 }

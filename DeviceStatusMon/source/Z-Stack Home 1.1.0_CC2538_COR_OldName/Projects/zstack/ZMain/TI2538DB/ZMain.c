@@ -264,6 +264,7 @@ int main( void )
     pollEnc28j60();
     if (dhcpdone)
     {
+      tcp_ipaddr_init();
       tpc_app_init();
       dhcpdone = 0;
     }

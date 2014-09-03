@@ -6,6 +6,8 @@
 void tpc_app_init(void);
 void tpc_app_call(void);
 void tcp_client_appcall_user(void);
+void tcp_reset_ip_addr(uint8 len, uint8 * newIpAddr);
+void tcp_ipaddr_init(void);
 
 struct example_state
 {

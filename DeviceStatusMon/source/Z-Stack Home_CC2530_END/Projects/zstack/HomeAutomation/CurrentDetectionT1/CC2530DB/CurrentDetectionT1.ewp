@@ -3245,6 +3245,12 @@
       <name>$PROJ_DIR$\..\Source\CurrentDetectionT1.h</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\Source\mem.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\mem.h</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\Source\nv.c</name>
     </file>
     <file>
